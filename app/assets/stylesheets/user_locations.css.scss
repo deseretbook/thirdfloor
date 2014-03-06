@@ -1,3 +1,52 @@
 // Place all the styles related to the user_locations controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+body { background-color: black; }
+
+.user-locations {
+  color: white;
+
+  // font-size: 20px;
+  font-family: Arial;
+  table {
+    width: 100%;
+
+    th { font-size: 50%; }
+
+    td {
+      border-bottom: 1px solid grey;
+    }
+    tr.even { background-color: charcoal; }
+
+    th.user {
+      text-align: right;
+      padding-right: 10%;
+    }
+    .user {
+      text-align: right;
+      img {
+        vertical-align: middle;
+        width: 30px;
+        height: 30px;
+        padding: 10px;
+      }
+    }
+
+    td.last-seen {
+      font-size: 80%;
+      text-align: center;
+    }
+
+    td.in-office-today {
+      text-align: center;
+      i { margin-right: 5px; }
+      &.true {
+        i { color: green; }
+      }
+      &.false {
+        i { color: red; }
+      }
+    }
+  }
+}

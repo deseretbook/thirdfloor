@@ -1,12 +1,24 @@
-table
-  thead
-    tr
-      th Name
-      th Last Seen
-      th Location
-  tbody
-    - user_locations.each do |user, location|
+.user-locations
+  table
+    thead
       tr
-        td = user.name
-        td #{time_ago_in_words(location.created_at)} ago
-        td = location.station.location
+        th.user Who
+        th.in-office-today In today?
+        th.last-seen Last Seen
+    tbody
+      - user_locations.each do |location|
+        tr class="#{cycle('odd', 'even')}"
+          td.user
+            = location.user.name
+          
+            - if location.user.avatar_url.present?
+              = image_tag(location.user.avatar_url)
+          td.in-office-today class=location.in_office_today?
+            - if location.in_office_today?
+              i.fa.fa-check-circle
+            - else
+              / i.fa.fa-minus-circle
+              | &nbsp;
+          td.last-seen
+            | #{time_ago_in_words(location.created_at)} ago: 
+            = location.station.location

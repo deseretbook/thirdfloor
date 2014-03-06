@@ -14,11 +14,12 @@
 ActiveRecord::Schema.define(version: 20140306160754) do
 
   create_table "stations", force: true do |t|
-    t.string   "hostname",                          null: false
-    t.string   "password",                          null: false
-    t.string   "location",                          null: false
-    t.boolean  "enabled",           default: false, null: false
+    t.string   "hostname",                        null: false
+    t.string   "password",                        null: false
+    t.string   "location",                        null: false
+    t.boolean  "enabled",         default: false, null: false
     t.datetime "last_seen_at"
+    t.string   "last_ip_address"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -40,6 +41,7 @@ ActiveRecord::Schema.define(version: 20140306160754) do
     t.string   "last_name",                         null: false
     t.string   "bluetooth_address"
     t.boolean  "track_location",    default: false, null: false
+    t.string   "avatar_url"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

@@ -6,16 +6,38 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-User.create!(
-  first_name: "Matthew",
-  last_name: "Nielsen",
-  bluetooth_address: "F8:27:93:31:A8:A9",
-  track_location: true
-)
-
-Station.create!(
+station = Station.create!(
   hostname: "raspbian",
   password: "SECRET!",
   location: "Third Floor, West",
   enabled: true
 )
+
+[
+  [ "Matthew", "Nielsen", "F8:27:93:31:A8:A9", "https://trello-avatars.s3.amazonaws.com/bc632f608d5d884f7c32d65aefad549b/30.png" ],
+  [ "Matt", "Redd", nil, "https://trello-avatars.s3.amazonaws.com/9b3598d5177ac5515df7815605d49186/30.png" ],
+  [ "Mike", "Bourgeous", nil, "https://trello-avatars.s3.amazonaws.com/eb1017b7332755909f514f040c2214b7/30.png" ],
+  [ "Tory", "Briggs", nil, "https://trello-avatars.s3.amazonaws.com/eb1017b7332755909f514f040c2214b7/30.png" ],
+  [ "Tim", "Hogg", nil, "https://trello-avatars.s3.amazonaws.com/eb1017b7332755909f514f040c2214b7/30.png" ],
+  [ "Tom", "Welch", nil, "https://trello-avatars.s3.amazonaws.com/9bd2fae77a8db00d984ec9a96900bd01/30.png" ],
+  [ "Ben", "Lopshire", nil, "https://trello-avatars.s3.amazonaws.com/f672bb5a40ddf426d32f2d0a7d0fd28f/30.png" ],
+  [ "Logan", "Mallory", nil, "https://trello-avatars.s3.amazonaws.com/254f69a74adbf945974db913dd196153/30.png" ],
+  [ "Rob", "Johnson", nil, "https://trello-avatars.s3.amazonaws.com/743a5aea47083e84b93d84bc3a6aaf95/30.png" ],
+  [ "Joseph", "McLaughlin", nil, "https://trello-avatars.s3.amazonaws.com/b846760769c60325796b651af31be6d8/30.png" ],
+  [ "Greg", "Price", nil, "https://trello-avatars.s3.amazonaws.com/5c5babb048f683ef27cbf61a305e2bb1/30.png" ],
+].each do |fn, ln, bt, au|
+  puts "Creating #{fn} #{ln}"
+  user = User.create!(
+    first_name: fn,
+    last_name: ln,
+    bluetooth_address: bt || (0...32).map{65.+(rand(25)).chr}.join,
+    avatar_url: au,
+    track_location: true
+  )
+
+  ul = UserLocation.create!(
+    user_id: user.id,
+    station_id: station.id
+  )
+  ul.update_column(:created_at, 1.day.ago)
+end

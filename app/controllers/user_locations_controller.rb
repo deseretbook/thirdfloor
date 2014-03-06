@@ -4,9 +4,9 @@ class UserLocationsController < ApplicationController
   skip_before_filter :verify_authenticity_token
 
   def index # GET collection
-    user_locations = User.where(track_location: true).map do |user|
-      [ user, user.user_locations.last ]
-    end
+    user_locations = User.where(track_location: true).order('first_name, last_name').map do |user|
+      user.user_locations.last
+    end.compact
 
     respond_with(user_locations: user_locations) do |format|
       format.html { render locals: { user_locations: user_locations } }

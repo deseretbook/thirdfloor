@@ -5,6 +5,7 @@ class CreateUsers < ActiveRecord::Migration
       t.string :last_name, null: false
       t.string :bluetooth_address
       t.boolean :track_location, default: false, null: false
+      t.string :avatar_url
       t.timestamps
     end
 
