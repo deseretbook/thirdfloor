@@ -11,8 +11,9 @@
           td.user
             = location.user.name
           
-            - if location.user.avatar_url.present?
-              = image_tag(location.user.avatar_url)
+            span
+              - if location.user.avatar_url.present?
+                = image_tag(location.user.avatar_url)
           td.in-office-today class=location.in_office_today?
             - if location.in_office_today?
               i.fa.fa-check-circle

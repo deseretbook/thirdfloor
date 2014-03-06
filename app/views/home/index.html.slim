@@ -1,0 +1,29 @@
+javascript:
+  $(function() {
+
+    var reload_timer = 60000;
+    
+    var reload_countdown_width = 100;
+
+    var counter_timeout = reload_timer / reload_countdown_width;
+    
+    setInterval(function() {
+      reload_countdown_width = reload_countdown_width -1;
+      $('.reload-countdown').css('width', reload_countdown_width + "%")
+    }, counter_timeout);
+    
+    
+    (function() {
+      $.get('/user_locations').done(function(data){
+        $('.user-locations-container').html(data);
+      });
+    })()
+  
+    setInterval(function() { window.location.reload() }, reload_timer);
+  });
+.reload-countdown
+.home
+  .user-locations-container.inline-container.border-right
+    | Loading...
+  .inline-container
+    | Loading...

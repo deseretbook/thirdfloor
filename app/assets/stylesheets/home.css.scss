@@ -1,0 +1,23 @@
+// Place all the styles related to the home controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+
+.reload-countdown {
+  height: 2px;
+  width: 100%;
+  background-color: green;
+  margin: 0 auto;
+}
+
+.home {
+  height: 100vh;
+  .border-right {
+    border-right: 1px solid red;
+  }
+  .inline-container {
+    // height: 100vh;
+    display:inline-block;
+    width: 49%;
+  }
+}
