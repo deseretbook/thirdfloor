@@ -15,11 +15,20 @@ class UserLocationsController < ApplicationController
 
   def create # POST collection
     params.require(:station)
-    params.require(:user_id)
+    params.permit(:user_ids)
     station = get_station(params[:station])
-    user = User.find(params[:user_id])
     station.communicated!
-    respond_with UserLocation.create!( station_id: station.id, user_id: user.id)
+
+    user_ids = (params[:user_ids] || []) # allow a station to send empty list
+    user_ids.each do |user_id|
+      user = User.find(user_id)
+      UserLocation.create!( station_id: station.id, user_id: user.id)
+    end
+    respond_with_success(created: user_ids.size)
+  end
+
+  def respond_with_success(options = {})
+    respond_with({status: :ok}.merge(options), status: :ok, location: nil)
   end
 
 private
