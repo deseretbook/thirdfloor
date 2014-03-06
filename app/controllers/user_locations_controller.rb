@@ -3,7 +3,6 @@ class UserLocationsController < ApplicationController
 
   skip_before_filter :verify_authenticity_token
 
-
   def index # GET collection
     user_locations = User.where(track_location: true).map do |user|
       [ user, user.user_locations.last ]
@@ -17,7 +16,7 @@ class UserLocationsController < ApplicationController
   def create # POST collection
     
     params.permit(:user_ids)
-    
+
     current_station.communicated!(params[:station][:ip])
 
     user_ids = (params[:user_ids] || []) # allow a station to send empty list
