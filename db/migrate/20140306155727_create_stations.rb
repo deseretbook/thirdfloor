@@ -5,7 +5,8 @@ class CreateStations < ActiveRecord::Migration
       t.string :password, null: false
       t.string :location, null: false
       t.boolean :enabled, default: false, null: false
-      t.datetime :last_responded_at
+      t.datetime :last_seen_at
+      t.string :last_ip_address
       t.timestamps
     end
 

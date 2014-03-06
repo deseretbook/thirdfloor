@@ -18,7 +18,7 @@ ActiveRecord::Schema.define(version: 20140306160754) do
     t.string   "password",                          null: false
     t.string   "location",                          null: false
     t.boolean  "enabled",           default: false, null: false
-    t.datetime "last_responded_at"
+    t.datetime "last_seen_at"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

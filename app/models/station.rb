@@ -4,7 +4,10 @@ class Station < ActiveRecord::Base
 
   has_many :user_locations
 
-  def communicated!
-    update_attributes(last_responded_at: Time.now)
+  def communicated!(remote_ip)
+    update_attributes(
+      last_seen_at: Time.now,
+      last_ip_address: remote_ip
+    )
   end
 end
