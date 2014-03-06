@@ -2,13 +2,11 @@ table
   thead
     tr
       th Name
-      th Here?
       th Last Seen
       th Location
   tbody
     - user_locations.each do |user, location|
       tr
         td = user.name
-        td = location.here?
         td #{time_ago_in_words(location.created_at)} ago
         td = location.station.location

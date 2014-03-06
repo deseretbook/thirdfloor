@@ -4,7 +4,4 @@ class UserLocation < ActiveRecord::Base
 
   default_scope -> { order('id') }
 
-  def here?
-    true
-  end
 end
