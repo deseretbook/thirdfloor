@@ -16,6 +16,6 @@ User.create!(
 Station.create!(
   hostname: "raspbian",
   password: "SECRET!",
-  location: "some place",
+  location: "Third Floor, West",
   enabled: true
 )
