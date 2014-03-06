@@ -5,4 +5,8 @@ class User < ActiveRecord::Base
   validates_inclusion_of :track_location, in: [ true, false ]
 
   has_many :user_locations
+
+  def name
+    [first_name, last_name].join(' ')
+  end
 end
