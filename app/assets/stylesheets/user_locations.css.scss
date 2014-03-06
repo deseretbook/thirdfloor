@@ -14,10 +14,7 @@ body { background-color: black; }
 
     th { font-size: 50%; }
 
-    td {
-      border-bottom: 1px solid grey;
-    }
-    tr.even { background-color: charcoal; }
+    tr.even { background-color: rgb(15,15,20); }
 
     th.user {
       text-align: right;
@@ -40,7 +37,10 @@ body { background-color: black; }
 
     td.in-office-today {
       text-align: center;
-      i { margin-right: 5px; }
+      i {
+        margin-right: 5px;
+        font-size: 200%;
+      }
       &.true {
         i { color: green; }
       }
