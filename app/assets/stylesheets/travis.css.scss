@@ -1,0 +1,59 @@
+// Place all the styles related to the travis controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+.travis {
+  color: white;
+
+  // font-size: 20px;
+  font-family: Arial;
+  table {
+    width: 100%;
+
+    th { font-size: 80%; }
+
+    td {
+      padding-top: 5px;
+      padding-bottom: 5px;
+    }
+
+    tr.even { background-color: rgb(15,15,20); }
+
+    td.repo { font-size: 120%; }
+    .repo {
+      text-align: right;
+      padding-right: 1%;
+      span {
+        padding: 10px;
+        img {
+          border-radius: 15px;
+          vertical-align: middle;
+          width: 30px;
+          height: 30px;
+        }   
+      }
+    }
+
+    td.last-build {
+      font-size: 80%;
+    }
+    .last-build {
+      padding-left: 1%;
+      text-align: left;
+    }
+
+    td.state {
+      text-align: center;
+      i {
+        margin-right: 5px;
+        font-size: 30px;
+      }
+      &.true {
+        i { color: green; }
+      }
+      &.false {
+        i { color: red; }
+      }
+    }
+  }
+}

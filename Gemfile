@@ -45,4 +45,4 @@ gem 'font-awesome-sass'
 
 gem 'rails_12factor', group: :production
 
-gem 'travis'
+gem 'httparty'

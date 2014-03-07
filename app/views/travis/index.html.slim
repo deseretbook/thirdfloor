@@ -1,0 +1,20 @@
+.travis
+  table
+    thead
+      tr
+        th.repo Repo
+        th.state Passing?
+        th.last-build Last Build
+    tbody
+      - Travis.repos.sort.each do |repo_name|
+        - repo = Rails.cache.fetch("travis_#{repo_name}", expires_in: 10.minutes) { Travis.status(repo_name) }
+        tr class="#{cycle('odd', 'even')}"
+          td.repo
+            = repo_name.split('/').last
+          td.state class=repo.passing?
+            - if repo.passing?
+              i.fa.fa-thumbs-up
+            - else
+              i.fa.fa-minus-down
+          td.last-build
+            | #{time_ago_in_words(repo.finished)} ago (#{repo.duration(:english)})

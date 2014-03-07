@@ -20,6 +20,8 @@ Rails.application.routes.draw do
 
   resources :stations, only: [ :index ]
 
+  resources :travis, only: [ :index ]
+
   # Example resource route with options:
   #   resources :products do
   #     member do

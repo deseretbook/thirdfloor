@@ -1,12 +1,12 @@
 javascript:
   $(function() {
 
-    var reload_timer = 60000;
+    var reload_timer = 60000*5;
     
     var reload_countdown_width = 100;
 
     var counter_timeout = reload_timer / reload_countdown_width;
-    
+    console.log(counter_timeout);
     setInterval(function() {
       reload_countdown_width = reload_countdown_width -1;
       $('.reload-countdown').css('width', reload_countdown_width + "%")
@@ -17,7 +17,11 @@ javascript:
       $.get('/user_locations').done(function(data){
         $('.user-locations-container').html(data);
       });
-    })()
+    })();
+
+    (function() {
+      $.get('/travis').done(function(data){$('.travis-container').html(data); });
+    })();
   
     setInterval(function() { window.location.reload() }, reload_timer);
   });
@@ -25,5 +29,5 @@ javascript:
 .home
   .user-locations-container.inline-container.border-right
     | Loading...
-  .inline-container
+  .travis-container.inline-container
     | Loading...
