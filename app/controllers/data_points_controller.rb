@@ -4,7 +4,7 @@ class DataPointsController < ApplicationController
   skip_before_filter :verify_authenticity_token, only: :create
 
   def index # GET collection
-    data_points = DataPoint.where(name_condition).all
+    data_points = DataPoint.where(name_condition).limit(limit_condition).all
 
     respond_with(data_points: data_points, name: name_param) do |format|
       format.html { render locals: { data_points: data_points, name: name_param } }
@@ -33,6 +33,19 @@ class DataPointsController < ApplicationController
   end
 
 private
+
+  def limit_param
+    params.permit(:limit)
+    params[:limit].to_i
+  end
+
+  def limit_condition
+    if (l = limit_param) > 0
+      l
+    else
+      nil
+    end
+  end
 
   def name_param
     params.permit(:name)

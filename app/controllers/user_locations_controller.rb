@@ -5,7 +5,7 @@ class UserLocationsController < ApplicationController
 
   def index # GET collection
     user_locations = User.where(track_location: true).order('first_name, last_name').map do |user|
-      user.user_locations.last
+      user.user_locations.first
     end.compact
 
     respond_with(user_locations: user_locations) do |format|

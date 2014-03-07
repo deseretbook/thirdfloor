@@ -2,7 +2,7 @@ class UserLocation < ActiveRecord::Base
   belongs_to :user
   belongs_to :station
 
-  default_scope -> { order('id') }
+  default_scope -> { order('id DESC') }
 
   after_save :delete_old_records
 
