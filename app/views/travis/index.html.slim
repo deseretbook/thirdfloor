@@ -15,7 +15,7 @@
             - if repo.passing?
               i.fa.fa-thumbs-up
             - else
-              i.fa.fa-minus-down
+              i.fa.fa-thumbs-down
           td.last-build
             - if repo.finished.present?
               | #{time_ago_in_words(repo.finished)} ago
