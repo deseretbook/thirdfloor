@@ -24,6 +24,9 @@ Rails.application.routes.draw do
 
   resources :data_points, only: [ :index, :show, :create ]
 
+  get '/charts/orders' => 'home#orders'
+  get '/charts/sales' => 'home#sales'
+
   # Example resource route with options:
   #   resources :products do
   #     member do

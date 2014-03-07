@@ -1,0 +1,46 @@
+javascript:
+  google.load('visualization', '1.0', {'packages':['corechart']});
+  google.setOnLoadCallback(drawOrdersChart);
+
+  function drawOrdersChart() {
+    
+    $.get(
+      'http://thirdfloor.herokuapp.com/data_points.json?name=daily_sales&limit=100'
+    ).done(function(returned_data) {
+      
+      var data = new google.visualization.DataTable();
+      data.addColumn('datetime', 'Time');
+      data.addColumn('number', 'Sales');
+      // data.addColumn('number', 'Shipping');
+      // data.addColumn('number', 'Shipping Disc.');
+      // data.addColumn('number', 'Surcharge');
+      // data.addColumn('number', 'Tax');
+
+      var chart_data = [];
+      for (var i in returned_data.data_points) {
+        var dp = returned_data.data_points[i];
+        var dpd = dp.data;
+        chart_data.unshift([
+          new Date(Date.parse(dp.created_at)),
+          parseFloat(dpd.sales),
+          // parseFloat(dpd.shipping),
+          // parseFloat(dpd.shipping_disc),
+          // parseFloat(dpd.surcharge),
+          // parseFloat(dpd.tax),
+        ]);
+      }
+      data.addRows(chart_data);
+      // Instantiate and draw our chart, passing in some options.
+      var chart = new google.visualization.LineChart(document.getElementById('sales_chart_div'));
+      chart.draw(data, {
+        'title':'Sales',
+        'width':'100%',
+        'height':200,
+        'vAxis':{ 'title': 'Dollars'},
+        'titleTextStyle': { 'color' : '#FFFFFF'},
+        'backgroundColor': 'rgb(30,30,30)'
+      });
+    });
+  }
+
+#sales_chart_div
