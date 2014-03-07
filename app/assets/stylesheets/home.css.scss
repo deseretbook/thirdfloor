@@ -11,14 +11,14 @@
 }
 
 .home {
+  padding-top:2px;
   height: 100vh;
-  .border-right {
-    border-right: 1px solid red;
-  }
   .inline-container {
     // height: 100vh;
     display:inline-block;
     width: 49%;
+    margin-left: 0.5%;
     vertical-align: top;
+    border: 1px solid rgb(30,30,30);
   }
 }
