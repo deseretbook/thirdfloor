@@ -20,6 +20,4 @@
             - if repo.finished.present?
               | #{time_ago_in_words(repo.finished)} ago
               - if repo.duration.present?
-                | (
-                = repo.duration(:english)
-                | )
+                |  (#{repo.duration(:english)})
