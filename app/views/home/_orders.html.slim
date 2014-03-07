@@ -25,15 +25,26 @@ javascript:
       // Instantiate and draw our chart, passing in some options.
       var chart = new google.visualization.LineChart(document.getElementById('order_chart_div'));
       chart.draw(data, {
-        'title':'Orders',
+        'title':'Orders Today',
         'width':'100%',
         'height':150,
-        'vAxis':{ 'title': 'Number of orders'},
+        'colors': ['green'],
+        'lineWidth': 5,
         'titleTextStyle': { 'color' : '#FFFFFF'},
-        'backgroundColor': 'rgb(30,30,30)',
-        legend: {position: 'none'},
-        vAxis: { gridlines: { color: 'transparent'} },
-        hAxis: { gridlines: { color: 'transparent'} }
+        'backgroundColor':'rgb(15,15,20)',
+        'legend': { position: 'none' },
+        'vAxis': {
+          'title': 'Orders',
+          'baselineColor': 'white',
+          'textStyle': { color: 'white' },
+          'titleTextStyle': { color: 'white' },
+          'gridlines': { color: 'transparent'}
+        },
+        'hAxis': {
+          'baselineColor': 'white',
+          'textStyle': { color: 'white' },
+          'gridlines': { color: 'transparent'}
+        }
       });
     });
   }

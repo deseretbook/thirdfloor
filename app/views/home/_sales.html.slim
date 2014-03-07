@@ -33,15 +33,26 @@ javascript:
       // Instantiate and draw our chart, passing in some options.
       var chart = new google.visualization.LineChart(document.getElementById('sales_chart_div'));
       chart.draw(data, {
-        'title':'Sales',
+        'title':'Sales Today',
         'width':'100%',
         'height':150,
-        'vAxis':{ 'title': 'Dollars'},
+        'colors': ['green'],
+        'lineWidth': 5,
         'titleTextStyle': { 'color' : '#FFFFFF'},
-        'backgroundColor': 'rgb(30,30,30)',
-        legend: {position: 'none'},
-        vAxis: { gridlines: { color: 'transparent'} },
-        hAxis: { gridlines: { color: 'transparent'} }
+        'backgroundColor':'rgb(15,15,20)',
+        'legend': { position: 'none' },
+        'vAxis': {
+          'title': 'Dollars',
+          'baselineColor': 'white',
+          'textStyle': { color: 'white' },
+          'titleTextStyle': { color: 'white' },
+          'gridlines': { color: 'transparent'}
+        },
+        'hAxis': {
+          'baselineColor': 'white',
+          'textStyle': { color: 'white' },
+          'gridlines': { color: 'transparent'}
+        }
       });
     });
   }
