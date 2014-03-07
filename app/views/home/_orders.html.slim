@@ -5,7 +5,7 @@ javascript:
   function drawOrdersChart() {
     
     $.get(
-      'http://thirdfloor.herokuapp.com/data_points.json?name=daily_sales&limit=100'
+      'http://thirdfloor.herokuapp.com/data_points.json?name=daily_sales&limit=250'
     ).done(function(returned_data) {
       
       var data = new google.visualization.DataTable();
@@ -31,7 +31,9 @@ javascript:
         'vAxis':{ 'title': 'Number of orders'},
         'titleTextStyle': { 'color' : '#FFFFFF'},
         'backgroundColor': 'rgb(30,30,30)',
-        legend: {position: 'none'}
+        legend: {position: 'none'},
+        vAxis: { gridlines: { color: 'transparent'} },
+        hAxis: { gridlines: { color: 'transparent'} }
       });
     });
   }
