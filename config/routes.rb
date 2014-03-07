@@ -22,6 +22,8 @@ Rails.application.routes.draw do
 
   resources :travis, only: [ :index ]
 
+  resources :data_points, only: [ :index, :show, :create ]
+
   # Example resource route with options:
   #   resources :products do
   #     member do

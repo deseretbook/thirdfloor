@@ -11,7 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140306160754) do
+ActiveRecord::Schema.define(version: 20140307031854) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+  enable_extension "hstore"
+
+  create_table "data_points", force: true do |t|
+    t.integer  "station_id", null: false
+    t.string   "name",       null: false
+    t.hstore   "data"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "stations", force: true do |t|
     t.string   "hostname",                        null: false
@@ -24,7 +36,7 @@ ActiveRecord::Schema.define(version: 20140306160754) do
     t.datetime "updated_at"
   end
 
-  add_index "stations", ["hostname"], name: "index_stations_on_hostname", unique: true
+  add_index "stations", ["hostname"], name: "index_stations_on_hostname", unique: true, using: :btree
 
   create_table "user_locations", force: true do |t|
     t.integer  "user_id",    null: false
@@ -33,8 +45,8 @@ ActiveRecord::Schema.define(version: 20140306160754) do
     t.datetime "updated_at"
   end
 
-  add_index "user_locations", ["station_id"], name: "index_user_locations_on_station_id"
-  add_index "user_locations", ["user_id"], name: "index_user_locations_on_user_id"
+  add_index "user_locations", ["station_id"], name: "index_user_locations_on_station_id", using: :btree
+  add_index "user_locations", ["user_id"], name: "index_user_locations_on_user_id", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "first_name",                        null: false
@@ -46,7 +58,7 @@ ActiveRecord::Schema.define(version: 20140306160754) do
     t.datetime "updated_at"
   end
 
-  add_index "users", ["bluetooth_address"], name: "index_users_on_bluetooth_address", unique: true
-  add_index "users", ["first_name", "last_name"], name: "index_users_on_first_name_and_last_name", unique: true
+  add_index "users", ["bluetooth_address"], name: "index_users_on_bluetooth_address", unique: true, using: :btree
+  add_index "users", ["first_name", "last_name"], name: "index_users_on_first_name_and_last_name", unique: true, using: :btree
 
 end

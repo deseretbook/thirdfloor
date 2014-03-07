@@ -1,0 +1,15 @@
+.data-points
+  table
+    thead
+      tr
+        th.station Posted by
+        th.created-at Posted
+        th.name Name
+        th.data-size Data Size
+    tbody
+      - DataPoint.all.each do |data_point|
+        tr class="#{cycle('odd', 'even')}"
+          td.station = data_point.station.location
+          td.created-at = data_point.created_at.strftime("%D %T %Z")
+          td.name = link_to data_point.name, data_point_path(data_point)
+          td.data-size = data_point.data.to_s.size
