@@ -29,8 +29,9 @@ javascript:
 .home
   .user-locations-container.inline-container
     | Loading...
-  .travis-container.inline-container
-    | Loading...
-  .charts-container
-    .inline-container = render partial: 'orders'
-    .inline-container = render partial: 'sales'
+  .inline-container
+    .travis-container
+      | Loading...
+    .charts-container
+      .orders = render partial: 'orders'
+      .sales = render partial: 'sales'
