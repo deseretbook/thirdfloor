@@ -58,7 +58,7 @@ class Travis::Repo
     when :english
       "#{(@repo["last_build_duration"].to_f/60.0).round(1)} minutes"
     else
-      @repo["last_build_duration"].to_i
+      @repo["last_build_duration"]
     end
   end
 
