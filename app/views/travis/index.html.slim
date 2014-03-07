@@ -17,4 +17,5 @@
             - else
               i.fa.fa-minus-down
           td.last-build
-            | #{time_ago_in_words(repo.finished)} ago (#{repo.duration(:english)})
+            - if repo.finished.present?
+              | #{time_ago_in_words(repo.finished)} ago (#{repo.duration(:english)})
