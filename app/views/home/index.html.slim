@@ -20,7 +20,7 @@ javascript:
     })();
 
     (function() {
-      //$.get('/travis').done(function(data){$('.travis-container').html(data); });
+      $.get('/travis').done(function(data){$('.travis-container').html(data); });
     })();
   
     setInterval(function() { window.location.reload() }, reload_timer);
