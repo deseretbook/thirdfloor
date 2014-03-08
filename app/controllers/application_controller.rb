@@ -12,9 +12,9 @@ class ApplicationController < ActionController::Base
         hostname: params[:station][:hostname],
         password: params[:station][:password]
       ).first!
-      if params[:station][:ip]
-        station.communicated!(params[:station][:ip])
-      end
+      
+      station.communicated!(params[:station][:ip])
+      
       station
     end
   end
