@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140307031854) do
+ActiveRecord::Schema.define(version: 20140308053728) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -34,9 +34,11 @@ ActiveRecord::Schema.define(version: 20140307031854) do
     t.string   "last_ip_address"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "local",           default: false
   end
 
   add_index "stations", ["hostname"], name: "index_stations_on_hostname", unique: true, using: :btree
+  add_index "stations", ["local"], name: "index_stations_on_local", using: :btree
 
   create_table "user_locations", force: true do |t|
     t.integer  "user_id",    null: false

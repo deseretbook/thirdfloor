@@ -4,10 +4,21 @@ class Station < ActiveRecord::Base
 
   has_many :user_locations
 
+  before_destroy :do_not_delete_local_station
+
   def communicated!(remote_ip=nil)
     update_attributes(
       last_seen_at: Time.now,
       last_ip_address: remote_ip
     )
+  end
+
+private
+
+  def do_not_delete_local_station
+    if local?
+      errors[:base] << "cannot delete the local station"
+      return false
+    end
   end
 end

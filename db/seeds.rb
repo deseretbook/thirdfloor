@@ -13,6 +13,15 @@ station = Station.create!(
   enabled: true
 )
 
+# local station representing the site itself. There can be only one.
+Station.create!(
+  hostname: "localhost",
+  password: "SECRET!",
+  location: "Inside the app",
+  local: true,
+  enabled: true
+)
+
 [
   [ "Matthew", "Nielsen", "F8:27:93:31:A8:A9", "https://trello-avatars.s3.amazonaws.com/bc632f608d5d884f7c32d65aefad549b/30.png" ],
   [ "Matt", "Redd", "B8:E8:56:F0:AB:16", "https://trello-avatars.s3.amazonaws.com/9b3598d5177ac5515df7815605d49186/30.png" ],
