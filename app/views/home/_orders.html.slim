@@ -29,6 +29,10 @@ javascript:
           continue;
         }
 
+        if (current_value < previous_value) {
+          continue;
+        }
+
         var new_value = current_value - previous_value;
         previous_value = current_value;
 
