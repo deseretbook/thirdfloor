@@ -1,7 +1,7 @@
 class DataPointsController < ApplicationController
   respond_to :html, :js, :json, :text
 
-  skip_before_filter :verify_authenticity_token, only: :create
+  skip_before_filter :verify_authenticity_token, only: [ :create, :named_route_create ]
 
   def index # GET collection
     data_points = Rails.cache.fetch("dp_#{name_condition}_#{limit_condition}", expires_in: 2.minutes) do
@@ -24,6 +24,15 @@ class DataPointsController < ApplicationController
       name: params[:name],
       station_id: current_station.id,
       data: data
+    ))
+  end
+
+  # allows data points to be creates from anything that posts data
+  def named_route_create
+    respond_with(DataPoint.create!(
+      name: params[:name],
+      station_id: Station.local_station.id,
+      data: params
     ))
   end
 

@@ -23,6 +23,7 @@ Rails.application.routes.draw do
   resources :travis, only: [ :index ]
 
   resources :data_points, only: [ :index, :show, :create ]
+  post 'data_points/:name' => 'data_points#named_route_create'
 
   # Example resource route with options:
   #   resources :products do

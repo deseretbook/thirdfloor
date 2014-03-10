@@ -6,6 +6,10 @@ class Station < ActiveRecord::Base
 
   before_destroy :do_not_delete_local_station
 
+  def self.local_station
+    self.where(local: true).first!
+  end
+
   def communicated!(remote_ip=nil)
     update_attributes(
       last_seen_at: Time.now,
