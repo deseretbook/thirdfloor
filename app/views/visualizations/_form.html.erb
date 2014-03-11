@@ -25,7 +25,7 @@
   </div>
   <div class="field">
     <%= f.label :markup_type %><br>
-    <%= f.text_field :markup_type %>
+    <%= f.select :markup_type, [ 'html', 'slim', 'erb' ] %>
   </div>
   <div class="field">
     <%= f.label :markup %><br>
