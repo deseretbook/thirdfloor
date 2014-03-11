@@ -2,7 +2,7 @@ class HomeController < ApplicationController
   def visualize
     if vis = Visualization.find_by_slug(params[:slug])
       render(
-        layout: true,
+        layout: choose_correct_template,
         inline: vis.markup,
         type: vis.markup_type,
         locals: { visualization: vis }

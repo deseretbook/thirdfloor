@@ -9,7 +9,12 @@ class UserLocationsController < ApplicationController
     end.compact
 
     respond_with(user_locations: user_locations) do |format|
-      format.html { render locals: { user_locations: user_locations }, layout: request.xhr? ? false : 'application' }
+      format.html do
+        render(
+          locals: { user_locations: user_locations },
+          layout: choose_correct_template
+        )
+      end
     end
   end
 

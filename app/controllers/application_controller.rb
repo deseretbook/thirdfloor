@@ -21,6 +21,10 @@ class ApplicationController < ActionController::Base
 
 protected
 
+  def choose_correct_template
+    request.xhr? ? false : 'application'
+  end
+
   def respond_with_success(options = {})
     respond_with( { status: :ok }.merge(options), status: :ok, location: nil)
   end

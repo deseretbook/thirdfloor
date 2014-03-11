@@ -9,7 +9,12 @@ class TravisController < ApplicationController
     end
 
     respond_with(travis_repos: travis_repos) do |format|
-      format.html { render locals: { travis_repos: travis_repos }, layout: request.xhr? ? false : 'application' }
+      format.html do
+        render(
+          locals: { travis_repos: travis_repos },
+          layout: choose_correct_template
+        )
+      end
     end
   end
 end
