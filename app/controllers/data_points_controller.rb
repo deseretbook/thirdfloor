@@ -4,7 +4,7 @@ class DataPointsController < ApplicationController
   skip_before_filter :verify_authenticity_token, only: [ :create, :named_route_create ]
 
   def index # GET collection
-    data_points = Rails.cache.fetch("dp_#{name_condition}_#{limit_condition}", expires_in: 2.minutes) do
+    data_points = Rails.cache.fetch("dp_#{name_param}_#{limit_param}", expires_in: 2.minutes) do
       DataPoint.where(name_condition).limit(limit_condition).all.to_a
     end
 
