@@ -78,7 +78,7 @@ protected
 private
 
   def limit_condition
-    if (l = limit_param.to_i[) > 0
+    if (l = limit_param.to_i) > 0
       l
     else
       nil
