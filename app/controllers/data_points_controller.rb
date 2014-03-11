@@ -6,14 +6,12 @@ class DataPointsController < ApplicationController
   skip_before_filter :verify_authenticity_token, only: [ :create, :named_route_create ]
 
   def index # GET collection
-    respond_with do |format|
+    respond_with(data_points: cached_data_points) do |format|
       format.html do
         render locals: {
           data_points: DataPoint.where(name_condition).paginate(:page => params[:page])
         }
       end
-
-      format.json { render json: cached_data_points }
     end
   end
 

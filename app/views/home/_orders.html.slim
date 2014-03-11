@@ -5,9 +5,9 @@ javascript:
   function drawOrdersChart() {
     
     $.get(
-      'http://thirdfloor.herokuapp.com/data_points.json?name=daily_sales&limit=300'
+      '/data_points.json?name=daily_sales&limit=250'
     ).done(function(returned_data) {
-      
+
       var data = new google.visualization.DataTable();
       data.addColumn('datetime', 'Time');
       data.addColumn('number', 'Orders');
