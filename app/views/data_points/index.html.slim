@@ -6,6 +6,7 @@
     - if limit_param>0
       span.limit-param
         | Limit: #{limit_param}
+  .navigation = will_paginate data_points
   table
     thead
       tr
@@ -20,3 +21,5 @@
           td.created-at = data_point.created_at.strftime("%D %T %Z")
           td.name = link_to data_point.name, data_point_path(data_point)
           td.data-size = data_point.data.to_s.size
+          
+  .navigation = will_paginate data_points

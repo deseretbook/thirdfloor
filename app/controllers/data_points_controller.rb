@@ -1,19 +1,17 @@
 class DataPointsController < ApplicationController
-  respond_to :html, :js, :json, :text
+  respond_to :html, :json
 
   skip_before_filter :verify_authenticity_token, only: [ :create, :named_route_create ]
 
   def index # GET collection
-    data_points = Rails.cache.fetch("dp_#{name_param}_#{limit_param}", expires_in: 2.minutes) do
-      DataPoint.where(name_condition).limit(limit_condition).all.to_a
-    end
-
-    respond_with(data_points: data_points, name: name_param) do |format|
+    respond_with do |format|
       format.html do
         render locals: {
-          data_points: data_points
+          data_points: DataPoint.where(name_condition).paginate(:page => params[:page])
         }
       end
+
+      format.json { render json: cached_data_points }
     end
   end
 
@@ -49,7 +47,8 @@ class DataPointsController < ApplicationController
 
   def limit_param
     params.permit(:limit)
-    params[:limit].to_i
+    if (limit_str = params[:limit]).present?
+      || .to_i
   end
   helper_method :limit_param
 
@@ -58,6 +57,14 @@ class DataPointsController < ApplicationController
     params[:name]
   end
   helper_method :name_param
+
+protected
+
+  def cached_data_points
+    Rails.cache.fetch("data_points_#{name_param}_#{limit_param}", expires_in: 2.minutes) do
+      DataPoint.where(name_condition).limit(limit_condition).to_a
+    end
+  end
 
 private
 
