@@ -3,9 +3,12 @@
     - if name_param.present?
       span.name-param
         | Name: #{name_param}
-    - if limit_param>0
+    - if limit_param.present?
       span.limit-param
         | Limit: #{limit_param}
+    - if days_param.present?
+      span.days-param
+        | Days: #{days_param}
   .navigation = will_paginate data_points
   table
     thead
