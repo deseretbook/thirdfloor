@@ -50,3 +50,25 @@ Station.create!(
   )
   ul.update_column(:created_at, 1.day.ago)
 end
+
+vis_markup = <<MARKUP
+<script>
+  $(document).ready(function(){
+    $.get('/data_points.json?name=daily_sales&limit=1').done(function(returned_data) {
+      $('#sales_today').html(returned_data.data_points[0].data.sales);
+      $('#orders_today').html(returned_data.data_points[0].data.orders);
+    });
+  });
+</script>
+<div>
+  <div class='sales'>Sales today: <span id='sales_today'>Loading...</span></div>
+  <div class='orders'>Orders today: <span id='orders_today'>Loading...</span></div>
+</div>
+MARKUP
+
+Visualization.create!(
+  name: 'Totals Today',
+  markup_type: 'html',
+  markup: vis_markup
+)
+ 
