@@ -9,7 +9,11 @@ class DataPointsController < ApplicationController
     end
 
     respond_with(data_points: data_points, name: name_param) do |format|
-      format.html { render locals: { data_points: data_points, name: name_param } }
+      format.html do
+        render locals: {
+          data_points: data_points
+        }
+      end
     end
   end
 
