@@ -1,6 +1,8 @@
 class DataPointsController < ApplicationController
   respond_to :html, :json
 
+  DEFAULT_LIMIT = 10
+
   skip_before_filter :verify_authenticity_token, only: [ :create, :named_route_create ]
 
   def index # GET collection
@@ -48,7 +50,10 @@ class DataPointsController < ApplicationController
   def limit_param
     params.permit(:limit)
     if (limit_str = params[:limit]).present?
-      || .to_i
+      limit_str.to_i
+    else
+      DEFAULT_LIMIT
+    end
   end
   helper_method :limit_param
 
