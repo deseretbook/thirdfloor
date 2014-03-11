@@ -5,7 +5,7 @@ javascript:
   function drawOrdersChart() {
     
     $.get(
-      '/data_points.json?name=daily_sales&limit=300'
+      '/data_points.json?name=daily_sales&days=1'
     ).done(function(returned_data) {
       
       var data = new google.visualization.DataTable();
@@ -17,7 +17,7 @@ javascript:
       var previous_value = undefined;
 
       var smoothed_data = [];
-      var smoothed_data_threshold = 15;
+      var smoothed_data_threshold = 60;
 
       for (var i in returned_data.data_points.reverse()) {
         var dp = returned_data.data_points[i];

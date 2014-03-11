@@ -1,15 +1,13 @@
 class DataPointsController < ApplicationController
   respond_to :html, :json
 
-  DEFAULT_LIMIT = 10
-
   skip_before_filter :verify_authenticity_token, only: [ :create, :named_route_create ]
 
   def index # GET collection
     respond_with(data_points: cached_data_points) do |format|
       format.html do
         render locals: {
-          data_points: DataPoint.where(name_condition).paginate(:page => params[:page])
+          data_points: data_points.paginate(:page => params[:page])
         }
       end
     end
@@ -50,29 +48,37 @@ class DataPointsController < ApplicationController
     if (limit_str = params[:limit]).present?
       limit_str.to_i
     else
-      DEFAULT_LIMIT
+      nil
     end
   end
   helper_method :limit_param
 
   def name_param
-    params.permit(:name)
     params[:name]
   end
   helper_method :name_param
 
+  def days_param
+    params[:days]
+  end
+  helper_method :days_param
+
 protected
 
+  def data_points
+    DataPoint.where(name_condition).where(days_condition)
+  end
+
   def cached_data_points
-    Rails.cache.fetch("data_points_#{name_param}_#{limit_param}", expires_in: 2.minutes) do
-      DataPoint.where(name_condition).limit(limit_condition).to_a
-    end
+    # Rails.cache.fetch("data_points_#{name_param}_#{days_param}_#{limit_param}", expires_in: 2.minutes) do
+      data_points.limit(limit_condition).to_a
+    # end
   end
 
 private
 
   def limit_condition
-    if (l = limit_param) > 0
+    if (l = limit_param.to_i[) > 0
       l
     else
       nil
@@ -87,4 +93,12 @@ private
     end
   end
 
+  def days_condition
+    [].tap do |a|
+      if days_param.present?
+        a << "created_at >= now() - interval '? days'"
+        a << days_param.to_i
+      end
+    end
+  end
 end
