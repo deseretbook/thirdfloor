@@ -25,7 +25,7 @@ Rails.application.routes.draw do
   resources :data_points, only: [ :index, :show, :create ]
   post 'data_points/:name' => 'data_points#named_route_create'
 
-  get '/visualize/:name' => 'home#visualize'
+  get '/visualize/:slug' => 'home#visualize'
 
   # Example resource route with options:
   #   resources :products do

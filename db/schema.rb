@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140308053728) do
+ActiveRecord::Schema.define(version: 20140311215040) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,6 +24,8 @@ ActiveRecord::Schema.define(version: 20140308053728) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "data_points", ["name"], name: "index_data_points_on_name", using: :btree
 
   create_table "stations", force: true do |t|
     t.string   "hostname",                        null: false
@@ -62,5 +64,15 @@ ActiveRecord::Schema.define(version: 20140308053728) do
 
   add_index "users", ["bluetooth_address"], name: "index_users_on_bluetooth_address", unique: true, using: :btree
   add_index "users", ["first_name", "last_name"], name: "index_users_on_first_name_and_last_name", unique: true, using: :btree
+
+  create_table "visualizations", force: true do |t|
+    t.string   "name",                         null: false
+    t.string   "slug",                         null: false
+    t.string   "markup_type", default: "html", null: false
+    t.text     "markup"
+    t.boolean  "enabled",     default: true
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
 end
