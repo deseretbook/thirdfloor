@@ -43,12 +43,19 @@ class DataPointsController < ApplicationController
     end
   end
 
-private
-
   def limit_param
     params.permit(:limit)
     params[:limit].to_i
   end
+  helper_method :limit_param
+
+  def name_param
+    params.permit(:name)
+    params[:name]
+  end
+  helper_method :name_param
+
+private
 
   def limit_condition
     if (l = limit_param) > 0
@@ -56,11 +63,6 @@ private
     else
       nil
     end
-  end
-
-  def name_param
-    params.permit(:name)
-    params[:name]
   end
 
   def name_condition

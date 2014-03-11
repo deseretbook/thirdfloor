@@ -1,4 +1,11 @@
 .data-points
+  .filters
+    - if name_param.present?
+      span.name-param
+        | Name: #{name_param}
+    - if limit_param>0
+      span.limit-param
+        | Limit: #{limit_param}
   table
     thead
       tr
@@ -7,7 +14,7 @@
         th.name Name
         th.data-size Data Size
     tbody
-      - DataPoint.all.each do |data_point|
+      - data_points.each do |data_point|
         tr class="#{cycle('odd', 'even')}"
           td.station = data_point.station.hostname
           td.created-at = data_point.created_at.strftime("%D %T %Z")
