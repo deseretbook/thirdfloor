@@ -5,7 +5,7 @@ javascript:
   function drawOrdersChart() {
     
     $.get(
-      '/data_points.json?name=daily_sales&limit=250'
+      '/data_points.json?name=daily_sales&limit=300'
     ).done(function(returned_data) {
 
       var data = new google.visualization.DataTable();
