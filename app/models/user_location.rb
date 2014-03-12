@@ -6,9 +6,9 @@ class UserLocation < ActiveRecord::Base
 
   after_save :delete_old_records
 
-  # true if created_at is after 8am
+  # true if created_at is after 7am
   def in_office_today?
-    @in_office_today ||= created_at > Time.parse('8am')
+    @in_office_today ||= created_at > Time.parse('7am')
   end
 
 private

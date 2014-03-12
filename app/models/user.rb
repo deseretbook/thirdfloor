@@ -9,4 +9,9 @@ class User < ActiveRecord::Base
   def name
     [first_name, last_name].join(' ')
   end
+
+  def self.find_by_name(full_name_str)
+    f,l = full_name_str.split(' ')
+    self.where(first_name: f, last_name: l).first
+  end
 end

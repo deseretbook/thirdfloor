@@ -9,7 +9,7 @@
   table {
     width: 100%;
 
-    th { font-size: 80%; }
+    th { font-size: 50%; }
 
     td {
       padding-top: 5px;
@@ -24,12 +24,6 @@
       padding-right: 1%;
       span {
         padding: 10px;
-        img {
-          border-radius: 15px;
-          vertical-align: middle;
-          width: 30px;
-          height: 30px;
-        }   
       }
     }
 
@@ -39,6 +33,10 @@
     .last-build {
       padding-left: 1%;
       text-align: left;
+    }
+
+    td.branch {
+      text-align: center;
     }
 
     td.state {

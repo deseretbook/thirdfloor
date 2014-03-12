@@ -3,14 +3,15 @@
     thead
       tr
         th.repo Repo
+        th.branch Branch
         th.state Passing?
         th.last-build Last Build
     tbody
-      - Travis.repos.sort.each do |repo_name|
-        - repo = Rails.cache.fetch("travis_#{repo_name}", expires_in: 10.minutes) { Travis.status(repo_name) }
+      - Travis.repos.each do |repo_name|
+        - repo = Rails.cache.fetch("travis_#{repo_name}", expires_in: 5.minutes) { Travis.status(repo_name) }
         tr class="#{cycle('odd', 'even')}"
-          td.repo
-            = repo_name.split('/').last
+          td.repo = repo.repository
+          td.branch = repo.branch_name
           td.state class=repo.passing?
             - if repo.passing?
               i.fa.fa-thumbs-up
@@ -18,6 +19,5 @@
               i.fa.fa-thumbs-down
           td.last-build
             - if repo.finished.present?
-              | #{time_ago_in_words(repo.finished)} ago
-              - if repo.duration.present?
-                |  (#{repo.duration(:english)})
+              | #{time_ago_in_words(repo.finished)} ago  
+            | by #{repo.by.split(' ').first}

@@ -1,19 +1,22 @@
 class Travis
   include Singleton
 
-  # https://api.travis-ci.com/repositories/owner/repo/cc.xml?access_token=token
+  # https://api.travis-ci.com/repositories/:owner/:repo/branches/:branch?access_token=token
   BASE_URL = "https://api.travis-ci.com/repositories/"
 
   def self.repos
-    @repos ||= Rails.application.secrets.travis_repos.split(' ')
+    @repos ||= Rails.application.secrets.travis_repos.split(' ').compact
   end
 
-  def self.status(repo)
-    url = "#{BASE_URL}#{repo}/cc?access_token=#{Rails.application.secrets.travis_token}"
+  # repo arg expected to be string ":owner/:repo/:branch". See TRAVIS_REPOS
+  # variable in .env.example for examples.
+  def self.status(repo_string)
+    owner, repo, branch = repo_string.split('/')
+    url = "#{BASE_URL}#{owner}/#{repo}/branches/#{branch}?access_token=#{Rails.application.secrets.travis_token}"
     puts url
     response = HTTParty.get(url, headers: default_headers)
     report_http_error(response)
-    Travis::Repo.new(response.body)
+    Travis::Repo.new(response.body, owner: owner, repository: repo)
   end
 
 private
@@ -37,16 +40,23 @@ private
 end
 
 class Travis::Repo
-  def initialize(travis_json)
-    @repo = if travis_json.class == String
+  attr_reader :response, :branch, :commit, :owner, :repository
+
+  def initialize(travis_json, owner: nil, repository: nil, branch_name: nil)
+    @response = if travis_json.class == String
       JSON.parse(travis_json)
     else
       travis_json
     end
+    @branch = @response["branch"]
+    @commit = @response["commit"]
+    @owner = owner
+    @repository = repository
+    @branch_name = branch_name
   end
 
   def passing?
-    @repo["last_build_status"] == 0 && @repo["last_build_result"] == 0
+    @branch["state"] == "passed"
   end
 
   def broken?
@@ -56,13 +66,21 @@ class Travis::Repo
   def duration(fmt=:raw)
     case fmt
     when :english
-      "#{(@repo["last_build_duration"].to_f/60.0).round(1)} minutes"
+      "#{(@branch["duration"].to_f/60.0).round(1)} minutes"
     else
-      @repo["last_build_duration"]
+      @branch["duration"]
     end
   end
 
   def finished
-    Time.parse(@repo["last_build_finished_at"])
+    @finished ||= Time.parse(@branch["finished_at"])
+  end
+
+  def branch_name
+    @branch_name || @commit["branch"]
+  end
+
+  def by
+    @commit["committer_name"]
   end
 end

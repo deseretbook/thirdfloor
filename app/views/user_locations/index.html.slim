@@ -16,7 +16,7 @@
                 = image_tag(location.user.avatar_url)
           td.in-office-today class=location.in_office_today?
             - if location.in_office_today?
-              i.fa.fa-check-circle
+              i.fa.fa-check-circle title="Has been in office after 7am today"
             - else
               / i.fa.fa-minus-circle
               | &nbsp;
