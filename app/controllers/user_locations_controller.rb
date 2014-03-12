@@ -1,5 +1,5 @@
 class UserLocationsController < ApplicationController
-  respond_to :html, :js, :json, :text
+  respond_to :html, :json
 
   skip_before_filter :verify_authenticity_token, only: :create
 

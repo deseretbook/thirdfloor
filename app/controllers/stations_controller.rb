@@ -1,5 +1,5 @@
 class StationsController < ApplicationController
-  respond_to :html, :js, :json, :text
+  respond_to :html, :json
 
   def index # GET collection
     stations = Station.all

@@ -16,7 +16,12 @@ Rails.application.routes.draw do
 
   resources :user_locations, only: [ :index, :create, :show ]
 
-  resources :users, only: [ :index ]
+  resources :users, only: [ :index ] do
+    collection do
+      get 'log_in'
+      post 'authenticate'
+    end
+  end
 
   resources :stations, only: [ :index ]
 

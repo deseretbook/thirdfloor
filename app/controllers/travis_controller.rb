@@ -1,5 +1,5 @@
 class TravisController < ApplicationController
-  respond_to :html, :js, :json, :text
+  respond_to :html, :json
 
   def index # GET collection
     travis_repos = Rails.cache.fetch('travis_repos', expires_in: 10.minutes) do

@@ -1,6 +1,8 @@
 class VisualizationsController < ApplicationController
   before_action :set_visualization, only: [:show, :edit, :update, :destroy]
 
+  before_filter :login_required
+
   # GET /visualizations
   def index
     @visualizations = Visualization.all

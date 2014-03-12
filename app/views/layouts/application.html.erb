@@ -8,7 +8,9 @@
   <%= javascript_include_tag "https://www.google.com/jsapi" %>
 </head>
 <body>
-  
+<%- if (nn = flash[:notice]).present? %>
+  <div class="notice"><%= nn %></div>
+<% end -%>
 <%= yield %>
 
 </body>

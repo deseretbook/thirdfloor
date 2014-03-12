@@ -1,0 +1,15 @@
+p id="notice"
+  = notice
+
+p Sign in with your Deseret Book password
+p
+  form action=authenticate_users_path method="post"
+    input name="authenticity_token" type="hidden" value=form_authenticity_token
+    .email-address
+      | Email:
+      input type="text" name="email"
+    .password
+      | Password:
+      input type="password" name="password"
+    .submit-button
+      input type="submit" value="Log In"
