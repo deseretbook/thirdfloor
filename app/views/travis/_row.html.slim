@@ -1,0 +1,11 @@
+td.repo = repo.repository
+td.branch = repo.branch_name
+td.state class=repo.passing?
+  - if repo.passing?
+    i.fa.fa-thumbs-up
+  - else
+    i.fa.fa-thumbs-down
+td.last-build
+  - if repo.finished.present?
+    | #{time_ago_in_words(repo.finished)} ago  
+  | by #{repo.by.split(' ').first}

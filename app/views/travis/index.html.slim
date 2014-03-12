@@ -1,3 +1,15 @@
+javascript:
+  $(function() {
+    $.each($('.travis table tbody tr'), function(index, el) {
+      // stagger the load times so we don't crush the server.
+      setTimeout(function() {
+        $.get('/travis/' + $(el).data('repo-string')).done(function(returned_data) {
+          $(el).html(returned_data);
+        });
+      }, (index+1) * 500);
+    });
+  });
+
 .travis
   table
     thead
@@ -7,17 +19,12 @@
         th.state Passing?
         th.last-build Last Build
     tbody
-      - Travis.repos.each do |repo_name|
-        - repo = Rails.cache.fetch("travis_#{repo_name}", expires_in: 5.minutes) { Travis.status(repo_name) }
-        tr class="#{cycle('odd', 'even')}"
-          td.repo = repo.repository
-          td.branch = repo.branch_name
-          td.state class=repo.passing?
-            - if repo.passing?
-              i.fa.fa-thumbs-up
-            - else
-              i.fa.fa-thumbs-down
-          td.last-build
-            - if repo.finished.present?
-              | #{time_ago_in_words(repo.finished)} ago  
-            | by #{repo.by.split(' ').first}
+      - Travis.repos.each do |repo_string|
+        - owner, repo, branch = repo_string.split('/')
+        // The rows will be filled in via jquery ready callback.
+        tr class="#{cycle('odd', 'even')}" data-repo-string=repo_string
+          td.repo = repo
+          td.branch = branch
+          td.state
+            i.fa.fa-question
+          td.last-build Loading...

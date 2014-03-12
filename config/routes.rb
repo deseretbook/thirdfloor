@@ -26,6 +26,7 @@ Rails.application.routes.draw do
   resources :stations, only: [ :index ]
 
   resources :travis, only: [ :index ]
+  get '/travis/*repo_string' => 'travis#show'
 
   resources :data_points, only: [ :index, :show, :create ]
   post 'data_points/:name' => 'data_points#named_route_create'
