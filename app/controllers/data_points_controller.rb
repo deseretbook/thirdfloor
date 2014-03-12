@@ -70,9 +70,9 @@ protected
   end
 
   def cached_data_points
-    # Rails.cache.fetch("data_points_#{name_param}_#{days_param}_#{limit_param}", expires_in: 2.minutes) do
+    Rails.cache.fetch(data_points.limit(limit_condition).to_sql, expires_in: 5.minutes) do
       data_points.limit(limit_condition).to_a
-    # end
+    end
   end
 
 private
