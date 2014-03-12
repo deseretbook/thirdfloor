@@ -17,7 +17,7 @@ private
   def delete_old_records
     # only do this ~20% of the time
     if rand(10) >= 8
-      UserLocation.where(['created_at < ?', 1.week.ago]).delete_all
+      UserLocation.where(['created_at < ?', 3.days.ago]).delete_all
     end
   end
 
