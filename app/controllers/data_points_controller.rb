@@ -32,7 +32,7 @@ class DataPointsController < ApplicationController
     respond_with(DataPoint.create!(
       name: params[:name],
       station_id: Station.local_station.id,
-      data: params
+      data: params.merge(remote_ip: request.remote_ip)
     ))
   end
 
