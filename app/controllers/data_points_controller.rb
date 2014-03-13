@@ -43,30 +43,10 @@ class DataPointsController < ApplicationController
     end
   end
 
-  def limit_param
-    params.permit(:limit)
-    if (limit_str = params[:limit]).present?
-      limit_str.to_i
-    else
-      nil
-    end
-  end
-  helper_method :limit_param
-
-  def name_param
-    params[:name]
-  end
-  helper_method :name_param
-
-  def days_param
-    params[:days]
-  end
-  helper_method :days_param
-
 protected
 
   def data_points
-    DataPoint.where(name_condition).where(days_condition)
+    DataPoint.where(id_condition).where(name_condition).where(days_condition)
   end
 
   def cached_data_points
@@ -78,7 +58,7 @@ protected
 private
 
   def limit_condition
-    if (l = limit_param.to_i) > 0
+    if (l = params[:limit].to_i) > 0
       l
     else
       nil
@@ -87,7 +67,7 @@ private
 
   def name_condition
     {}.tap do |h|
-      if name = name_param
+      if (name = params[:name]).present?
         h[:name] = name
       end
     end
@@ -95,9 +75,17 @@ private
 
   def days_condition
     [].tap do |a|
-      if days_param.present?
+      if (days = params[:days]).present?
         a << "created_at >= now() - interval '? days'"
-        a << days_param.to_i
+        a << days.to_i
+      end
+    end
+  end
+
+  def id_condition
+    {}.tap do |h|
+      if params[:id]
+        h[:id] = params[:id]
       end
     end
   end
