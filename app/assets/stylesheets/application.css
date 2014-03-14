@@ -15,10 +15,47 @@
  *= require_self
  */
 
-body {
+html, body {
   background-color: black;
   color: white;
-  padding: 0px;
-  margin: 0px;
-  height: 100vh;
+  padding: 0;
+  margin: 0;
+  height: 100%;
+}
+
+.content {
+  line-height: 1.6em;
+}
+
+#menu {
+  z-index: 99;
+  position: fixed;
+  top:0;
+  left:0;
+  -webkit-transition: all 0.2s ease-out;
+  -moz-transition: all 0.2s ease-out;
+  -ms-transition: all 0.2s ease-out;
+  -o-transition: all 0.2s ease-out;
+  transition: all 0.2s ease-out;
+}
+
+#menu-link {
+  z-index: 100;
+  position: fixed;
+  top:0;
+  left:0;
+  padding: 0.25em;
+  font-size: 20px;
+  width: 1em;
+  height: 1em;
+  text-align: center;
+}
+
+#menu-link i {
+  vertical-align: top;
+}
+
+#menu-link:hover {
+  background: lightblue;
+  border-radius: 30px;
 }

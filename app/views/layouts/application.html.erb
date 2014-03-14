@@ -3,15 +3,33 @@
 <head>
   <title>Thirdfloor</title>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= stylesheet_link_tag    '//yui.yahooapis.com/pure/0.5.0-rc-1/pure-min.css' %>
+  <%= stylesheet_link_tag    '//yui.yahooapis.com/pure/0.5.0-rc-1/grids-responsive-min.css' %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
   <%= javascript_include_tag "https://www.google.com/jsapi" %>
 </head>
 <body>
-<%- if (nn = flash[:notice]).present? %>
-  <div class="notice"><%= nn %></div>
-<% end -%>
-<%= yield %>
+  
+  <div id="menu-link" title="Menu">
+    <i class="fa fa-bars"></i>
+  </div>
+  <div id="menu" class="pure-menu pure-menu-horizontal">
+    <ul>
+      <li class="pure-menu-selected"><a href="/">Home</a></li>
+      <li><a href="#">GNDN</a></li>
+      <li><a href="#">GNDN</a></li>
+      <li><a href="#">GNDN</a></li>
+      <li><a href="#">GNDN</a></li>
+    </ul>
+  </div>
+
+  <div class="content">
+    <%- if (nn = flash[:notice]).present? %>
+      <div class="notice"><%= nn %></div>
+    <% end -%>
+    <%= yield %>
+  </div>
 
 </body>
 </html>

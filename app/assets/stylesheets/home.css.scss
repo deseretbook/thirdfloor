@@ -9,24 +9,10 @@
   margin: 0 auto;
 }
 
-.home {
-  height: 100vh;
+.pure-g {
   .container {
     border: 1px solid rgb(30,30,30);
-    margin-top: 5px;
-    margin-left: 0.5%;
-  }
-  .inline {
-    display: inline-block;
-    width: 49%;
-    vertical-align: top;
-  }
-  > .inline {
-    margin-left: 0.5%;
-  }
-  .centered {
-    margin: 5px auto;
-    vertical-align: top;
-    width: 50%;
+    margin: 3px;
+    box-sizing: border-box;
   }
 }

@@ -14,3 +14,32 @@
 //= require jquery_ujs
 //= require turbolinks
 //= require_tree .
+
+$(document).ready(function(){
+  var setMenuHideTimeout = function(){
+    return setTimeout(function(){
+      if ($('.pure-menu').hasClass('pure-menu-open')) {
+        $('.pure-menu').removeClass('pure-menu-open');
+        menuLink.show();
+      }
+    }, 1000);
+  };
+  
+  var menuLink = $('#menu-link');
+  var menuHiderId = setMenuHideTimeout();
+  
+  $('#menu-link').on('click, mouseover', function(eventData) {
+    if (!$('.pure-menu').hasClass('pure-menu-open')) {
+      menuLink.hide();
+      $('.pure-menu').addClass('pure-menu-open');
+    }
+  });
+
+  $('#menu').on('mouseleave', function(eventData) {
+    menuHiderId = setMenuHideTimeout();
+  });
+
+  $('#menu').on('mouseenter', function(eventData) {
+    clearTimeout(menuHiderId);
+  });
+});
