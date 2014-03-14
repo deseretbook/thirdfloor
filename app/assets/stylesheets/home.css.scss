@@ -11,19 +11,22 @@
 
 .home {
   height: 100vh;
-  .inline-container {
-    // height: 100vh;
-    display:inline-block;
-    width: 49%;
-    margin-top: 5px;
-    margin-left: 0.5%;
-    vertical-align: top;
+  
+}
+.home {
+  .container {
     border: 1px solid rgb(30,30,30);
+    margin-top: 5px;
   }
-  .centered-container {
+  .inline {
+    display: inline-block;
+    width: 49%;
+    vertical-align: top;
+    margin-left: 0.5%;
+  }
+  .centered {
     margin: 5px auto;
     vertical-align: top;
-    border: 1px solid rgb(30,30,30);
     width: 50%;
   }
 }

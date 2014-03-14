@@ -15,29 +15,34 @@ javascript:
     
     (function() {
       $.get('/user_locations').done(function(data){
-        $('.user-locations-container').html(data);
+        $('.user-locations').html(data);
       });
     })();
 
     (function() {
-      $.get('/travis').done(function(data){$('.travis-container').html(data); });
+      $.get('/travis').done(function(data){$('.travis').html(data); });
     })();
 
     (function() {
-      $.get('/visualize/totals_today').done(function(data){$('.totals-container').html(data); });
+      $.get('/visualize/totals_today').done(function(data){$('.totals').html(data); });
     })();
   
     setInterval(function() { window.location.reload() }, reload_timer);
   });
 .reload-countdown
 .home
-  .user-locations-container.inline-container
-    | Loading...
-  .inline-container
-    .travis-container
+  .inline
+    .user-locations.container
       | Loading...
-  .charts-container
-    .inline-container.orders = render partial: 'orders'
-    .inline-container.sales = render partial: 'sales'
-  .totals-container.centered-container
+
+    .inline.container.orders = render partial: 'orders'
+    .inline.container.sales = render partial: 'sales'
+  .inline
+    .travis.container
+      | Loading...
+    .deployments.container
+      - vis = Visualization.find_by_slug('deployments')
+      = render inline: vis.markup, type: vis.markup_type
+  
+  .totals.container.centered
 
