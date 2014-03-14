@@ -15,7 +15,7 @@
 //= require turbolinks
 //= require_tree .
 
-$(document).ready(function(){
+window.ready = function () {
   var setMenuHideTimeout = function(){
     return setTimeout(function(){
       if ($('.pure-menu').hasClass('pure-menu-open')) {
@@ -42,4 +42,8 @@ $(document).ready(function(){
   $('#menu').on('mouseenter', function(eventData) {
     clearTimeout(menuHiderId);
   });
-});
+};
+
+$(document).on('page:load', window.ready);
+
+$(document).ready(window.ready);
