@@ -6,7 +6,7 @@ javascript:
     var reload_countdown_width = 100;
 
     var counter_timeout = reload_timer / reload_countdown_width;
-    console.log(counter_timeout);
+
     setInterval(function() {
       reload_countdown_width = reload_countdown_width -1;
       $('.reload-countdown').css('width', reload_countdown_width + "%")

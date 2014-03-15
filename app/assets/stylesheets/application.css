@@ -28,6 +28,10 @@ html, body {
 }
 
 #menu {
+  /*position: relative;*/
+}
+
+.autohide-menu {
   z-index: 99;
   position: fixed;
   top:0;
@@ -39,7 +43,16 @@ html, body {
   transition: all 0.2s ease-out;
 }
 
+.static-menu .hide-menu-link {
+  display: none;
+}
+
 #menu-link {
+  display: none;
+}
+
+#menu-link.autohide-menu {
+  display: block;
   z-index: 100;
   position: fixed;
   top:0;

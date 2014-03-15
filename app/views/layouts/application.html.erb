@@ -15,16 +15,14 @@
 </head>
 <body>
   
-  <div id="menu-link" title="Menu">
+  <div id="menu-link" title="Menu" class="<% if request.path == '/' %>autohide-menu<% end %>">
     <i class="fa fa-bars"></i>
   </div>
-  <div id="menu" class="pure-menu pure-menu-horizontal">
+  <div id="menu" class="pure-menu pure-menu-horizontal <% if request.path == '/' %>autohide-menu<% else %>static-menu pure-menu-open<% end %>">
     <ul>
-      <li class="pure-menu-selected"><a href="/">Home</a></li>
-      <li><a href="#">GNDN</a></li>
-      <li><a href="#">GNDN</a></li>
-      <li><a href="#">GNDN</a></li>
-      <li><a href="#">GNDN</a></li>
+      <li class="hide-menu-link"><a href="#">Close</a></li>
+      <li class="<% if request.path == '/' %>pure-menu-selected<% end %>"><a href="<%= root_path %>">Home</a></li>
+      <li class="<% if request.path =~ /^#{visualizations_path.gsub('/', '\/')}/ %>pure-menu-selected<% end %>"><a href="<%= visualizations_path %>">Visualizations</a></li>
     </ul>
   </div>
 

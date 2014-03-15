@@ -15,33 +15,54 @@
 //= require turbolinks
 //= require_tree .
 
-window.ready = function () {
-  var setMenuHideTimeout = function(){
-    return setTimeout(function(){
-      if ($('.pure-menu').hasClass('pure-menu-open')) {
-        $('.pure-menu').removeClass('pure-menu-open');
-        menuLink.show();
-      }
-    }, 1000);
-  };
+window.ready = function() {
+  console.log('window.ready()');
   
-  var menuLink = $('#menu-link');
-  var menuHiderId = setMenuHideTimeout();
-  
-  $('#menu-link').on('click, mouseover', function(eventData) {
-    if (!$('.pure-menu').hasClass('pure-menu-open')) {
+  if ($('.pure-menu').hasClass('autohide-menu')) {
+    var hideMenu = function() {
+      $('.pure-menu').removeClass('pure-menu-open');
+      menuLink.show();
+    };
+
+    var showMenu = function() {
       menuLink.hide();
       $('.pure-menu').addClass('pure-menu-open');
-    }
-  });
+    };
 
-  $('#menu').on('mouseleave', function(eventData) {
-    menuHiderId = setMenuHideTimeout();
-  });
+    var menuIsOpen = function() {
+      return $('.pure-menu').hasClass('pure-menu-open');
+    };
 
-  $('#menu').on('mouseenter', function(eventData) {
-    clearTimeout(menuHiderId);
-  });
+    var menuIsNotOpen = function() {
+      return !menuIsOpen();
+    };
+
+    var setMenuHideTimeout = function(){
+      return setTimeout(function(){
+        if (menuIsOpen()) { hideMenu(); }
+      }, 1000);
+    };
+    
+    var menuLink = $('#menu-link');
+    var menuHiderId = setMenuHideTimeout();
+    
+    $('#menu-link').on('click, mouseover', function(eventData) {
+      if (menuIsNotOpen) { showMenu(); }
+    });
+
+    $('#menu').on('mouseleave', function(eventData) {
+      menuHiderId = setMenuHideTimeout();
+    });
+
+    $('#menu').on('mouseenter', function(eventData) {
+      clearTimeout(menuHiderId);
+    });
+
+    $('.hide-menu-link a').on('click', function(eventData) {
+      hideMenu();
+      eventData.preventDefault();
+    });
+  }
 };
 
 $(document).on('page:load', window.ready);
