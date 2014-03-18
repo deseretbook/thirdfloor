@@ -10,7 +10,7 @@ class DataPoint < ActiveRecord::Base
   def delete_old_records
     # only do this ~20% of the time
     if rand(10) >= 8
-      DataPoint.where(['created_at < ?', 3.days.ago]).delete_all
+      DataPoint.where(['created_at < ?', 7.days.ago]).delete_all
     end
   end
 
