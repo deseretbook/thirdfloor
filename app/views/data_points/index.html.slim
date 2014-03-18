@@ -1,14 +1,18 @@
+javascript:
+  $(function(){
+    $('.data-points').on('change', 'select', function(eventData) {
+      $(this).closest('form').submit();
+    });
+  });
+
 .data-points
   .filters
-    - if params[:name].present?
-      span.name-param
-        | Name: #{params[:name]}
-    - if params[:limit].present?
-      span.limit-param
-        | Limit: #{params[:limit]}
-    - if params[:days].present?
-      span.days-param
-        | Days: #{params[:days]}
+    form method="GET"
+      label for="name" Name:
+      select name="name"
+        option value="" (filter by name)
+        - DataPoint.select(:name).distinct.reorder(:name).each do |n|
+          option value=n.name selected=(params[:name] == n.name) = n.name
   .navigation = will_paginate data_points
   table
     thead
