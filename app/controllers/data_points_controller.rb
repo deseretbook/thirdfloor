@@ -3,6 +3,8 @@ class DataPointsController < ApplicationController
 
   skip_before_filter :verify_authenticity_token, only: [ :create, :named_route_create ]
 
+  before_filter :login_required, only: [ :index, :show ]
+
   def index # GET collection
     respond_with(data_points: cached_data_points) do |format|
       format.html do
