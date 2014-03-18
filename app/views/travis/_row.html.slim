@@ -6,6 +6,7 @@ td.state class=repo.passing?
   - else
     i.fa.fa-thumbs-down
 td.last-build
-  - if repo.finished.present?
-    | #{time_ago_in_words(repo.finished)} ago  
-  | by #{repo.by.split(' ').first}
+  - if (finished = repo.finished).present?
+    | #{time_ago_in_words(finished)} ago  
+  - if (by = repo.by).present?
+    | by #{by.split(' ').first}
