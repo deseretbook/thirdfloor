@@ -21,7 +21,7 @@
   <div id="menu" class="pure-menu pure-menu-horizontal <% if request.path == '/' %>autohide-menu<% else %>static-menu pure-menu-open<% end %>">
     <ul>
       <li class="hide-menu-link"><a href="#">Close</a></li>
-      <li class="<% if request.path == root_path %>pure-menu-selected<% end %>"><a href="<%= root_path %>">Home</a></li>
+      <li class="<% if request.path == root_path %>pure-menu-selected<% end %>"><a href="<%= root_path %>" data-no-turbolink>Home</a></li>
       <%-
         [
           [ visualizations_path, 'Visualizations' ],
