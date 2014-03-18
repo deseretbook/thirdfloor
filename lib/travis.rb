@@ -73,7 +73,11 @@ class Travis::Repo
   end
 
   def finished
-    @finished ||= Time.parse(@branch["finished_at"])
+    @finished ||= if (finished_at = @branch["finished_at"]).present?
+      Time.parse(finished_at)
+    else
+      nil
+    end
   end
 
   def branch_name
