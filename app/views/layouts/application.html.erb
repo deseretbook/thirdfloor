@@ -21,8 +21,18 @@
   <div id="menu" class="pure-menu pure-menu-horizontal <% if request.path == '/' %>autohide-menu<% else %>static-menu pure-menu-open<% end %>">
     <ul>
       <li class="hide-menu-link"><a href="#">Close</a></li>
-      <li class="<% if request.path == '/' %>pure-menu-selected<% end %>"><a href="<%= root_path %>">Home</a></li>
-      <li class="<% if request.path =~ /^#{visualizations_path.gsub('/', '\/')}/ %>pure-menu-selected<% end %>"><a href="<%= visualizations_path %>">Visualizations</a></li>
+      <li class="<% if request.path == root_path %>pure-menu-selected<% end %>"><a href="<%= root_path %>">Home</a></li>
+      <%-
+        [
+          [ visualizations_path, 'Visualizations' ],
+          [ data_points_path, 'Data Points'],
+          [ stations_path,  'Stations' ]
+        ].each do |path, text|
+      %>
+        <li class="<% if request.path =~ /^#{path.gsub('/', '\/')}/ %>pure-menu-selected<% end %>">
+          <a href="<%= path %>"><%= text %></a>
+        </li>
+      <% end -%>
     </ul>
   </div>
 
