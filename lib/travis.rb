@@ -55,12 +55,32 @@ class Travis::Repo
     @branch_name = branch_name
   end
 
+  def state
+    @branch["state"]
+  end
+
+  def running?
+    created? || started?
+  end
+
+  def finished?
+    !running?
+  end
+
+  def created?
+    state == "created"
+  end
+
+  def started?
+    state == "started"
+  end
+
   def passing?
-    @branch["state"] == "passed"
+    state == "passed"
   end
 
   def broken?
-    !passing?
+    !building? && !passing?
   end
 
   def duration(fmt=:raw)

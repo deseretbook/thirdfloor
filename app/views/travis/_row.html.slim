@@ -1,12 +1,18 @@
 td.repo = repo.repository
 td.branch = repo.branch_name
-td.state class=repo.passing?
-  - if repo.passing?
-    i.fa.fa-thumbs-up
+td.state class="#{repo.passing?} #{repo.running? ? 'running' : nil}"
+  - if repo.finished?
+    - if repo.passing?
+      i.fa.fa-thumbs-up
+    - else
+      i.fa.fa-thumbs-down
   - else
-    i.fa.fa-thumbs-down
+    i.fa.fa-refresh
 td.last-build
-  - if (finished = repo.finished).present?
-    | #{time_ago_in_words(finished)} ago  
+  - if repo.finished?
+    - if (finished = repo.finished).present?
+      | #{time_ago_in_words(finished)} ago 
+  - else
+    | currently running 
   - if (by = repo.by).present?
     | by #{by.split(' ').first}

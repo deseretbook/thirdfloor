@@ -51,6 +51,9 @@
       &.false {
         i { color: red; }
       }
+      &.running {
+        i { color: yellow; }
+      }
     }
   }
 }
