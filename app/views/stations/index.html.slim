@@ -4,15 +4,19 @@ table
       th Hostname
       th Location
       th Enabled?
+      th Local?
       th Last Communication
+      th Last IP
   tbody
     - stations.each do |station|
       tr
-        td = station.hostname
+        td = link_to station.hostname, station_path(station)
         td = station.location
         td = station.enabled
+        td = station.local
         td 
           - if station.last_seen_at
             | #{time_ago_in_words(station.last_seen_at)} ago
           - else
             | never
+        td = station.last_ip_address

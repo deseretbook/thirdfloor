@@ -1,0 +1,3 @@
+dropdb thirdfloor_development
+heroku pg:pull HEROKU_POSTGRESQL_YELLOW_URL thirdfloor_development
+

@@ -1,0 +1,6 @@
+dl
+  - %w[ id hostname location enabled last_seen_at last_ip_address ].each do |p|
+    dt= p.humanize
+    dd= station.attributes[p]
+
+= link_to 'back', stations_path
