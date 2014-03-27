@@ -9,7 +9,6 @@ class CreateDashboardCells < ActiveRecord::Migration
       t.timestamps
     end
 
-    add_index :dashboard_cells, [:dashboard_id, :visualization_id], unique: true
     add_index :dashboard_cells, :dashboard_id
     add_index :dashboard_cells, :visualization_id
   end

@@ -8,7 +8,7 @@
       - counter += 1
       - cell_width = cell.columns.to_i > 0 ? cell.columns : 1
       - width = (cell_width == dashboard.columns ? '1' : "1-#{dashboard.columns}")
-      div class="pure-u-#{width} pure-u-md-#{width} pure-u-lg-#{width}"
+      div class="pure-u-1 pure-u-md-#{width} pure-u-lg-#{width}"
         .container title=cell.visualization.name  
           = render inline: cell.visualization.markup, type: cell.visualization.markup_type
       

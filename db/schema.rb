@@ -20,14 +20,12 @@ ActiveRecord::Schema.define(version: 20140326231226) do
   create_table "dashboard_cells", force: true do |t|
     t.integer  "dashboard_id",                 null: false
     t.integer  "visualization_id",             null: false
-    t.integer  "rows",             default: 1, null: false
-    t.integer  "columns",          default: 1, null: false
+    t.integer  "columns"
     t.integer  "position",         default: 0, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "dashboard_cells", ["dashboard_id", "visualization_id"], name: "index_dashboard_cells_on_dashboard_id_and_visualization_id", unique: true, using: :btree
   add_index "dashboard_cells", ["dashboard_id"], name: "index_dashboard_cells_on_dashboard_id", using: :btree
   add_index "dashboard_cells", ["visualization_id"], name: "index_dashboard_cells_on_visualization_id", using: :btree
 
@@ -37,7 +35,6 @@ ActiveRecord::Schema.define(version: 20140326231226) do
     t.boolean  "enabled",    default: true
     t.integer  "refresh"
     t.text     "css"
-    t.integer  "rows",       default: 1,    null: false
     t.integer  "columns",    default: 1,    null: false
     t.datetime "created_at"
     t.datetime "updated_at"
