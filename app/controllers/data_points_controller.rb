@@ -6,7 +6,10 @@ class DataPointsController < ApplicationController
   # before_filter :login_required, only: [ :index, :show ]
 
   def index # GET collection
-    respond_with(data_points: cached_data_points) do |format|
+    respond_with(
+      cached_data_points,
+      each_serializer: DataPointSerializer
+    ) do |format|
       format.html do
         render locals: {
           data_points: data_points.paginate(:page => params[:page])
@@ -40,7 +43,7 @@ class DataPointsController < ApplicationController
 
   def show
     point = DataPoint.find(params[:id])
-    respond_with(data_point: point) do |format|
+    respond_with(point, serializer: DataPointSerializer, root: false) do |format|
       format.html { render text: point.to_json }
     end
   end
