@@ -1,0 +1,41 @@
+<%= form_for(@dashboard) do |f| %>
+  <% if @dashboard.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@dashboard.errors.count, "error") %> prohibited this dashboard from being saved:</h2>
+
+      <ul>
+      <% @dashboard.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %><br>
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :slug %><br>
+    <%= f.text_field :slug %>
+  </div>
+  <div class="field">
+    <%= f.label :enabled %><br>
+    <%= f.check_box :enabled %>
+  </div>
+  <div class="field">
+    <%= f.label :refresh %><br>
+    <%= f.number_field :refresh %>
+  </div>
+  <div class="field">
+    <%= f.label :css %><br>
+    <%= f.text_area :css %>
+  </div>
+  <div class="field">
+    <%= f.label :columns %><br>
+    <%= f.number_field :columns %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  resources :dashboard_cells
+
+  resources :dashboards
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
@@ -32,6 +36,7 @@ Rails.application.routes.draw do
   post 'data_points/:name' => 'data_points#named_route_create'
 
   get '/visualize/:slug' => 'home#visualize', as: 'render_visualization'
+  get '/dashboard/:slug' => 'home#dashboard', as: 'render_dashboard'
 
   resources :visualizations
 

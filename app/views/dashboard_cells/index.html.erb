@@ -1,0 +1,33 @@
+<h1>Listing dashboard_cells</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Dashboard</th>
+      <th>Visualization</th>
+      <th>Rows</th>
+      <th>Columns</th>
+      <th>Position</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @dashboard_cells.each do |dashboard_cell| %>
+      <tr>
+        <td><%= dashboard_cell.dashboard_id %></td>
+        <td><%= dashboard_cell.visualization_id %></td>
+        <td><%= dashboard_cell.rows %></td>
+        <td><%= dashboard_cell.columns %></td>
+        <td><%= dashboard_cell.position %></td>
+        <td><%= link_to 'Show', dashboard_cell %></td>
+        <td><%= link_to 'Edit', edit_dashboard_cell_path(dashboard_cell) %></td>
+        <td><%= link_to 'Destroy', dashboard_cell, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Dashboard cell', new_dashboard_cell_path %>

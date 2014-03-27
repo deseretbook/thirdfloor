@@ -1,0 +1,14 @@
+.reload-countdown
+.pure-g
+  - counter = 0
+  - while dashboard.visualizations.size >= (counter+1)
+    - dashboard.columns.times do |column_number|
+      - cell = dashboard.dashboard_cells[counter]
+      - break if cell.nil?
+      - counter += 1
+      - cell_width = cell.columns.to_i > 0 ? cell.columns : 1
+      - width = (cell_width == dashboard.columns ? '1' : "1-#{dashboard.columns}")
+      div class="pure-u-#{width} pure-u-md-#{width} pure-u-lg-#{width}"
+        .container title=cell.visualization.name  
+          = render inline: cell.visualization.markup, type: cell.visualization.markup_type
+      

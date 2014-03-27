@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Dashboard:</strong>
+  <%= @dashboard_cell.dashboard_id %>
+</p>
+
+<p>
+  <strong>Visualization:</strong>
+  <%= @dashboard_cell.visualization_id %>
+</p>
+
+<p>
+  <strong>Rows:</strong>
+  <%= @dashboard_cell.rows %>
+</p>
+
+<p>
+  <strong>Columns:</strong>
+  <%= @dashboard_cell.columns %>
+</p>
+
+<p>
+  <strong>Position:</strong>
+  <%= @dashboard_cell.position %>
+</p>
+
+<%= link_to 'Edit', edit_dashboard_cell_path(@dashboard_cell) %> |
+<%= link_to 'Back', dashboard_cells_path %>

@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  dashboard_id: 1
+  visualization_id: 1
+  rows: 1
+  columns: 1
+  position: 1
+
+two:
+  dashboard_id: 1
+  visualization_id: 1
+  rows: 1
+  columns: 1
+  position: 1

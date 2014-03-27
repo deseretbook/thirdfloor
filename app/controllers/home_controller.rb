@@ -11,4 +11,10 @@ class HomeController < ApplicationController
       locals: { visualization: vis }
     )
   end
+
+  def dashboard
+    render locals: {
+      dashboard: Dashboard.where(slug: params[:slug], enabled: true).first!
+    }
+  end
 end
