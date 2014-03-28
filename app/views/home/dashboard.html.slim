@@ -1,7 +1,9 @@
 .reload-countdown
 .pure-g
+  - if dashboard.dashboard_cells.empty?
+    .pure-u-1 No visualizations added to this dashboard.
   - counter = 0
-  - while dashboard.visualizations.size >= (counter+1)
+  - while dashboard.dashboard_cells.size >= (counter+1)
     - dashboard.columns.times do |column_number|
       - cell = dashboard.dashboard_cells[counter]
       - break if cell.nil?

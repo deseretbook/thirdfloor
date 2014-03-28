@@ -20,11 +20,6 @@
   <%= @visualization.markup_type %>
 </p>
 
-<!-- <p>
-  <strong>Markup:</strong>
-  <%= @visualization.markup %>
-</p> -->
-
 <p> <%= link_to "See on site", render_visualization_path(@visualization.slug), target: "_blank" %></p>
 
 <%= link_to 'Edit', edit_visualization_path(@visualization) %> |

@@ -30,5 +30,12 @@
   <%= @dashboard.columns %>
 </p>
 
+<p>
+  <strong>Cells:</strong>
+  <%= @dashboard.dashboard_cells.count %>
+</p>
+
+<p> <%= link_to "See on site", render_dashboard_path(@dashboard.slug), target: "_blank" %></p>
+
 <%= link_to 'Edit', edit_dashboard_path(@dashboard) %> |
 <%= link_to 'Back', dashboards_path %>

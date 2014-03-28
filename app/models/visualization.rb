@@ -3,6 +3,8 @@ class Visualization < ActiveRecord::Base
   validates_inclusion_of :markup_type, in: %i[ html erb slim ]
   validates_format_of :slug, with: /[a-z0-9_\-]+/
 
+  has_many :dashboard_cells, dependent: :destroy
+
   before_validation :populate_slug
 
   def markup_type

@@ -35,6 +35,31 @@
     <%= f.label :columns %><br>
     <%= f.number_field :columns %>
   </div>
+  <%= f.fields_for :dashboard_cells do |ff| %>
+    <fieldset>
+      <%= ff.hidden_field :dashboard_id %>
+      <!-- <div class="field">
+        <%= ff.label :visualization_id %><br>
+        <%= ff.number_field :visualization_id %>
+      </div> -->
+      <div class="field">
+        <%= ff.label :visualization_id %><br>
+        <%= ff.select :visualization_id, Visualization.all.map{|v|[v.name, v.id]}, include_blank: '- select -' %>
+      </div>
+      <div class="field">
+        <%= ff.label :columns %><br>
+        <%= ff.number_field :columns %>
+      </div>
+      <div class="field">
+        <%= ff.label :position %><br>
+        <%= ff.number_field :position %>
+      </div>
+      <div class="field">
+        <%= ff.label :_destroy, 'Destroy?' %>
+        <%= ff.check_box :_destroy, value: true %>
+      </div>
+    </fieldset>
+  <% end %>
   <div class="actions">
     <%= f.submit %>
   </div>

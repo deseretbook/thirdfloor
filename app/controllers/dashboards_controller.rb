@@ -1,6 +1,8 @@
 class DashboardsController < ApplicationController
   before_action :set_dashboard, only: [:show, :edit, :update, :destroy]
 
+  before_filter :login_required
+
   # GET /dashboards
   def index
     @dashboards = Dashboard.all
@@ -17,6 +19,7 @@ class DashboardsController < ApplicationController
 
   # GET /dashboards/1/edit
   def edit
+    @dashboard.dashboard_cells.build
   end
 
   # POST /dashboards
@@ -53,6 +56,9 @@ class DashboardsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def dashboard_params
-      params.require(:dashboard).permit(:name, :slug, :enabled, :refresh, :css, :columns)
+      params.require(:dashboard).permit(
+        :name, :slug, :enabled, :refresh, :css, :columns,
+        dashboard_cells_attributes: [ :id, :dashboard_id, :visualization_id, :columns, :position, :_destroy ]
+      )
     end
 end
