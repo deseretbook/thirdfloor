@@ -1,52 +1,59 @@
 javascript:
   $(function() {
 
-    $('.visualization-cell .widen-cell-handler.enabled').on('click', function(event) {
-      var cell = $(this).closest('.visualization-cell');
-      var cell_id = cell.data('cell-id');
-      $.post('/dashboard_cells/' + cell_id + '/widen')
-      .done(function() {
-        window.location.reload();
-      })
-      .fail(function(d,e,j) {
-        alert(d.responseText);
-      });
+    $('.cell-movement.true').on('click', function(event) {
+      var cell_id = $(this).closest('.visualization-cell').data('cell-id');
+      var action = $(this).data('action');
+
+      $.post('/dashboard_cells/' + cell_id + '/' + action)
+      .done(function() { window.location.reload(); })
+      .fail(function(d,e,j) { alert(d.responseText); });
     });
 
-    $('.visualization-cell .narrow-cell-handler.enabled').on('click', function(event) {
-      var cell = $(this).closest('.visualization-cell');
-      var cell_id = cell.data('cell-id');
-      $.post('/dashboard_cells/' + cell_id + '/narrow')
-      .done(function() {
-        window.location.reload();
-      })
-      .fail(function(d,e,j) {
-        alert(d.responseText);
-      });
+    $('.dashboard-controls .width.true').on('click', function(event) {
+      var dashboard_id = $('.dashboard').data('dashboard-id');
+      var action = $(this).data('action');
+
+      $.post('/dashboards/' + dashboard_id + '/' + action)
+      .done(function() { window.location.reload(); })
+      .fail(function(d,e,j) { alert(d.responseText); });
     });
 
-    $('.visualization-cell .lower-cell-position-handler.enabled').on('click', function(event) {
-      var cell = $(this).closest('.visualization-cell');
-      var cell_id = cell.data('cell-id');
-      $.post('/dashboard_cells/' + cell_id + '/lower_position')
-      .done(function() {
-        window.location.reload();
-      })
-      .fail(function(d,e,j) {
-        alert(d.responseText);
-      });
-    });
+    var dashboardControlsVisible = function() {
+      return ($('.dashboard-controls:visible').length > 0);
+    };
 
-    $('.visualization-cell .raise-cell-position-handler.enabled').on('click', function(event) {
-      var cell = $(this).closest('.visualization-cell');
-      var cell_id = cell.data('cell-id');
-      $.post('/dashboard_cells/' + cell_id + '/raise_position')
-      .done(function() {
-        window.location.reload();
-      })
-      .fail(function(d,e,j) {
-        alert(d.responseText);
-      });
+    var hideDashboardControls = function() {
+      $('.dashboard-controls').removeClass('visible');
+    };
+
+    var showDashboardControls = function() {
+      if (!$('.dashboard-controls').hasClass('visible')) {
+        $('.dashboard-controls').addClass('visible');
+        //dashboardControlsHiderId = setDashboardControlsHideTimeout();
+      }
+    };
+
+    var setDashboardControlsHideTimeout = function(){
+      return setTimeout(function(){
+        if (dashboardControlsVisible()) {
+          hideDashboardControls();
+        }
+      }, 5000);
+    };
+
+    var dashboardControlsHiderId = setDashboardControlsHideTimeout();
+
+    var menuHiderId = setDashboardControlsHideTimeout();
+
+    $('body').on('mousemove', function() {
+      if (!dashboardControlsVisible()) {
+        showDashboardControls();
+      }
+      if (typeof(dashboardControlsHiderId) != "undefined") {
+        clearTimeout(dashboardControlsHiderId);
+        dashboardControlsHiderId = setDashboardControlsHideTimeout();
+      }  
     });
 
   });
@@ -56,29 +63,82 @@ scss:
     position:relative;
 
     .controls {
+      display: none;
       position: absolute;
       right:3px;
       top:3px;
-      z-index: 100;
+      z-index: 1;
+
       i {
         margin: 0 3px 0 3px;
-        &.enabled {
+        &.true {
           &:hover {
             cursor: pointer;
             color: blue;
           }
         }
-        &.disabled {
+        &.false {
           &:hover {
             color: red;
           }
         }
       }
     }
+    
+    &:hover {
+      .controls {
+        display: block;
+      }
+    }
+  }
+
+  .dashboard-controls {
+    &.hidden { display: none; }
+    &.visible { display: block; }
+    div {
+      position: fixed;
+      top: 75px;
+      padding: 10px;
+      background-color: lightgrey;
+      opacity: 0.5;
+      span {
+        display: none;
+      }
+      &:hover {
+        opacity: 1.0;
+        z-index: 1;
+        
+        &.true {
+          color: blue;
+          cursor: pointer;
+        }
+        &.false { color: red; }
+        
+        span {
+          display: inline-block;
+        }
+      }
+      &.narrow {
+        left: 0px;
+        border-top-right-radius: 1em;
+        border-bottom-right-radius: 1em;
+        span {
+          margin-right: 10px;
+        }
+      }
+      &.widen {
+        right: 0px;
+        border-top-left-radius: 1em;
+        border-bottom-left-radius: 1em;
+        span {
+          margin-left: 10px;
+        }
+      }
+    }
   }
 
 .reload-countdown
-.pure-g
+.pure-g.dashboard data-dashboard-id=dashboard.id
   - if dashboard.dashboard_cells.empty?
     .pure-u-1 No visualizations added to this dashboard.
   - counter = 0
@@ -90,20 +150,37 @@ scss:
       - counter += 1
       - cell_width = cell.columns.to_i > 0 ? cell.columns : 1
       - width = (cell_width == dashboard.columns ? '1' : "#{cell_width}-#{dashboard.columns}")
-      div id="vc_#{cell.id}" data-cell-id=cell.id class="visualization-cell pure-u-1 pure-u-md-#{width} pure-u-lg-#{width}"
+      .visualization-cell.pure-u-1 id="vc_#{cell.id}" data-cell-id=cell.id class="pure-u-md-#{width} pure-u-lg-#{width}"
         .container title=cell.visualization.name
           .controls
             erb:
               <% icons = [
-                ['fa-expand widen-cell-handler', true, 'make wider', 'too wide already'],
-                ['fa-compress narrow-cell-handler', cell.columns > 1, 'make narrower', 'as narrow as it can be'],
-                ['fa-arrow-circle-left lower-cell-position-handler', cell.position > 0, 'move up', 'already at the top'],
-                ['fa-arrow-circle-right raise-cell-position-handler', cell.position < max_cell_position, 'move down', 'already the last one']
+                ['fa-expand', 'widen', true, 'make wider', 'too wide already'],
+                ['fa-compress', 'narrow', cell.columns > 1, 'make narrower', 'as narrow as it can be'],
+                ['fa-arrow-circle-left', 'lower_position', cell.position > 0, 'move up', 'already at the top'],
+                ['fa-arrow-circle-right', 'raise_position', cell.position < max_cell_position, 'move down', 'already the last one']
               ] %>
-            - icons.each do |klasses, enabled, yep, nope|
-              - classes = [ klasses, (enabled ? 'enabled' : 'disabled')]
+            - icons.each do |klasses, action, enabled, yep, nope|
+              - classes = [ 'cell-movement', klasses, enabled.to_s ]
               - title = (enabled ? yep : nope)
-              i.fa class=classes.join(' ') title=title
+              i.fa class=classes.join(' ') title=title data-action=action
             
           = render inline: cell.visualization.markup, type: cell.visualization.markup_type
-      
+
+.dashboard-controls.hidden
+  .width.narrow class=(dashboard.columns > 1) data-action="narrow"
+    span
+      - if dashboard.columns > 1
+        | Narrow dashboard
+      - else 
+        | Can't narrow dashboard
+       
+    i.fa.fa-compress
+  .width.widen class=(dashboard.columns < 5) data-action="widen"
+    // 6 is arbitrary max
+    i.fa.fa-expand
+    span
+      - if dashboard.columns < 5
+        | Widen dashboard
+      - else
+        | Can't widen dashboard

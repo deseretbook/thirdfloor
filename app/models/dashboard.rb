@@ -17,7 +17,21 @@ class Dashboard < ActiveRecord::Base
   after_initialize -> { attributes["columns"] ||= 1 }
 
   def widen!(amount = 1)
-    update!(columns: columns + amount)
+    if columns < 5
+      update!(columns: columns + amount)
+    end
+    columns
+  end
+
+  def narrow!(amount = 1)
+    if columns > 1
+      if amount >= columns
+        update!(columns: 1)
+      else
+        update!(columns: columns - amount)
+      end
+    end
+    narrow_cells
     columns
   end
 

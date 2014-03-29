@@ -8,7 +8,12 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :dashboards
+  resources :dashboards do
+    member do
+      post :widen
+      post :narrow
+    end
+  end
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

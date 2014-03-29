@@ -1,5 +1,5 @@
 class DashboardsController < ApplicationController
-  before_action :set_dashboard, only: [:show, :edit, :update, :destroy]
+  before_action :set_dashboard
 
   before_filter :login_required
 
@@ -42,6 +42,17 @@ class DashboardsController < ApplicationController
     end
   end
 
+  def widen
+    @dashboard.widen!
+    render text: 'ok'
+  end
+
+  def narrow
+    @dashboard.narrow!
+    render text: 'ok'
+  end
+
+
   # DELETE /dashboards/1
   def destroy
     @dashboard.destroy
@@ -51,7 +62,9 @@ class DashboardsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_dashboard
-      @dashboard = Dashboard.find(params[:id])
+      if (id = params[:id]).present?
+        @dashboard = Dashboard.find(id)
+      end
     end
 
     # Only allow a trusted parameter "white list" through.
