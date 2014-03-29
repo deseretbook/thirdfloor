@@ -1,5 +1,6 @@
 class DashboardCellsController < ApplicationController
-  before_action :set_dashboard_cell, only: [:show, :edit, :update, :destroy]
+  respond_to :html, :js
+  before_action :set_dashboard_cell
 
   # GET /dashboard_cells
   def index
@@ -39,6 +40,26 @@ class DashboardCellsController < ApplicationController
     end
   end
 
+  def widen
+    @dashboard_cell.widen!
+    render text: 'ok'
+  end
+
+  def narrow
+    @dashboard_cell.narrow!
+    render text: 'ok'
+  end
+
+  def raise_position
+    @dashboard_cell.raise_position!
+    render text: 'ok'
+  end
+
+  def lower_position
+    @dashboard_cell.lower_position!
+    render text: 'ok'
+  end
+
   # DELETE /dashboard_cells/1
   def destroy
     @dashboard_cell.destroy
@@ -48,7 +69,9 @@ class DashboardCellsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_dashboard_cell
-      @dashboard_cell = DashboardCell.find(params[:id])
+      if (id = params[:id]).present?
+        @dashboard_cell = DashboardCell.find(params[:id])
+      end
     end
 
     # Only allow a trusted parameter "white list" through.

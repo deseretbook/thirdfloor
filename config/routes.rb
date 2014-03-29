@@ -1,5 +1,12 @@
 Rails.application.routes.draw do
-  resources :dashboard_cells
+  resources :dashboard_cells do
+    member do
+      post :widen
+      post :narrow
+      post :raise_position
+      post :lower_position
+    end
+  end
 
   resources :dashboards
 

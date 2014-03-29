@@ -1,16 +1,109 @@
+javascript:
+  $(function() {
+
+    $('.visualization-cell .widen-cell-handler.enabled').on('click', function(event) {
+      var cell = $(this).closest('.visualization-cell');
+      var cell_id = cell.data('cell-id');
+      $.post('/dashboard_cells/' + cell_id + '/widen')
+      .done(function() {
+        window.location.reload();
+      })
+      .fail(function(d,e,j) {
+        alert(d.responseText);
+      });
+    });
+
+    $('.visualization-cell .narrow-cell-handler.enabled').on('click', function(event) {
+      var cell = $(this).closest('.visualization-cell');
+      var cell_id = cell.data('cell-id');
+      $.post('/dashboard_cells/' + cell_id + '/narrow')
+      .done(function() {
+        window.location.reload();
+      })
+      .fail(function(d,e,j) {
+        alert(d.responseText);
+      });
+    });
+
+    $('.visualization-cell .lower-cell-position-handler.enabled').on('click', function(event) {
+      var cell = $(this).closest('.visualization-cell');
+      var cell_id = cell.data('cell-id');
+      $.post('/dashboard_cells/' + cell_id + '/lower_position')
+      .done(function() {
+        window.location.reload();
+      })
+      .fail(function(d,e,j) {
+        alert(d.responseText);
+      });
+    });
+
+    $('.visualization-cell .raise-cell-position-handler.enabled').on('click', function(event) {
+      var cell = $(this).closest('.visualization-cell');
+      var cell_id = cell.data('cell-id');
+      $.post('/dashboard_cells/' + cell_id + '/raise_position')
+      .done(function() {
+        window.location.reload();
+      })
+      .fail(function(d,e,j) {
+        alert(d.responseText);
+      });
+    });
+
+  });
+
+scss:
+  .visualization-cell .container {
+    position:relative;
+
+    .controls {
+      position: absolute;
+      right:3px;
+      top:3px;
+      z-index: 100;
+      i {
+        margin: 0 3px 0 3px;
+        &.enabled {
+          &:hover {
+            cursor: pointer;
+            color: blue;
+          }
+        }
+        &.disabled {
+          &:hover {
+            color: red;
+          }
+        }
+      }
+    }
+  }
+
 .reload-countdown
 .pure-g
   - if dashboard.dashboard_cells.empty?
     .pure-u-1 No visualizations added to this dashboard.
   - counter = 0
+  - max_cell_position = dashboard.dashboard_cells.maximum(:position)
   - while dashboard.dashboard_cells.size >= (counter+1)
     - dashboard.columns.times do |column_number|
       - cell = dashboard.dashboard_cells[counter]
       - break if cell.nil?
       - counter += 1
       - cell_width = cell.columns.to_i > 0 ? cell.columns : 1
-      - width = (cell_width == dashboard.columns ? '1' : "1-#{dashboard.columns}")
-      div class="pure-u-1 pure-u-md-#{width} pure-u-lg-#{width}"
-        .container title=cell.visualization.name  
+      - width = (cell_width == dashboard.columns ? '1' : "#{cell_width}-#{dashboard.columns}")
+      div id="vc_#{cell.id}" data-cell-id=cell.id class="visualization-cell pure-u-1 pure-u-md-#{width} pure-u-lg-#{width}"
+        .container title=cell.visualization.name
+          .controls
+            erb:
+              <% icons = [
+                ['fa-expand widen-cell-handler', true, 'make wider', 'too wide already'],
+                ['fa-compress narrow-cell-handler', cell.columns > 1, 'make narrower', 'as narrow as it can be'],
+                ['fa-arrow-circle-left lower-cell-position-handler', cell.position > 0, 'move up', 'already at the top'],
+                ['fa-arrow-circle-right raise-cell-position-handler', cell.position < max_cell_position, 'move down', 'already the last one']
+              ] %>
+            - icons.each do |klasses, enabled, yep, nope|
+              - classes = [ klasses, (enabled ? 'enabled' : 'disabled')]
+              - title = (enabled ? yep : nope)
+              i.fa class=classes.join(' ') title=title
+            
           = render inline: cell.visualization.markup, type: cell.visualization.markup_type
       
