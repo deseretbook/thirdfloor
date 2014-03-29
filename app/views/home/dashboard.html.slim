@@ -20,7 +20,7 @@ javascript:
     });
 
     var dashboardControlsVisible = function() {
-      return ($('.dashboard-controls:visible').length > 0);
+      return ($('.dashboard-controls.visible').length > 0);
     };
 
     var hideDashboardControls = function() {
@@ -93,14 +93,22 @@ scss:
   }
 
   .dashboard-controls {
-    &.hidden { display: none; }
-    &.visible { display: block; }
+    &.visible {
+      .narrow {
+        transition: all 0.2s ease-out;
+        left: 0px;
+      }
+      .widen {
+        transition: all 0.2s ease-out;
+        right: 0px;
+      }
+    }
     div {
       position: fixed;
       top: 75px;
       padding: 10px;
       background-color: lightgrey;
-      opacity: 0.5;
+      opacity: 0.75;
       span {
         display: none;
       }
@@ -118,8 +126,9 @@ scss:
           display: inline-block;
         }
       }
+      transition: all 0.2s ease-out;
       &.narrow {
-        left: 0px;
+        left: -35px;
         border-top-right-radius: 1em;
         border-bottom-right-radius: 1em;
         span {
@@ -127,7 +136,7 @@ scss:
         }
       }
       &.widen {
-        right: 0px;
+        right: -35px;
         border-top-left-radius: 1em;
         border-bottom-left-radius: 1em;
         span {
