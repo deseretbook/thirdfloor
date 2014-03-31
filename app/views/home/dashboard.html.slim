@@ -94,18 +94,14 @@ scss:
 
   .dashboard-controls {
     &.visible {
-      .narrow {
-        transition: all 0.2s ease-out;
-        left: 0px;
-      }
-      .widen {
-        transition: all 0.2s ease-out;
-        right: 0px;
-      }
+      .narrow { left: 0px; }
+      .widen { right: 0px; }
+      .add { left: 0px; }
+      .settings { right: 0px; }
     }
     div {
       position: fixed;
-      top: 75px;
+      
       padding: 10px;
       background-color: lightgrey;
       opacity: 0.75;
@@ -128,6 +124,7 @@ scss:
       }
       transition: all 0.2s ease-out;
       &.narrow {
+        top: 95px;
         left: -35px;
         border-top-right-radius: 1em;
         border-bottom-right-radius: 1em;
@@ -136,6 +133,25 @@ scss:
         }
       }
       &.widen {
+        top: 95px;
+        right: -35px;
+        border-top-left-radius: 1em;
+        border-bottom-left-radius: 1em;
+        span {
+          margin-left: 10px;
+        }
+      }
+      &.add {
+        top: 50px;
+        left: -35px;
+        border-top-right-radius: 1em;
+        border-bottom-right-radius: 1em;
+        span {
+          margin-right: 10px;
+        }
+      }
+      &.settings {
+        top: 50px;
         right: -35px;
         border-top-left-radius: 1em;
         border-bottom-left-radius: 1em;
@@ -177,6 +193,10 @@ scss:
           = render inline: cell.visualization.markup, type: cell.visualization.markup_type
 
 .dashboard-controls.hidden
+  .add
+    span Add Visualization
+    i.fa.fa-plus
+    
   .width.narrow class=(dashboard.columns > 1) data-action="narrow"
     span
       - if dashboard.columns > 1
@@ -185,6 +205,10 @@ scss:
         | Can't narrow dashboard
        
     i.fa.fa-compress
+  .settings
+    i.fa.fa-cog
+    span Settings
+    
   .width.widen class=(dashboard.columns < 5) data-action="widen"
     // 6 is arbitrary max
     i.fa.fa-expand
