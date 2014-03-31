@@ -322,7 +322,7 @@ scss:
             i.fa.fa-cog.cell-settings.true title="Cell settings"
             erb:
               <% icons = [
-                ['fa-expand', 'widen', true, 'make wider', 'too wide already'],
+                ['fa-expand', 'widen', cell.columns < Dashboard::MAXIMUM_COLUMNS, 'make wider', 'too wide already'],
                 ['fa-compress', 'narrow', cell.columns > 1, 'make narrower', 'as narrow as it can be'],
                 ['fa-arrow-circle-left', 'lower_position', cell.position > 0, 'move up', 'already at the top'],
                 ['fa-arrow-circle-right', 'raise_position', cell.position < max_cell_position, 'move down', 'already the last one']
