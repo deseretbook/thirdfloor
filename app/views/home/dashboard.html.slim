@@ -19,6 +19,25 @@ javascript:
       .fail(function(d,e,j) { alert(d.responseText); });
     });
 
+    $('.dashboard-controls .popup.true').on('click', function(event) {
+      var selector = $(this).data('selector');
+      var el = $('.popups').find(selector);
+      var title = el.find('title').text();
+      el.dialog(
+        {
+          title: title,
+          resizable: false,
+          draggable: false,
+          modal: true,
+          show: { effect: 'slideDown', duration: 250 },
+          hide: { effect: 'slideUp', duration: 250 },
+          close: function (event, ui) {
+            $(this).dialog("destroy"); // so the dialog will open again
+          }
+        }
+      );
+    });
+
     var dashboardControlsVisible = function() {
       return ($('.dashboard-controls.visible').length > 0);
     };
@@ -162,6 +181,12 @@ scss:
     }
   }
 
+  .popups {
+    display: none;
+    .add-visualization {
+    }
+  }
+
 .reload-countdown
 .pure-g.dashboard data-dashboard-id=dashboard.id
   - if dashboard.dashboard_cells.empty?
@@ -193,7 +218,7 @@ scss:
           = render inline: cell.visualization.markup, type: cell.visualization.markup_type
 
 .dashboard-controls.hidden
-  .add
+  .add.popup.true data-selector='.add-visualization'
     span Add Visualization
     i.fa.fa-plus
     
@@ -205,15 +230,23 @@ scss:
         | Can't narrow dashboard
        
     i.fa.fa-compress
-  .settings
+  .settings.popup.true data-selector='.settings'
     i.fa.fa-cog
     span Settings
     
-  .width.widen class=(dashboard.columns < 5) data-action="widen"
+  .width.widen class=(dashboard.columns < Dashboard::MAXIMUM_COLUMNS) data-action="widen"
     // 6 is arbitrary max
     i.fa.fa-expand
     span
-      - if dashboard.columns < 5
+      - if dashboard.columns < Dashboard::MAXIMUM_COLUMNS
         | Widen dashboard
       - else
         | Can't widen dashboard
+
+.popups
+  .add-visualization
+    title Add Visualization
+    | add
+  .settings
+    title Dashboard Settings
+    | settings

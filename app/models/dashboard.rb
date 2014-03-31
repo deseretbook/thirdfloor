@@ -1,4 +1,6 @@
 class Dashboard < ActiveRecord::Base
+  MAXIMUM_COLUMNS = 6 # arbitrary
+  
   validates_uniqueness_of :slug
   validates_presence_of :name, :slug
   before_validation :populate_slug
@@ -17,7 +19,7 @@ class Dashboard < ActiveRecord::Base
   after_initialize -> { attributes["columns"] ||= 1 }
 
   def widen!(amount = 1)
-    if columns < 5
+    if columns < MAXIMUM_COLUMNS
       update!(columns: columns + amount)
     end
     columns
