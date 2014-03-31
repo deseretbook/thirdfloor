@@ -52,6 +52,26 @@ javascript:
       );
     });
 
+    var cell_setting_popup = $('.popups .cell-settings').dialog({
+      autoOpen: false,
+      title: "Cell settings",
+      resizable: false,
+      draggable: false,
+      modal: true,
+      width: 370,
+      show: { effect: 'slideDown', duration: 250 },
+      hide: { effect: 'slideUp', duration: 250 }
+    });
+
+    $('.cell-settings.true').on('click', function(event) {
+      var cell_id = $(this).closest('.visualization-cell').data('cell-id');
+      $.get('/dashboard_cells/' + cell_id + '/edit').done(function(data) {
+        cell_setting_popup.html(data);
+        cell_setting_popup.dialog("open");
+      });
+
+    });
+
     $('.popups .add-visualization form').on('submit', function(event) {
       var visualization_id = $(this).find('select').val();
       if (visualization_id.toString().length < 1) {
@@ -65,7 +85,7 @@ javascript:
       reload();
     });
 
-    $('.popups .settings form').bind('ajax:complete', function(e) {
+    $('.popups .dashboard-settings form').bind('ajax:complete', function(e) {
       reload();
     });
 
@@ -134,7 +154,7 @@ javascript:
       $('body .maximum-height').each(function(index, el) {
       $(el).data('scroll-delay', 200);
       setTimeout( function() {
-        autoScroll(el, 200);
+        autoScroll(el, 500);
       }, 2000 );
       });
 
@@ -145,7 +165,6 @@ javascript:
 
       $('body .maximum-height').on('mouseleave', function(event) {
         $(this).data('stopped', false);
-        autoScroll(this, $(this).data('scroll-delay'));
       });
 
     }
@@ -200,7 +219,7 @@ scss:
       .narrow { left: 0px; }
       .widen { right: 0px; }
       .add { left: 0px; }
-      .settings { right: 0px; }
+      .dashboard-settings { right: 0px; }
     }
     div {
       position: fixed;
@@ -253,7 +272,7 @@ scss:
           margin-right: 10px;
         }
       }
-      &.settings {
+      &.dashboard-settings {
         top: 75px;
         right: -35px;
         border-top-left-radius: 1em;
@@ -290,7 +309,7 @@ scss:
 
           .controls
             span Width: #{cell_width}
-            i.fa.fa-times.remove-cell.true
+            i.fa.fa-cog.cell-settings.true title="Cell settings"
             erb:
               <% icons = [
                 ['fa-expand', 'widen', true, 'make wider', 'too wide already'],
@@ -302,7 +321,7 @@ scss:
               - classes = [ 'cell-movement', klasses, enabled.to_s ]
               - title = (enabled ? yep : nope)
               i.fa class=classes.join(' ') title=title data-action=action
-            
+            i.fa.fa-times.remove-cell.true title="remove this cell"
           = render inline: cell.visualization.markup, type: cell.visualization.markup_type
 
 .dashboard-controls.hidden
@@ -318,7 +337,7 @@ scss:
         | Can't narrow dashboard
        
     i.fa.fa-compress
-  .settings.popup.true data-selector='.settings'
+  .dashboard-settings.popup.true data-selector='.dashboard-settings'
     i.fa.fa-cog
     span Settings
     
@@ -332,6 +351,9 @@ scss:
         | Can't widen dashboard
 
 .popups
+  .cell-settings
+    title Cell Settings
+    
   .add-visualization
     title Add Visualization
     - if Visualization.enabled.count > 0
@@ -347,7 +369,7 @@ scss:
         | No visualizations are enabled! #{link_to 'Please enable some',  visualizations_path}.
       - else
         | No visualizations have been created! #{link_to 'Please make one', new_visualization_path}.
-  .settings
+  .dashboard-settings
     title Dashboard Settings
     = form_for(dashboard, remote: true, html: { class: 'pure-form pure-form-aligned' }) do |f|
       fieldset

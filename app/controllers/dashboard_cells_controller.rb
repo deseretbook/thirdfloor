@@ -1,5 +1,4 @@
 class DashboardCellsController < ApplicationController
-  respond_to :html, :js
   before_action :set_dashboard_cell
 
   # GET /dashboard_cells
