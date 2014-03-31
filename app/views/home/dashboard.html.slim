@@ -12,6 +12,17 @@ javascript:
       .fail(function(d,e,j) { alert(d.responseText); });
     });
 
+    $('.remove-cell.true').on('click', function(event) {
+      var cell_id = $(this).closest('.visualization-cell').data('cell-id');
+      var action = $(this).data('action');
+
+      if (confirm('Remove this cell?')) {
+        $.post('#{remove_visualization_dashboard_path(dashboard)}', { dashboard_cell_id: cell_id })
+        .done(function() { reload(); })
+        .fail(function(d,e,j) { alert(d.responseText); });
+      }
+    });
+
     $('.dashboard-controls .width.true').on('click', function(event) {
       var dashboard_id = $('.dashboard').data('dashboard-id');
       var action = $(this).data('action');
@@ -217,6 +228,7 @@ scss:
       .visualization-cell.pure-u-1 id="vc_#{cell.id}" data-cell-id=cell.id class="pure-u-md-#{width} pure-u-lg-#{width}"
         .container title=cell.visualization.name
           .controls
+            i.fa.fa-times.remove-cell.true
             erb:
               <% icons = [
                 ['fa-expand', 'widen', true, 'make wider', 'too wide already'],

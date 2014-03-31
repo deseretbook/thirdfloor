@@ -65,6 +65,11 @@ class DashboardsController < ApplicationController
     end
   end
 
+  def remove_visualization
+    cell = @dashboard.dashboard_cells.where(id: params[:dashboard_cell_id]).first!
+    cell.destroy if cell
+    render text: 'ok', status: :ok
+  end
 
   # DELETE /dashboards/1
   def destroy

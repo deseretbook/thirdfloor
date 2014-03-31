@@ -13,6 +13,7 @@ Rails.application.routes.draw do
       post :widen
       post :narrow
       post :add_visualization
+      post :remove_visualization
     end
   end
 
