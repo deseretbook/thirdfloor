@@ -15,16 +15,17 @@
 </head>
 <body>
   
-  <div id="menu-link" title="Menu" class="<% if request.path == '/' %>autohide-menu<% end %>">
+  <div id="menu-link" title="Menu" class="<% if request.path == '/' || request.path =~ /^\/dashboard\// %>autohide-menu<% end %>">
     <i class="fa fa-bars"></i>
   </div>
-  <div id="menu" class="pure-menu pure-menu-horizontal <% if request.path == '/' %>autohide-menu<% else %>static-menu pure-menu-open<% end %>">
+  <div id="menu" class="pure-menu pure-menu-horizontal <% if request.path == '/' || request.path =~ /^\/dashboard\// %>autohide-menu<% else %>static-menu pure-menu-open<% end %>">
     <ul>
       <li class="hide-menu-link"><a href="#">Close</a></li>
       <li class="<% if request.path == root_path %>pure-menu-selected<% end %>"><a href="<%= root_path %>" data-no-turbolink>Home</a></li>
       <%-
         [
           [ visualizations_path, 'Visualizations' ],
+          [ dashboards_path, 'Dashboards' ],
           [ data_points_path, 'Data Points'],
           [ stations_path,  'Stations' ]
         ].each do |path, text|

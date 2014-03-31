@@ -1,0 +1,402 @@
+javascript:
+  $(function() {
+
+    var reload = function() { window.location.reload(); }
+
+    var reload_timer = #{dashboard.refresh.to_i * 1000};
+    
+    var reload_countdown_width = 100;
+
+    var counter_timeout = reload_timer / reload_countdown_width;
+
+    if (reload_timer > 0) {
+      setInterval(function() {
+        reload_countdown_width = reload_countdown_width -1;
+        $('.reload-countdown').css('width', reload_countdown_width + "%")
+      }, counter_timeout);
+
+      setInterval(function() { reload() }, reload_timer);
+    }
+
+    $('.cell-movement.true').on('click', function(event) {
+      var cell_id = $(this).closest('.visualization-cell').data('cell-id');
+      var action = $(this).data('action');
+
+      $.post('/dashboard_cells/' + cell_id + '/' + action)
+      .done(function() { reload(); })
+      .fail(function(d,e,j) { alert(d.responseText); });
+    });
+
+    $('.remove-cell.true').on('click', function(event) {
+      var cell_id = $(this).closest('.visualization-cell').data('cell-id');
+      var action = $(this).data('action');
+
+      if (confirm('Remove this cell?')) {
+        $.post('#{remove_visualization_dashboard_path(dashboard)}', { dashboard_cell_id: cell_id })
+        .done(function() { reload(); })
+        .fail(function(d,e,j) { alert(d.responseText); });
+      }
+    });
+
+    $('.dashboard-controls .width.true').on('click', function(event) {
+      var dashboard_id = $('.dashboard').data('dashboard-id');
+      var action = $(this).data('action');
+
+      $.post('/dashboards/' + dashboard_id + '/' + action)
+      .done(function() { reload(); })
+      .fail(function(d,e,j) { alert(d.responseText); });
+    });
+
+    $('.dashboard-controls .popup.true').on('click', function(event) {
+      var selector = $(this).data('selector');
+      var el = $('.popups').find(selector);
+      var title = el.find('title').text();
+      el.dialog(
+        {
+          title: title,
+          resizable: false,
+          draggable: false,
+          modal: true,
+          width: 370,
+          show: { effect: 'slideDown', duration: 250 },
+          hide: { effect: 'slideUp', duration: 250 },
+          close: function (event, ui) {
+            $(this).dialog("destroy"); // so the dialog will open again
+          }
+        }
+      );
+    });
+
+    var cell_setting_popup = $('.popups .cell-settings').dialog({
+      autoOpen: false,
+      title: "Cell settings",
+      resizable: false,
+      draggable: false,
+      modal: true,
+      width: 370,
+      show: { effect: 'slideDown', duration: 250 },
+      hide: { effect: 'slideUp', duration: 250 }
+    });
+
+    $('.cell-settings.true').on('click', function(event) {
+      var cell_id = $(this).closest('.visualization-cell').data('cell-id');
+      $.get('/dashboard_cells/' + cell_id + '/edit').done(function(data) {
+        cell_setting_popup.html(data);
+        cell_setting_popup.dialog("open");
+      });
+
+    });
+
+    $('.popups .add-visualization form').on('submit', function(event) {
+      var visualization_id = $(this).find('select').val();
+      if (visualization_id.toString().length < 1) {
+        alert('Select a visualization first');
+        return false;
+      }
+      return true;
+    });
+
+    $('.popups .add-visualization form').bind('ajax:complete', function(e) {
+      reload();
+    });
+
+    $('.popups .dashboard-settings form').bind('ajax:complete', function(e) {
+      reload();
+    });
+
+    var dashboardControlsVisible = function() {
+      return ($('.dashboard-controls.visible').length > 0);
+    };
+
+    var hideDashboardControls = function() {
+      $('.dashboard-controls').removeClass('visible');
+    };
+
+    var showDashboardControls = function() {
+      if (!$('.dashboard-controls').hasClass('visible')) {
+        $('.dashboard-controls').addClass('visible');
+        //dashboardControlsHiderId = setDashboardControlsHideTimeout();
+      }
+    };
+
+    var setDashboardControlsHideTimeout = function(){
+      return setTimeout(function(){
+        if (dashboardControlsVisible()) {
+          hideDashboardControls();
+        }
+      }, 5000);
+    };
+
+    var dashboardControlsHiderId = setDashboardControlsHideTimeout();
+
+    var menuHiderId = setDashboardControlsHideTimeout();
+
+    $('body').on('mousemove', function() {
+      if (!dashboardControlsVisible()) {
+        showDashboardControls();
+      }
+      if (typeof(dashboardControlsHiderId) != "undefined") {
+        clearTimeout(dashboardControlsHiderId);
+        dashboardControlsHiderId = setDashboardControlsHideTimeout();
+      }  
+    });
+
+    var scrollersPresent = function() {
+      return ($('body .maximum-height').length > 0);
+    };
+
+    var autoScroll = function(el, scroll_delay) {
+      if (!$(el).data('stopped')) {
+        var direction = $(el).data('direction') || 'down';
+        if (direction == 'down') {
+          if ($(el).scrollTop() < ($(el).find('.container').height() - $(el).height())) {
+            $(el).scrollTop($(el).scrollTop()+1);
+          } else {
+            $(el).data('direction', 'up');
+          }
+        } else {
+          if ($(el).scrollTop() > 0 ) {
+            $(el).scrollTop($(el).scrollTop()-1);
+          } else {
+            $(el).data('direction', 'down');
+          }
+        }
+      }
+      setTimeout(function(){ autoScroll(el, scroll_delay); }, scroll_delay);
+    }
+
+    if (scrollersPresent()) {
+      $('body .maximum-height').each(function(index, el) {
+      $(el).data('scroll-delay', 200);
+      setTimeout( function() {
+        autoScroll(el, 500);
+      }, 2000 );
+      });
+
+      $('body .maximum-height').on('mouseenter', function(event) {
+        $(this).data('stopped', true);
+        $(this).scrollTop('0');
+      });
+
+      $('body .maximum-height').on('mouseleave', function(event) {
+        $(this).data('stopped', false);
+      });
+
+    }
+
+  });
+
+scss:
+  .visualization-cell.maximum-height {
+    overflow: hidden;
+  }
+
+  .visualization-cell .container {
+    position:relative;
+
+    .controls {
+      display: none;
+      position: absolute;
+      right:3px;
+      top:3px;
+      z-index: 1;
+
+      i {
+        margin: 0 3px 0 3px;
+        &.true {
+          &:hover {
+            cursor: pointer;
+            color: blue;
+          }
+        }
+        &.false {
+          &:hover {
+            color: red;
+          }
+        }
+      }
+    }
+    
+    &:hover {
+      .controls {
+        display: block;
+      }
+    }
+  }
+
+  .dashboard-controls {
+    &.visible {
+      .narrow { left: 0px; }
+      .widen { right: 0px; }
+      .add { left: 0px; }
+      .dashboard-settings { right: 0px; }
+    }
+    div {
+      position: fixed;
+      
+      padding: 10px;
+      background-color: lightgrey;
+      opacity: 0.75;
+      span {
+        display: none;
+      }
+      &:hover {
+        opacity: 1.0;
+        z-index: 1;
+        
+        &.true {
+          color: blue;
+          cursor: pointer;
+        }
+        &.false { color: red; }
+        
+        span {
+          display: inline-block;
+        }
+      }
+      transition: all 0.2s ease-out;
+      &.narrow {
+        top: 125px;
+        left: -35px;
+        border-top-right-radius: 1em;
+        border-bottom-right-radius: 1em;
+        span {
+          margin-right: 10px;
+        }
+      }
+      &.widen {
+        top: 125px;
+        right: -35px;
+        border-top-left-radius: 1em;
+        border-bottom-left-radius: 1em;
+        span {
+          margin-left: 10px;
+        }
+      }
+      &.add {
+        top: 75px;
+        left: -35px;
+        border-top-right-radius: 1em;
+        border-bottom-right-radius: 1em;
+        span {
+          margin-right: 10px;
+        }
+      }
+      &.dashboard-settings {
+        top: 75px;
+        right: -35px;
+        border-top-left-radius: 1em;
+        border-bottom-left-radius: 1em;
+        span {
+          margin-left: 10px;
+        }
+      }
+    }
+  }
+
+  .popups {
+    display: none;
+  }
+
+- if dashboard.refresh.to_i > 0
+  .reload-countdown
+.pure-g.dashboard data-dashboard-id=dashboard.id
+  - if dashboard.dashboard_cells.empty?
+    .pure-u-1 No visualizations added to this dashboard.
+  - counter = 0
+  - max_cell_position = dashboard.dashboard_cells.maximum(:position)
+  - while dashboard.dashboard_cells.size >= (counter+1)
+    - dashboard.columns.times do |column_number|
+      - cell = dashboard.dashboard_cells[counter]
+      - break if cell.nil?
+      - counter += 1
+      - cell_width = cell.columns.to_i > 0 ? cell.columns : 1
+      - width = (cell_width == dashboard.columns ? '1' : "#{cell_width}-#{dashboard.columns}")
+      - classes = ["pure-u-md-#{width}, pure-u-lg-#{width}"]
+      - classes << 'maximum-height'if cell.maximum_height.present?
+      - style = (cell.maximum_height.present? ? "max-height: #{cell.maximum_height};" : nil)
+      .visualization-cell.pure-u-1 id="vc_#{cell.id}" data-cell-id=cell.id style=style class=classes.join(' ')
+        .container title=cell.visualization.name
+
+          .controls
+            i.fa.fa-cog.cell-settings.true title="Cell settings"
+            erb:
+              <% icons = [
+                ['fa-expand', 'widen', true, 'make wider', 'too wide already'],
+                ['fa-compress', 'narrow', cell.columns > 1, 'make narrower', 'as narrow as it can be'],
+                ['fa-arrow-circle-left', 'lower_position', cell.position > 0, 'move up', 'already at the top'],
+                ['fa-arrow-circle-right', 'raise_position', cell.position < max_cell_position, 'move down', 'already the last one']
+              ] %>
+            - icons.each do |klasses, action, enabled, yep, nope|
+              - classes = [ 'cell-movement', klasses, enabled.to_s ]
+              - title = (enabled ? yep : nope)
+              i.fa class=classes.join(' ') title=title data-action=action
+            i.fa.fa-times.remove-cell.true title="remove this cell"
+          = render inline: cell.visualization.markup, type: cell.visualization.markup_type
+
+.dashboard-controls
+  .add.popup.true data-selector='.add-visualization'
+    span Add Visualization
+    i.fa.fa-plus
+    
+  .width.narrow class=(dashboard.columns > 1) data-action="narrow"
+    span
+      - if dashboard.columns > 1
+        | Narrow dashboard
+      - else 
+        | Can't narrow dashboard
+       
+    i.fa.fa-compress
+  .dashboard-settings.popup.true data-selector='.dashboard-settings'
+    i.fa.fa-cog
+    span Settings
+    
+  .width.widen class=(dashboard.columns < Dashboard::MAXIMUM_COLUMNS) data-action="widen"
+    // 6 is arbitrary max
+    i.fa.fa-expand
+    span
+      - if dashboard.columns < Dashboard::MAXIMUM_COLUMNS
+        | Widen dashboard
+      - else
+        | Can't widen dashboard
+
+.popups
+  .cell-settings
+    title Cell Settings
+    
+  .add-visualization
+    title Add Visualization
+    - if Visualization.enabled.count > 0
+      = form_tag add_visualization_dashboard_path(dashboard), remote: true, class: 'pure-form pure-form-aligned'
+        fieldset
+          .pure-control-group
+            = label_tag :visualization_id, "Visualization"
+            = select_tag :visualization_id, options_for_select(Visualization.enabled.where(component: false).order('name').map{|v| [v.name, v.id] }), include_blank: true
+          .pure-controls
+            button type="submit" class="pure-button pure-button-primary" Add
+    - else
+      - if Visualization.disabled.count > 0
+        | No visualizations are enabled! #{link_to 'Please enable some',  visualizations_path}.
+      - else
+        | No visualizations have been created! #{link_to 'Please make one', new_visualization_path}.
+  .dashboard-settings
+    title Dashboard Settings
+    = form_for(dashboard, remote: true, html: { class: 'pure-form pure-form-aligned' }) do |f|
+      fieldset
+        .pure-control-group
+          = f.label :name
+          = f.text_field :name
+        .pure-control-group
+          = f.label :slug
+          = f.text_field :slug, disabled: true
+        .pure-control-group
+          = f.label :enabled
+          = f.check_box :enabled
+        .pure-control-group
+          = f.label :refresh
+          = f.number_field :refresh
+        .pure-control-group
+          = f.label :columns
+          = f.number_field :columns
+        .pure-controls
+          button type="submit" class="pure-button pure-button-primary" Update

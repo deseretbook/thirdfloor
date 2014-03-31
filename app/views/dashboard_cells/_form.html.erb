@@ -1,0 +1,37 @@
+<%= form_for(@dashboard_cell) do |f| %>
+  <% if @dashboard_cell.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@dashboard_cell.errors.count, "error") %> prohibited this dashboard_cell from being saved:</h2>
+
+      <ul>
+      <% @dashboard_cell.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :dashboard_id %><br>
+    <%= f.select :dashboard_id, Dashboard.all.map{|v|[v.name, v.id]}, include_blank: '- select -' %>
+  </div>
+  <div class="field">
+    <%= f.label :visualization_id %><br>
+    <%= f.select :visualization_id, Visualization.all.map{|v|[v.name, v.id]}, include_blank: '- select -' %>
+  </div>
+  <div class="field">
+    <%= f.label :columns %><br>
+    <%= f.number_field :columns %>
+  </div>
+  <div class="field">
+    <%= f.label :position %><br>
+    <%= f.number_field :position %>
+  </div>
+  <div class="field">
+    <%= f.label :maximum_height %><br>
+    <%= f.text_field :maximum_height %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

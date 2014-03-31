@@ -11,4 +11,23 @@ class HomeController < ApplicationController
       locals: { visualization: vis }
     )
   end
+
+  def dashboard
+    slug = params[:slug]
+    # get dashboard by slug or id
+    dashboard = if slug =~ /^\d+/
+      Dashboard.enabled.where(id: slug.to_i).first!
+    else
+      Dashboard.enabled.where(slug: params[:slug]).first!
+    end
+    render locals: { dashboard: dashboard }
+  end
+
+  def default_dashboard
+    redirect_to(
+      render_dashboard_path(
+        Dashboard.enabled.first!.slug
+      )
+    )
+  end
 end

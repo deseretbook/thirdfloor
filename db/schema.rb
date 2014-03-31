@@ -11,11 +11,37 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140311215040) do
+ActiveRecord::Schema.define(version: 20140331194048) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "hstore"
+
+  create_table "dashboard_cells", force: true do |t|
+    t.integer  "dashboard_id",                 null: false
+    t.integer  "visualization_id",             null: false
+    t.integer  "columns"
+    t.integer  "position",         default: 0, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "maximum_height"
+  end
+
+  add_index "dashboard_cells", ["dashboard_id"], name: "index_dashboard_cells_on_dashboard_id", using: :btree
+  add_index "dashboard_cells", ["visualization_id"], name: "index_dashboard_cells_on_visualization_id", using: :btree
+
+  create_table "dashboards", force: true do |t|
+    t.string   "name"
+    t.string   "slug"
+    t.boolean  "enabled",    default: true
+    t.integer  "refresh"
+    t.text     "css"
+    t.integer  "columns",    default: 1,    null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "dashboards", ["slug"], name: "index_dashboards_on_slug", unique: true, using: :btree
 
   create_table "data_points", force: true do |t|
     t.integer  "station_id", null: false
@@ -73,6 +99,7 @@ ActiveRecord::Schema.define(version: 20140311215040) do
     t.boolean  "enabled",     default: true
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "component",   default: false,  null: false
   end
 
 end

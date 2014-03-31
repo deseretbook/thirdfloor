@@ -1,0 +1,66 @@
+<%= form_for(@dashboard) do |f| %>
+  <% if @dashboard.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@dashboard.errors.count, "error") %> prohibited this dashboard from being saved:</h2>
+
+      <ul>
+      <% @dashboard.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %><br>
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :slug %><br>
+    <%= f.text_field :slug %>
+  </div>
+  <div class="field">
+    <%= f.label :enabled %><br>
+    <%= f.check_box :enabled %>
+  </div>
+  <div class="field">
+    <%= f.label :refresh %><br>
+    <%= f.number_field :refresh %>
+  </div>
+  <div class="field">
+    <%= f.label :css %><br>
+    <%= f.text_area :css %>
+  </div>
+  <div class="field">
+    <%= f.label :columns %><br>
+    <%= f.number_field :columns %>
+  </div>
+  <%= f.fields_for :dashboard_cells do |ff| %>
+    <fieldset>
+      <%= ff.hidden_field :dashboard_id %>
+      <!-- <div class="field">
+        <%= ff.label :visualization_id %><br>
+        <%= ff.number_field :visualization_id %>
+      </div> -->
+      <div class="field">
+        <%= ff.label :visualization_id %><br>
+        <%= ff.select :visualization_id, Visualization.all.map{|v|[v.name, v.id]}, include_blank: '- select -' %>
+      </div>
+      <div class="field">
+        <%= ff.label :columns %><br>
+        <%= ff.number_field :columns %>
+      </div>
+      <div class="field">
+        <%= ff.label :position %><br>
+        <%= ff.number_field :position %>
+      </div>
+      <div class="field">
+        <%= ff.label :_destroy, 'Destroy?' %>
+        <%= ff.check_box :_destroy, value: true %>
+      </div>
+    </fieldset>
+  <% end %>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

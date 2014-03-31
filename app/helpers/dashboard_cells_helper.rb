@@ -1,0 +1,2 @@
+module DashboardCellsHelper
+end

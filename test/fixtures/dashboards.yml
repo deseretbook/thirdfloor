@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  slug: MyString
+  enabled: false
+  refresh: 1
+  css: MyText
+  cells: 
+
+two:
+  name: MyString
+  slug: MyString
+  enabled: false
+  refresh: 1
+  css: MyText
+  cells: 
