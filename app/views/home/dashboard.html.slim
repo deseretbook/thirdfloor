@@ -42,6 +42,7 @@ javascript:
           resizable: false,
           draggable: false,
           modal: true,
+          width: 370,
           show: { effect: 'slideDown', duration: 250 },
           hide: { effect: 'slideUp', duration: 250 },
           close: function (event, ui) {
@@ -61,7 +62,10 @@ javascript:
     });
 
     $('.popups .add-visualization form').bind('ajax:complete', function(e) {
-      console.log(e);
+      reload();
+    });
+
+    $('.popups .settings form').bind('ajax:complete', function(e) {
       reload();
     });
 
@@ -114,6 +118,11 @@ scss:
       right:3px;
       top:3px;
       z-index: 1;
+
+      span {
+        border-right: 1px solid white;
+        padding-right: 3px;
+      }
 
       i {
         margin: 0 3px 0 3px;
@@ -170,7 +179,7 @@ scss:
       }
       transition: all 0.2s ease-out;
       &.narrow {
-        top: 95px;
+        top: 125px;
         left: -35px;
         border-top-right-radius: 1em;
         border-bottom-right-radius: 1em;
@@ -179,7 +188,7 @@ scss:
         }
       }
       &.widen {
-        top: 95px;
+        top: 125px;
         right: -35px;
         border-top-left-radius: 1em;
         border-bottom-left-radius: 1em;
@@ -188,7 +197,7 @@ scss:
         }
       }
       &.add {
-        top: 50px;
+        top: 75px;
         left: -35px;
         border-top-right-radius: 1em;
         border-bottom-right-radius: 1em;
@@ -197,7 +206,7 @@ scss:
         }
       }
       &.settings {
-        top: 50px;
+        top: 75px;
         right: -35px;
         border-top-left-radius: 1em;
         border-bottom-left-radius: 1em;
@@ -227,7 +236,9 @@ scss:
       - width = (cell_width == dashboard.columns ? '1' : "#{cell_width}-#{dashboard.columns}")
       .visualization-cell.pure-u-1 id="vc_#{cell.id}" data-cell-id=cell.id class="pure-u-md-#{width} pure-u-lg-#{width}"
         .container title=cell.visualization.name
+
           .controls
+            span Width: #{cell_width}
             i.fa.fa-times.remove-cell.true
             erb:
               <% icons = [
@@ -273,9 +284,13 @@ scss:
   .add-visualization
     title Add Visualization
     - if Visualization.enabled.count > 0
-      = form_tag add_visualization_dashboard_path(dashboard), remote: true, class: 'pure-form'
-        = select_tag :visualization_id, options_for_select(Visualization.enabled.order('name').map{|v| [v.name, v.id] }), include_blank: 'Choose'
-        = submit_tag "Add"
+      = form_tag add_visualization_dashboard_path(dashboard), remote: true, class: 'pure-form pure-form-aligned'
+        fieldset
+          .pure-control-group
+            = label_tag :visualization_id, "Visualization"
+            = select_tag :visualization_id, options_for_select(Visualization.enabled.order('name').map{|v| [v.name, v.id] }), include_blank: true
+          .pure-controls
+            button type="submit" class="pure-button pure-button-primary" Add
     - else
       - if Visualization.disabled.count > 0
         | No visualizations are enabled! #{link_to 'Please enable some',  visualizations_path}.
@@ -283,4 +298,22 @@ scss:
         | No visualizations have been created! #{link_to 'Please make one', new_visualization_path}.
   .settings
     title Dashboard Settings
-    | settings
+    = form_for(dashboard, remote: true, html: { class: 'pure-form pure-form-aligned' }) do |f|
+      fieldset
+        .pure-control-group
+          = f.label :name
+          = f.text_field :name
+        .pure-control-group
+          = f.label :slug
+          = f.text_field :slug, disabled: true
+        .pure-control-group
+          = f.label :enabled
+          = f.check_box :enabled
+        .pure-control-group
+          = f.label :refresh
+          = f.number_field :refresh
+        .pure-control-group
+          = f.label :columns
+          = f.number_field :columns
+        .pure-controls
+          button type="submit" class="pure-button pure-button-primary" Update

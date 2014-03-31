@@ -13,8 +13,12 @@ class HomeController < ApplicationController
   end
 
   def dashboard
-    render locals: {
-      dashboard: Dashboard.where(slug: params[:slug], enabled: true).first!
-    }
+    slug = params[:slug]
+    dashboard = if slug =~ /^\d+/
+      Dashboard.enabled.where(id: slug.to_i).first!
+    else
+      Dashboard.enabled.where(slug: params[:slug]).first!
+    end
+    render locals: { dashboard: dashboard }
   end
 end

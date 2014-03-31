@@ -1,9 +1,17 @@
 class Dashboard < ActiveRecord::Base
-  MAXIMUM_COLUMNS = 6 # arbitrary
-  
+  MAXIMUM_COLUMNS = 5 # arbitrary
+
   validates_uniqueness_of :slug
   validates_presence_of :name, :slug
   before_validation :populate_slug
+  validates_format_of :slug, with: /\A[a-zA-Z]+/, message: "must begin with a-z"
+
+  before_validation -> do
+    if read_attribute(:columns).to_i > MAXIMUM_COLUMNS
+      write_attribute(:columns, MAXIMUM_COLUMNS)
+    end
+  end
+  validates_numericality_of :columns, maximum: MAXIMUM_COLUMNS
 
   after_save :reposition_cells, :narrow_cells
   
@@ -17,6 +25,8 @@ class Dashboard < ActiveRecord::Base
   has_many :visualizations, through: :dashboard_cells
 
   after_initialize -> { attributes["columns"] ||= 1 }
+
+  scope :enabled, -> { where(enabled: true) }
 
   def widen!(amount = 1)
     if columns < MAXIMUM_COLUMNS
