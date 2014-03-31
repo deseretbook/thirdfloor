@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140326231226) do
+ActiveRecord::Schema.define(version: 20140331194048) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(version: 20140326231226) do
     t.integer  "position",         default: 0, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "maximum_height"
   end
 
   add_index "dashboard_cells", ["dashboard_id"], name: "index_dashboard_cells_on_dashboard_id", using: :btree
@@ -98,6 +99,7 @@ ActiveRecord::Schema.define(version: 20140326231226) do
     t.boolean  "enabled",     default: true
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "component",   default: false,  null: false
   end
 
 end

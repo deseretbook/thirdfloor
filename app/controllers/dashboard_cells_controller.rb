@@ -76,6 +76,6 @@ class DashboardCellsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def dashboard_cell_params
-      params.require(:dashboard_cell).permit(:dashboard_id, :visualization_id, :rows, :columns, :position)
+      params.require(:dashboard_cell).permit(:dashboard_id, :visualization_id, :rows, :columns, :position, :maximum_height)
     end
 end

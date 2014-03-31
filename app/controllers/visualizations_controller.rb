@@ -55,6 +55,6 @@ class VisualizationsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def visualization_params
-      params.require(:visualization).permit(:enabled, :name, :slug, :markup_type, :markup)
+      params.require(:visualization).permit(:enabled, :name, :slug, :markup_type, :markup, :component)
     end
 end
