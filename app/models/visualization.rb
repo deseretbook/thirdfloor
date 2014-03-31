@@ -7,8 +7,15 @@ class Visualization < ActiveRecord::Base
 
   before_validation :populate_slug
 
+  scope :enabled, -> { where(enabled: true) }
+  scope :disabled, -> { where(enabled: false) }
+
   def markup_type
     read_attribute(:markup_type).to_sym
+  end
+
+  def disabled?
+    !enabled?
   end
 
 private

@@ -52,6 +52,19 @@ class DashboardsController < ApplicationController
     render text: 'ok'
   end
 
+  def add_visualization
+    visualization = Visualization.where(id: params[:visualization_id]).first!
+    if visualization.disabled?
+      render text: 'visualization not enabled', status: :unacceptable
+    else
+      if @dashboard.dashboard_cells.create(visualization: visualization)
+        render text: 'ok', status: :ok
+      else
+        render text: 'problem adding visualization', status: :unacceptable
+      end
+    end
+  end
+
 
   # DELETE /dashboards/1
   def destroy

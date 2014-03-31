@@ -1,12 +1,14 @@
 javascript:
   $(function() {
 
+    var reload = function() { window.location.reload(); }
+
     $('.cell-movement.true').on('click', function(event) {
       var cell_id = $(this).closest('.visualization-cell').data('cell-id');
       var action = $(this).data('action');
 
       $.post('/dashboard_cells/' + cell_id + '/' + action)
-      .done(function() { window.location.reload(); })
+      .done(function() { reload(); })
       .fail(function(d,e,j) { alert(d.responseText); });
     });
 
@@ -15,7 +17,7 @@ javascript:
       var action = $(this).data('action');
 
       $.post('/dashboards/' + dashboard_id + '/' + action)
-      .done(function() { window.location.reload(); })
+      .done(function() { reload(); })
       .fail(function(d,e,j) { alert(d.responseText); });
     });
 
@@ -36,6 +38,20 @@ javascript:
           }
         }
       );
+    });
+
+    $('.popups .add-visualization form').on('submit', function(event) {
+      var visualization_id = $(this).find('select').val();
+      if (visualization_id.toString().length < 1) {
+        alert('Select a visualization first');
+        return false;
+      }
+      return true;
+    });
+
+    $('.popups .add-visualization form').bind('ajax:complete', function(e) {
+      console.log(e);
+      reload();
     });
 
     var dashboardControlsVisible = function() {
@@ -183,8 +199,6 @@ scss:
 
   .popups {
     display: none;
-    .add-visualization {
-    }
   }
 
 .reload-countdown
@@ -246,7 +260,15 @@ scss:
 .popups
   .add-visualization
     title Add Visualization
-    | add
+    - if Visualization.enabled.count > 0
+      = form_tag add_visualization_dashboard_path(dashboard), remote: true, class: 'pure-form'
+        = select_tag :visualization_id, options_for_select(Visualization.enabled.order('name').map{|v| [v.name, v.id] }), include_blank: 'Choose'
+        = submit_tag "Add"
+    - else
+      - if Visualization.disabled.count > 0
+        | No visualizations are enabled! #{link_to 'Please enable some',  visualizations_path}.
+      - else
+        | No visualizations have been created! #{link_to 'Please make one', new_visualization_path}.
   .settings
     title Dashboard Settings
     | settings
