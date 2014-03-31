@@ -51,6 +51,7 @@ Rails.application.routes.draw do
 
   get '/visualize/:slug' => 'home#visualize', as: 'render_visualization'
   get '/dashboard/:slug' => 'home#dashboard', as: 'render_dashboard'
+  get '/dashboard/' => 'home#default_dashboard', as: 'render_default_dashboard'
 
   resources :visualizations
 

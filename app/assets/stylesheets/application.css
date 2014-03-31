@@ -16,6 +16,10 @@
  *= require_self
  */
 
+.hidden {
+  display: none;
+}
+
 html, body {
   background-color: black;
   color: white;
@@ -33,10 +37,10 @@ html, body {
 }
 
 .autohide-menu {
-  z-index: 99;
   position: fixed;
   top:0;
   left:0;
+  width: 0px;
   -webkit-transition: all 0.2s ease-out;
   -moz-transition: all 0.2s ease-out;
   -ms-transition: all 0.2s ease-out;
@@ -63,6 +67,7 @@ html, body {
   width: 1em;
   height: 1em;
   text-align: center;
+  opacity: 0.5;
 }
 
 #menu-link i {

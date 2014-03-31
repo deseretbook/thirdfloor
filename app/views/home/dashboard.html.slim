@@ -298,7 +298,8 @@ scss:
     display: none;
   }
 
-.reload-countdown
+- if dashboard.refresh.to_i > 0
+  .reload-countdown
 .pure-g.dashboard data-dashboard-id=dashboard.id
   - if dashboard.dashboard_cells.empty?
     .pure-u-1 No visualizations added to this dashboard.
