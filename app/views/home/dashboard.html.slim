@@ -186,11 +186,6 @@ scss:
       top:3px;
       z-index: 1;
 
-      span {
-        border-right: 1px solid white;
-        padding-right: 3px;
-      }
-
       i {
         margin: 0 3px 0 3px;
         &.true {
@@ -308,7 +303,6 @@ scss:
         .container title=cell.visualization.name
 
           .controls
-            span Width: #{cell_width}
             i.fa.fa-cog.cell-settings.true title="Cell settings"
             erb:
               <% icons = [

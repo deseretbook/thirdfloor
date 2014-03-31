@@ -13,11 +13,11 @@
 
   <div class="field">
     <%= f.label :dashboard_id %><br>
-    <%= f.number_field :dashboard_id %>
+    <%= f.select :dashboard_id, Dashboard.all.map{|v|[v.name, v.id]}, include_blank: '- select -' %>
   </div>
   <div class="field">
     <%= f.label :visualization_id %><br>
-    <%= f.number_field :visualization_id %>
+    <%= f.select :visualization_id, Visualization.all.map{|v|[v.name, v.id]}, include_blank: '- select -' %>
   </div>
   <div class="field">
     <%= f.label :columns %><br>
