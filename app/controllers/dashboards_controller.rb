@@ -57,7 +57,8 @@ class DashboardsController < ApplicationController
     if visualization.disabled?
       render text: 'visualization not enabled', status: :unacceptable
     else
-      if @dashboard.dashboard_cells.create(visualization: visualization)
+      if @dashboard.dashboard_cells.create(visualization: visualization, position: 99)
+        @dashboard.reposition_cells
         render text: 'ok', status: :ok
       else
         render text: 'problem adding visualization', status: :unacceptable
@@ -68,6 +69,7 @@ class DashboardsController < ApplicationController
   def remove_visualization
     cell = @dashboard.dashboard_cells.where(id: params[:dashboard_cell_id]).first!
     cell.destroy if cell
+    @dashboard.reposition_cells
     render text: 'ok', status: :ok
   end
 

@@ -3,6 +3,21 @@ javascript:
 
     var reload = function() { window.location.reload(); }
 
+    var reload_timer = #{dashboard.refresh.to_i * 1000};
+    
+    var reload_countdown_width = 100;
+
+    var counter_timeout = reload_timer / reload_countdown_width;
+
+    if (reload_timer > 0) {
+      setInterval(function() {
+        reload_countdown_width = reload_countdown_width -1;
+        $('.reload-countdown').css('width', reload_countdown_width + "%")
+      }, counter_timeout);
+
+      setInterval(function() { reload() }, reload_timer);
+    }
+
     $('.cell-movement.true').on('click', function(event) {
       var cell_id = $(this).closest('.visualization-cell').data('cell-id');
       var action = $(this).data('action');
