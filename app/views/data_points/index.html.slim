@@ -13,7 +13,9 @@ javascript:
         option value="" (filter by name)
         - DataPoint.select(:name).distinct.reorder(:name).each do |n|
           option value=n.name selected=(params[:name] == n.name) = n.name
-    span (#{data_points.count} records)
+    span
+      = data_points.count
+      | records
   .navigation = will_paginate data_points
   table
     thead
