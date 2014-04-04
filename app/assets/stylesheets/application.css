@@ -74,3 +74,16 @@ html, body {
   background: lightblue;
   border-radius: 30px;
 }
+
+.pure-g .container {
+  border: 1px solid rgb(30,30,30);
+  margin: 3px;
+  box-sizing: border-box;
+}
+
+.reload-countdown {
+  height: 2px;
+  width: 100%;
+  background-color: green;
+  margin: 0 auto;
+}
