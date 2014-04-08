@@ -24,4 +24,6 @@ gem 'rails_12factor', group: :production
 
 gem 'httparty'
 gem 'will_paginate'
-gem 'rollbar' # error reporting app
+group :production do
+  gem 'rollbar' # error reporting app
+end
