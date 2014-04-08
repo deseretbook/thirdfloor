@@ -5,16 +5,11 @@ class DataPointsController < ApplicationController
 
   # before_filter :login_required, only: [ :index, :show ]
 
-  def index # GET collection
-    respond_with(
-      cached_data_points,
-      each_serializer: DataPointSerializer
-    ) do |format|
-      format.html do
-        render locals: {
-          data_points: data_points.paginate(:page => params[:page])
-        }
-      end
+  def index # GET/HEAD collection
+    if request.head?
+      respond_with_collection_head
+    else
+      respond_with_collection_index
     end
   end
 
@@ -57,6 +52,36 @@ protected
   def cached_data_points
     Rails.cache.fetch(data_points.limit(limit_condition).to_sql, expires_in: 5.minutes) do
       data_points.limit(limit_condition).to_a
+    end
+  end
+
+  def respond_with_collection_index
+    respond_with(
+      cached_data_points,
+      each_serializer: DataPointSerializer
+    ) do |format|
+      format.html do
+        render locals: {
+          data_points: data_points.paginate(:page => params[:page])
+        }
+      end
+    end
+  end
+
+  def respond_with_collection_head
+    params[:limit] = 1 # so caching works
+    point = cached_data_points.first
+    h = {
+      "x-last-data-point-id" => point.id,
+      "x-last-data-point-created-at" => point.created_at.to_i,
+      "x-last-data-point-name" => point.name
+    }
+
+    h.each { |k,v| headers[k] = v.to_s }
+
+    respond_to do |fmt|
+      fmt.html { render text: h.inspect }
+      fmt.json { render json: true }
     end
   end
 
