@@ -29,6 +29,7 @@ javascript:
     setInterval(function() { window.location.reload() }, reload_timer);
   });
 
+= render_visualization('deploy_fanfare')
 .reload-countdown
 .pure-g
   .pure-u-1.pure-u-md-1-2.pure-u-lg-1-2
@@ -50,4 +51,3 @@ javascript:
       = render_visualization('deployments')
     .alerts.container
       = render_visualization('alerts')
-= render_visualization('deploy_fanfare')
