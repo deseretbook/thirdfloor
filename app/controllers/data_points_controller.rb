@@ -50,7 +50,13 @@ protected
   end
 
   def cached_data_points
-    Rails.cache.fetch(data_points.limit(limit_condition).to_sql, expires_in: 5.minutes) do
+    cache_expiration = if params[:cache_time].present
+      params[:cache_time].to_i.seconds
+    else
+      5.minutes
+    end
+    
+    Rails.cache.fetch(data_points.limit(limit_condition).to_sql, expires_in: cache_expiration) do
       data_points.limit(limit_condition).to_a
     end
   end
