@@ -47,9 +47,7 @@ javascript:
     .travis.container
       | Loading...
     .deployments.container
-      - vis = Visualization.find_by_slug('deployments')
-      = render inline: vis.markup, type: vis.markup_type
+      = render_visualization('deployments')
     .alerts.container
-      - vis = Visualization.find_by_slug('alerts')
-      = render inline: vis.markup, type: vis.markup_type
-  
+      = render_visualization('alerts')
+= render_visualization('deploy_fanfare')
