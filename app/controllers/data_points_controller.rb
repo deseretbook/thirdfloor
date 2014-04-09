@@ -46,7 +46,10 @@ class DataPointsController < ApplicationController
 protected
 
   def data_points
-    DataPoint.where(id_condition).where(name_condition).where(days_condition)
+    DataPoint.where(id_condition).
+      where(name_condition).
+      where(days_condition).
+      where(hstore_key_presence_condition)
   end
 
   def cached_data_points
@@ -123,6 +126,14 @@ private
       if params[:id]
         h[:id] = params[:id]
       end
+    end
+  end
+
+  def hstore_key_presence_condition
+    if params[:has_key].present?
+      params[:has_key].split(',').map do |k|
+        "defined(data, '#{k}')"
+      end.join(' AND ')
     end
   end
 end
