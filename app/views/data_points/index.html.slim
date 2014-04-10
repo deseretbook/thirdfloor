@@ -13,6 +13,10 @@ javascript:
         option value="" (filter by name)
         - DataPoint.select(:name).distinct.reorder(:name).each do |n|
           option value=n.name selected=(params[:name] == n.name) = n.name
+      
+      - if params[:has_key].present?
+        span
+          | Data keys required: #{params[:has_key]}
       span
         = data_points.count
         | &nbsp;records

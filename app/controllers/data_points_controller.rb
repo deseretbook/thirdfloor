@@ -5,16 +5,11 @@ class DataPointsController < ApplicationController
 
   # before_filter :login_required, only: [ :index, :show ]
 
-  def index # GET collection
-    respond_with(
-      cached_data_points,
-      each_serializer: DataPointSerializer
-    ) do |format|
-      format.html do
-        render locals: {
-          data_points: data_points.paginate(:page => params[:page])
-        }
-      end
+  def index # GET/HEAD collection
+    if request.head?
+      respond_with_collection_head
+    else
+      respond_with_collection_index
     end
   end
 
@@ -51,12 +46,51 @@ class DataPointsController < ApplicationController
 protected
 
   def data_points
-    DataPoint.where(id_condition).where(name_condition).where(days_condition)
+    DataPoint.where(id_condition).
+      where(name_condition).
+      where(days_condition).
+      where(hstore_key_presence_condition)
   end
 
   def cached_data_points
-    Rails.cache.fetch(data_points.limit(limit_condition).to_sql, expires_in: 5.minutes) do
+    cache_expiration = if params[:cache_time].present?
+      params[:cache_time].to_i.seconds
+    else
+      5.minutes
+    end
+
+    Rails.cache.fetch(data_points.limit(limit_condition).to_sql, expires_in: cache_expiration) do
       data_points.limit(limit_condition).to_a
+    end
+  end
+
+  def respond_with_collection_index
+    respond_with(
+      cached_data_points,
+      each_serializer: DataPointSerializer
+    ) do |format|
+      format.html do
+        render locals: {
+          data_points: data_points.paginate(:page => params[:page])
+        }
+      end
+    end
+  end
+
+  def respond_with_collection_head
+    params[:limit] = 1 # so caching works
+    point = cached_data_points.first
+    h = {
+      "x-last-data-point-id" => point.id,
+      "x-last-data-point-created-at" => point.created_at.to_i,
+      "x-last-data-point-name" => point.name
+    }
+
+    h.each { |k,v| headers[k] = v.to_s }
+
+    respond_to do |fmt|
+      fmt.html { render text: h.inspect }
+      fmt.json { render json: true }
     end
   end
 
@@ -92,6 +126,14 @@ private
       if params[:id]
         h[:id] = params[:id]
       end
+    end
+  end
+
+  def hstore_key_presence_condition
+    if params[:has_key].present?
+      params[:has_key].split(',').map do |k|
+        "defined(data, '#{k}')"
+      end.join(' AND ')
     end
   end
 end
