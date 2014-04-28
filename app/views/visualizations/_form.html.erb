@@ -1,4 +1,4 @@
-<%= form_for(@visualization) do |f| %>
+<%= form_for(@visualization, html: { class: 'visualization' }) do |f| %>
   <% if @visualization.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@visualization.errors.count, "error") %> prohibited this visualization from being saved:</h2>
