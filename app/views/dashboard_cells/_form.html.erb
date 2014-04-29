@@ -20,16 +20,8 @@
     <%= f.select :visualization_id, Visualization.all.map{|v|[v.name, v.id]}, include_blank: '- select -' %>
   </div>
   <div class="field">
-    <%= f.label :columns %><br>
-    <%= f.number_field :columns %>
-  </div>
-  <div class="field">
     <%= f.label :position %><br>
     <%= f.number_field :position %>
-  </div>
-  <div class="field">
-    <%= f.label :maximum_height %><br>
-    <%= f.text_field :maximum_height %>
   </div>
   <div class="actions">
     <%= f.submit %>

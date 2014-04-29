@@ -47,10 +47,6 @@
         <%= ff.select :visualization_id, Visualization.all.map{|v|[v.name, v.id]}, include_blank: '- select -' %>
       </div>
       <div class="field">
-        <%= ff.label :columns %><br>
-        <%= ff.number_field :columns %>
-      </div>
-      <div class="field">
         <%= ff.label :position %><br>
         <%= ff.number_field :position %>
       </div>
