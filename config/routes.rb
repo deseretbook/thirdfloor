@@ -1,17 +1,12 @@
 Rails.application.routes.draw do
   resources :dashboard_cells do
     member do
-      post :widen
-      post :narrow
-      post :raise_position
-      post :lower_position
+      post '/' => :update
     end
   end
 
   resources :dashboards do
     member do
-      post :widen
-      post :narrow
       post :add_visualization
       post :remove_visualization
     end

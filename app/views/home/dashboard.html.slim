@@ -18,15 +18,6 @@ javascript:
       setInterval(function() { reload() }, reload_timer);
     }
 
-    $('.cell-movement.true').on('click', function(event) {
-      var cell_id = $(this).closest('.visualization-cell').data('cell-id');
-      var action = $(this).data('action');
-
-      $.post('/dashboard_cells/' + cell_id + '/' + action)
-      .done(function() { reload(); })
-      .fail(function(d,e,j) { alert(d.responseText); });
-    });
-
     $('.remove-cell.true').on('click', function(event) {
       var cell_id = $(this).closest('.visualization-cell').data('cell-id');
       var action = $(this).data('action');
@@ -36,15 +27,6 @@ javascript:
         .done(function() { reload(); })
         .fail(function(d,e,j) { alert(d.responseText); });
       }
-    });
-
-    $('.dashboard-controls .width.true').on('click', function(event) {
-      var dashboard_id = $('.dashboard').data('dashboard-id');
-      var action = $(this).data('action');
-
-      $.post('/dashboards/' + dashboard_id + '/' + action)
-      .done(function() { reload(); })
-      .fail(function(d,e,j) { alert(d.responseText); });
     });
 
     $('.dashboard-controls .popup.true').on('click', function(event) {
@@ -65,26 +47,6 @@ javascript:
           }
         }
       );
-    });
-
-    var cell_setting_popup = $('.popups .cell-settings').dialog({
-      autoOpen: false,
-      title: "Cell settings",
-      resizable: false,
-      draggable: false,
-      modal: true,
-      width: 370,
-      show: { effect: 'slideDown', duration: 250 },
-      hide: { effect: 'slideUp', duration: 250 }
-    });
-
-    $('.cell-settings.true').on('click', function(event) {
-      var cell_id = $(this).closest('.visualization-cell').data('cell-id');
-      $.get('/dashboard_cells/' + cell_id + '/edit').done(function(data) {
-        cell_setting_popup.html(data);
-        cell_setting_popup.dialog("open");
-      });
-
     });
 
     $('.popups .add-visualization form').on('submit', function(event) {
@@ -115,7 +77,6 @@ javascript:
     var showDashboardControls = function() {
       if (!$('.dashboard-controls').hasClass('visible')) {
         $('.dashboard-controls').addClass('visible');
-        //dashboardControlsHiderId = setDashboardControlsHideTimeout();
       }
     };
 
@@ -184,12 +145,42 @@ javascript:
 
     }
 
-    var gridster_el = $(".gridster .dashboard");
+    window.gridster_el = $(".gridster .dashboard");
+
+    var syncGridsterChangesToServer = function() {
+      var objects = window.gridster.serialize();
+      var done_count = 0;
+      for (var index in objects) {
+        var object = objects[index];
+        var cell_id = object.el.data('cell-id');
+        var data = {
+          column: object.col,
+          row: object.row,
+          width: object.size_x,
+          height: object.size_y,
+        }
+        $.post('/dashboard_cells/' + cell_id, data)
+          /*.done(function() {
+            done_count = done_count + 1;
+            if (done_count >= objects.length) {
+              reload();
+            }
+          })*/
+          .fail(function(d,e,j) { alert(d.responseText); });
+      }
+    }
 
     gridster_el.gridster({
-      widget_margins: [10, 10],
+      widget_margins: [5, 5],
       widget_base_dimensions: [140, 140],
-      resize: { enabled: true }
+      resize: {
+        enabled: true,
+        stop: syncGridsterChangesToServer
+      },
+      draggable: { stop: syncGridsterChangesToServer },
+      serialize_params: function($w, wgd) {
+        return { el: wgd.el, col: wgd.col, row: wgd.row, size_x: wgd.size_x, size_y: wgd.size_y }
+        }
     });
 
     window.gridster = gridster_el.gridster().data('gridster');
@@ -211,7 +202,7 @@ scss:
   ul.dashboard {
     list-style-type: none;
     li {
-      background: grey;
+      border: 1px solid #1e1e1e;
       overflow: hidden;
     }
   } 
@@ -249,8 +240,6 @@ scss:
 
   .dashboard-controls {
     &.visible {
-      .narrow { left: 0px; }
-      .widen { right: 0px; }
       .add { left: 0px; }
       .dashboard-settings { right: 0px; }
     }
@@ -278,24 +267,6 @@ scss:
         }
       }
       transition: all 0.2s ease-out;
-      &.narrow {
-        top: 125px;
-        left: -35px;
-        border-top-right-radius: 1em;
-        border-bottom-right-radius: 1em;
-        span {
-          margin-right: 10px;
-        }
-      }
-      &.widen {
-        top: 125px;
-        right: -35px;
-        border-top-left-radius: 1em;
-        border-bottom-left-radius: 1em;
-        span {
-          margin-left: 10px;
-        }
-      }
       &.add {
         top: 75px;
         left: -35px;
@@ -332,23 +303,9 @@ scss:
         - cell = dashboard.dashboard_cells[counter]
         - break if cell.nil?
         - counter += 1
-        - cell_width = cell.columns.to_i > 0 ? cell.columns : 1
-        li.visualization-cell id="vc_#{cell.id}" data-cell-id=cell.id data-row=counter.to_s data-col="1"  data-sizex="1" data-sizey="1"
+        li.visualization-cell id="vc_#{cell.id}" data-cell-id=cell.id data-row=cell.row data-col=cell.column  data-sizex=cell.width data-sizey=cell.height
           .container title=cell.visualization.name
-
             .controls
-              i.fa.fa-cog.cell-settings.true title="Cell settings"
-              erb:
-                <% icons = [
-                  ['fa-expand', 'widen', cell.columns < Dashboard::MAXIMUM_COLUMNS, 'make wider', 'too wide already'],
-                  ['fa-compress', 'narrow', cell.columns > 1, 'make narrower', 'as narrow as it can be'],
-                  ['fa-arrow-circle-left', 'lower_position', cell.position > 0, 'move up', 'already at the top'],
-                  ['fa-arrow-circle-right', 'raise_position', cell.position < max_cell_position, 'move down', 'already the last one']
-                ] %>
-              - icons.each do |klasses, action, enabled, yep, nope|
-                - classes = [ 'cell-movement', klasses, enabled.to_s ]
-                - title = (enabled ? yep : nope)
-                i.fa class=classes.join(' ') title=title data-action=action
               i.fa.fa-times.remove-cell.true title="remove this cell"
             = render inline: cell.visualization.markup, type: cell.visualization.markup_type
 
@@ -357,31 +314,11 @@ scss:
     span Add Visualization
     i.fa.fa-plus
     
-  .width.narrow class=(dashboard.columns > 1) data-action="narrow"
-    span
-      - if dashboard.columns > 1
-        | Narrow dashboard
-      - else 
-        | Can't narrow dashboard
-       
-    i.fa.fa-compress
   .dashboard-settings.popup.true data-selector='.dashboard-settings'
     i.fa.fa-cog
     span Settings
-    
-  .width.widen class=(dashboard.columns < Dashboard::MAXIMUM_COLUMNS) data-action="widen"
-    // 6 is arbitrary max
-    i.fa.fa-expand
-    span
-      - if dashboard.columns < Dashboard::MAXIMUM_COLUMNS
-        | Widen dashboard
-      - else
-        | Can't widen dashboard
 
-.popups
-  .cell-settings
-    title Cell Settings
-    
+.popups    
   .add-visualization
     title Add Visualization
     - if Visualization.enabled.count > 0
@@ -397,6 +334,7 @@ scss:
         | No visualizations are enabled! #{link_to 'Please enable some',  visualizations_path}.
       - else
         | No visualizations have been created! #{link_to 'Please make one', new_visualization_path}.
+
   .dashboard-settings
     title Dashboard Settings
     = form_for(dashboard, remote: true, html: { class: 'pure-form pure-form-aligned' }) do |f|
@@ -413,8 +351,5 @@ scss:
         .pure-control-group
           = f.label :refresh
           = f.number_field :refresh
-        .pure-control-group
-          = f.label :columns
-          = f.number_field :columns
         .pure-controls
           button type="submit" class="pure-button pure-button-primary" Update

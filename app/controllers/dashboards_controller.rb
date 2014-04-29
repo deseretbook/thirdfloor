@@ -42,16 +42,6 @@ class DashboardsController < ApplicationController
     end
   end
 
-  def widen
-    @dashboard.widen!
-    render text: 'ok'
-  end
-
-  def narrow
-    @dashboard.narrow!
-    render text: 'ok'
-  end
-
   def add_visualization
     visualization = Visualization.where(id: params[:visualization_id]).first!
     if visualization.disabled?

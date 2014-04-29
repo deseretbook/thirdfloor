@@ -39,26 +39,6 @@ class DashboardCellsController < ApplicationController
     end
   end
 
-  def widen
-    @dashboard_cell.widen!
-    render text: 'ok'
-  end
-
-  def narrow
-    @dashboard_cell.narrow!
-    render text: 'ok'
-  end
-
-  def raise_position
-    @dashboard_cell.raise_position!
-    render text: 'ok'
-  end
-
-  def lower_position
-    @dashboard_cell.lower_position!
-    render text: 'ok'
-  end
-
   # DELETE /dashboard_cells/1
   def destroy
     @dashboard_cell.destroy
@@ -69,12 +49,12 @@ class DashboardCellsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_dashboard_cell
       if (id = params[:id]).present?
-        @dashboard_cell = DashboardCell.find(params[:id])
+        @dashboard_cell = DashboardCell.find(id)
       end
     end
 
     # Only allow a trusted parameter "white list" through.
     def dashboard_cell_params
-      params.require(:dashboard_cell).permit(:dashboard_id, :visualization_id, :rows, :columns, :position, :maximum_height)
+      params.permit(:dashboard_cell, :dashboard_id, :visualization_id, :column, :row, :width, :height)
     end
 end

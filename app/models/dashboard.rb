@@ -13,7 +13,7 @@ class Dashboard < ActiveRecord::Base
   end
   validates_numericality_of :columns, maximum: MAXIMUM_COLUMNS
 
-  after_save :reposition_cells, :narrow_cells
+  after_save :reposition_cells
   
   has_many :dashboard_cells,
     dependent: :destroy
@@ -28,25 +28,6 @@ class Dashboard < ActiveRecord::Base
 
   scope :enabled, -> { where(enabled: true) }
 
-  def widen!(amount = 1)
-    if columns < MAXIMUM_COLUMNS
-      update!(columns: columns + amount)
-    end
-    columns
-  end
-
-  def narrow!(amount = 1)
-    if columns > 1
-      if amount >= columns
-        update!(columns: 1)
-      else
-        update!(columns: columns - amount)
-      end
-    end
-    narrow_cells
-    columns
-  end
-
   def reposition_cells
     self.dashboard_cells.sort do |a,b|
       [a.position, a.updated_at] <=> [b.position, b.updated_at] 
@@ -60,14 +41,6 @@ private
   def populate_slug
     if self.slug.blank? && self.name.present?
       self.slug = self.name.downcase.gsub(/([^a-z0-9_\-_]+)/, '_')
-    end
-  end
-
-  def narrow_cells
-    self.dashboard_cells.each do |cell|
-      if cell.columns > columns
-        cell.update!(columns: columns)
-      end
     end
   end
 end
