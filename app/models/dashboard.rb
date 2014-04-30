@@ -35,19 +35,19 @@ class Dashboard < ActiveRecord::Base
 
   def maximum_x_cells
     return unless maximum_width?
-    ((maximum_width - cell_x_margin) / ( cell_width + cell_x_margin)).to_i
+    ((maximum_width / ( cell_width + cell_x_margin))).to_i
   end
 
   def maximum_y_cells
     return unless maximum_height?
-    ((maximum_height - cell_y_margin) / ( cell_height + cell_y_margin)).to_i
+    ((maximum_height / ( cell_height + cell_y_margin))).to_i
   end
 
 private
 
   def populate_slug
     if self.slug.blank? && self.name.present?
-      self.slug = self.name.downcase.gsub(/([^a-z0-9_\-_]+)/, '_')
+      self.slug = self.name.downcase.gsub(/([^a-z0-9\-_]+)/, '_')
     end
   end
 end

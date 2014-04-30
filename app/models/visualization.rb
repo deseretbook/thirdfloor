@@ -1,5 +1,5 @@
 class Visualization < ActiveRecord::Base
-  validates_presence_of :name, :slug
+  validates_presence_of :name, :slug, case_sensitive: false
   validates_inclusion_of :markup_type, in: %i[ html erb slim ]
   validates_format_of :slug, with: /[a-z0-9_\-]+/
 
