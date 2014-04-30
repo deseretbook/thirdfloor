@@ -1,5 +1,5 @@
 class Dashboard < ActiveRecord::Base
-  validates_uniqueness_of :slug
+  validates_uniqueness_of :slug, case_sensitive: false
   validates_presence_of :name, :slug
   before_validation :populate_slug
   validates_format_of :slug, with: /\A[a-zA-Z]+/, message: "must begin with a-z"
@@ -23,6 +23,24 @@ class Dashboard < ActiveRecord::Base
     end.each_with_index do |cell, i|
       cell.update(position: i)
     end
+  end
+
+  def maximum_height?
+    maximum_height.present?
+  end
+
+  def maximum_width?
+    maximum_width.present?
+  end
+
+  def maximum_x_cells
+    return unless maximum_width?
+    ((maximum_width - cell_x_margin) / ( cell_width + cell_x_margin)).to_i
+  end
+
+  def maximum_y_cells
+    return unless maximum_height?
+    ((maximum_height - cell_y_margin) / ( cell_height + cell_y_margin)).to_i
   end
 
 private

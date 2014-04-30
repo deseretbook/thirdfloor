@@ -9,7 +9,7 @@
       <th>Markup type</th>
       <th>Created</th>
       <th>Updated</th>
-      <th colspan="3"></th>
+      <th colspan="4"></th>
     </tr>
   </thead>
 
@@ -22,6 +22,7 @@
         <td><%= visualization.markup_type %></td>
         <td><%= time_ago_in_words(visualization.created_at) %></td>
         <td><%= time_ago_in_words(visualization.updated_at) %></td>
+        <td><%= link_to 'See', render_visualization_path(visualization.slug), target: "_blank" %></td>
         <td><%= link_to 'Show', visualization %></td>
         <td><%= link_to 'Edit', edit_visualization_path(visualization) %></td>
         <td><%= link_to 'Destroy', visualization, method: :delete, data: { confirm: 'Are you sure?' } %></td>

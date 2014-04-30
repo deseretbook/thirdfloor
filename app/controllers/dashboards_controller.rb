@@ -80,7 +80,7 @@ class DashboardsController < ApplicationController
     # Only allow a trusted parameter "white list" through.
     def dashboard_params
       params.require(:dashboard).permit(
-        :name, :slug, :enabled, :refresh, :refresh_to, :css, :cell_width, :cell_height, :cell_x_margin, :cell_y_margin
+        :name, :slug, :enabled, :refresh, :refresh_to, :css, :cell_width, :cell_height, :cell_x_margin, :cell_y_margin, :maximum_width, :maximum_height, :autoscroll
       )
     end
 end

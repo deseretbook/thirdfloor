@@ -34,3 +34,16 @@ fieldset
   .pure-control-group
     = f.label :cell_y_margin
     = f.number_field :cell_y_margin
+
+  .pure-control-group
+    = f.label :maximum_width
+    = f.number_field :maximum_width
+
+  / gridster doesn't yet support max_rows, so this is currently useless.
+  /.pure-control-group
+  /  = f.label :maximum_height
+  /  = f.number_field :maximum_height
+
+  .pure-control-group
+    = f.label :autoscroll
+    = f.check_box :autoscroll

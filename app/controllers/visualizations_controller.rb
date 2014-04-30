@@ -5,7 +5,7 @@ class VisualizationsController < ApplicationController
 
   # GET /visualizations
   def index
-    @visualizations = Visualization.all
+    @visualizations = Visualization.order('name')
   end
 
   # GET /visualizations/1

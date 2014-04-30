@@ -21,6 +21,7 @@
         <td><%= dashboard.refresh %></td>
         <td><%= dashboard.refresh_to %></td>
         <td><%= dashboard.dashboard_cells.count %></td>
+        <td><%= link_to 'See', render_dashboard_path(dashboard.slug), target: "_blank" %></td>
         <td><%= link_to 'Show', dashboard %></td>
         <td><%= link_to 'Edit', edit_dashboard_path(dashboard) %></td>
         <td><%= link_to 'Destroy', dashboard, method: :delete, data: { confirm: 'Are you sure?' } %></td>

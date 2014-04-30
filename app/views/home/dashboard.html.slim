@@ -139,6 +139,7 @@ javascript:
 
     startAutoScroll = function() {
       if (scrollersArePresent()) {
+        console.log('Beginning autoscroll');
         $('.visualization-cell.do-scrolling').each(function(index, el) {
           var scroll_delay = $(el).data('scroll-delay');
           autoScroll(el, (scroll_delay || 100));
@@ -153,14 +154,13 @@ javascript:
           $(this).data('stopped', false);
         });
       } else {
-        console.log('no scrollers to scroll');
+        console.log('No divs found that need autoscrolling');
       }
     };
 
-    // start autoscrolling after the grid has had time to load. May take
-    // a while on slow machings like the Raspi.
-    // Comment/uncomment line below to enable or disable autoscrolling.
-    //setTimeout(function() { startAutoScroll() }, 10000);
+    // start autoscrolling after the grid contents have had time to load.
+    // That may take a while on slow machings like the Raspi.
+    setTimeout(function() { startAutoScroll() }, 10000);
 
     var syncGridsterChangesToServer = function() {
       var objects = gridster.serialize();
@@ -182,7 +182,10 @@ javascript:
     gridster = $(".gridster .dashboard").gridster({
       widget_margins: [#{dashboard.cell_x_margin}, #{dashboard.cell_y_margin}],
       widget_base_dimensions: [#{dashboard.cell_width}, #{dashboard.cell_height}],
-      autogrow_cols: true,
+      autogrow_cols: #{dashboard.maximum_width.blank?},
+      autogrow_rows: #{dashboard.maximum_height.blank?},
+      #{dashboard.maximum_width? ? "max_cols: #{dashboard.maximum_x_cells}," : nil }
+      // gridster doesn't seem to have a coresponding max_rows option, sadly.
       resize: {
         enabled: true,
         stop: syncGridsterChangesToServer
@@ -299,7 +302,7 @@ scss:
       - cell = dashboard.dashboard_cells[counter]
       - break if cell.nil?
       - counter += 1
-      li.visualization-cell.allow-autoscroll id="vc_#{cell.id}" data-cell-id=cell.id data-row=cell.row data-col=cell.column  data-sizex=cell.width data-sizey=cell.height
+      li.visualization-cell id="vc_#{cell.id}" class="#{dashboard.autoscroll? ? 'allow-autoscroll' : nil}" data-cell-id=cell.id data-row=cell.row data-col=cell.column  data-sizex=cell.width data-sizey=cell.height
         .container title=cell.visualization.name
           .controls
             i.fa.fa-times.remove-cell.true title="remove this cell"
