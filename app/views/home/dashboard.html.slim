@@ -102,21 +102,19 @@ javascript:
       }  
     });
 
-    var scrollersPresent = function() {
-      var present = false;
-      $('ul.dashboard li.visualization-cell').each(function(index, el) {
+    var markAutoScrollingElements = function() {
+      $('.dashboard .visualization-cell.allow-autoscroll').each(function(index, el) {
         var container = $(el).find('div.container');
         if (container.css('height') > $(el).css('height')) {
-          $(el).addClass('scroller');
+          $(el).addClass('do-scrolling');
           present = true;
         }
       });
-      if (present) {
-        console.log('scrollers present');
-      } else {
-        console.log('no scrollers present');
-      }
-      return present;
+    }
+
+    var scrollersArePresent = function() {
+      markAutoScrollingElements();
+      return($('.dashboard .visualization-cell.do-scrolling').length > 0);
     };
 
     var autoScroll = function(el, scroll_delay) {
@@ -140,20 +138,18 @@ javascript:
     };
 
     startAutoScroll = function() {
-      if (scrollersPresent()) {
-        $('li.visualization-cell.scroller').each(function(index, el) {
+      if (scrollersArePresent()) {
+        $('.visualization-cell.do-scrolling').each(function(index, el) {
           var scroll_delay = $(el).data('scroll-delay');
-          setTimeout( function() {
-            autoScroll(el, (scroll_delay || 100));
-          }, 2000 );
+          autoScroll(el, (scroll_delay || 100));
         });
 
-        $('li.visualization-cell.scroller').on('mouseenter', function(event) {
+        $('.visualization-cell.do-scrolling').on('mouseenter', function(event) {
           $(this).data('stopped', true);
           $(this).scrollTop('0');
         });
 
-        $('li.visualization-cell.scroller').on('mouseleave', function(event) {
+        $('.visualization-cell.do-scrolling').on('mouseleave', function(event) {
           $(this).data('stopped', false);
         });
       } else {
@@ -161,10 +157,13 @@ javascript:
       }
     };
 
-    window.gridster_el = $(".gridster .dashboard");
+    // start autoscrolling after the grid has had time to load. May take
+    // a while on slow machings like the Raspi.
+    // Comment/uncomment line below to enable or disable autoscrolling.
+    //setTimeout(function() { startAutoScroll() }, 10000);
 
     var syncGridsterChangesToServer = function() {
-      var objects = window.gridster.serialize();
+      var objects = gridster.serialize();
       var done_count = 0;
       for (var index in objects) {
         var object = objects[index];
@@ -176,17 +175,11 @@ javascript:
           height: object.size_y,
         }
         $.post('/dashboard_cells/' + cell_id, data)
-          /*.done(function() {
-            done_count = done_count + 1;
-            if (done_count >= objects.length) {
-              reload();
-            }
-          })*/
           .fail(function(d,e,j) { alert(d.responseText); });
       }
     }
 
-    window.gridster = gridster_el.gridster({
+    gridster = $(".gridster .dashboard").gridster({
       widget_margins: [#{dashboard.cell_x_margin}, #{dashboard.cell_y_margin}],
       widget_base_dimensions: [#{dashboard.cell_width}, #{dashboard.cell_height}],
       autogrow_cols: true,
@@ -306,7 +299,7 @@ scss:
       - cell = dashboard.dashboard_cells[counter]
       - break if cell.nil?
       - counter += 1
-      li.visualization-cell id="vc_#{cell.id}" data-cell-id=cell.id data-row=cell.row data-col=cell.column  data-sizex=cell.width data-sizey=cell.height
+      li.visualization-cell.allow-autoscroll id="vc_#{cell.id}" data-cell-id=cell.id data-row=cell.row data-col=cell.column  data-sizex=cell.width data-sizey=cell.height
         .container title=cell.visualization.name
           .controls
             i.fa.fa-times.remove-cell.true title="remove this cell"
