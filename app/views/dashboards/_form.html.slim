@@ -1,0 +1,16 @@
+= form_for(@dashboard, html: { class: 'pure-form pure-form-aligned' }) do |f|
+  - if @dashboard.errors.any?
+    #error_explanation
+      h2
+        = pluralize(@dashboard.errors.count, "error")
+        | prohibited this dashboard from being saved:
+      ul
+        - @dashboard.errors.full_messages.each do |msg|
+          li = msg
+  = render partial: 'form_guts', locals: { f: f }
+  
+  h2 Visualizations used
+  = render partial: 'cells_form', locals: { f: f }    
+
+  .actions
+    = f.submit

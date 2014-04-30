@@ -1,0 +1,10 @@
+= f.fields_for :dashboard_cells do |ff|
+  fieldset
+    .pure-control-group
+      = ff.label :visualization_id
+      = ff.select :visualization_id, Visualization.all.map{|v|[v.name, v.id]}, include_blank: '- select -'
+
+    = ff.hidden_field :dashboard_id
+    .pure-control-group
+      = ff.label :_destroy, 'Destroy?'
+      = ff.check_box :_destroy, value: true

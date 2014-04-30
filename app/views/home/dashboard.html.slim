@@ -334,33 +334,7 @@ scss:
   .dashboard-settings
     title Dashboard Settings
     = form_for(dashboard, remote: true, html: { class: 'pure-form pure-form-aligned' }) do |f|
-      fieldset
-        .pure-control-group
-          = f.label :name
-          = f.text_field :name
-        .pure-control-group
-          = f.label :slug
-          = f.text_field :slug, disabled: true
-        .pure-control-group
-          = f.label :enabled
-          = f.check_box :enabled
-        .pure-control-group
-          = f.label :refresh
-          = f.number_field :refresh
-        .pure-control-group
-          = f.label :refresh_to
-          = f.text_field :refresh_to
-        .pure-control-group
-          = f.label :cell_width
-          = f.number_field :cell_width
-        .pure-control-group
-          = f.label :cell_height
-          = f.number_field :cell_height
-        .pure-control-group
-          = f.label :cell_x_margin
-          = f.number_field :cell_x_margin
-        .pure-control-group
-          = f.label :cell_y_margin
-          = f.number_field :cell_y_margin
-        .pure-controls
-          button type="submit" class="pure-button pure-button-primary" Update
+      = render partial: 'dashboards/form_guts', locals: {f: f }
+      
+      .pure-controls
+        button type="submit" class="pure-button pure-button-primary" Update
