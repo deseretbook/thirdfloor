@@ -35,19 +35,20 @@ ActiveRecord::Schema.define(version: 20140430204502) do
   create_table "dashboards", force: true do |t|
     t.string   "name"
     t.string   "slug"
-    t.boolean  "enabled",        default: true
+    t.boolean  "enabled",          default: true
     t.integer  "refresh"
     t.text     "css"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "cell_width",     default: 100,  null: false
-    t.integer  "cell_height",    default: 100,  null: false
-    t.integer  "cell_x_margin",  default: 5,    null: false
-    t.integer  "cell_y_margin",  default: 5,    null: false
+    t.integer  "cell_width",       default: 100,  null: false
+    t.integer  "cell_height",      default: 100,  null: false
+    t.integer  "cell_x_margin",    default: 5,    null: false
+    t.integer  "cell_y_margin",    default: 5,    null: false
     t.integer  "refresh_to"
     t.integer  "maximum_width"
     t.integer  "maximum_height"
-    t.boolean  "autoscroll",     default: true, null: false
+    t.boolean  "autoscroll",       default: true, null: false
+    t.integer  "autoscroll_delay"
   end
 
   add_index "dashboards", ["slug"], name: "index_dashboards_on_slug", unique: true, using: :btree

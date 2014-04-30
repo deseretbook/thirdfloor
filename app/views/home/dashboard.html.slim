@@ -141,8 +141,9 @@ javascript:
       if (scrollersArePresent()) {
         console.log('Beginning autoscroll');
         $('.visualization-cell.do-scrolling').each(function(index, el) {
-          var scroll_delay = $(el).data('scroll-delay');
-          autoScroll(el, (scroll_delay || 100));
+          var scroll_delay = $(el).data('autoscroll-delay');
+          console.log(scroll_delay);
+          autoScroll(el, parseInt(scroll_delay || 1000));
         });
 
         $('.visualization-cell.do-scrolling').on('mouseenter', function(event) {
@@ -302,7 +303,7 @@ scss:
       - cell = dashboard.dashboard_cells[counter]
       - break if cell.nil?
       - counter += 1
-      li.visualization-cell id="vc_#{cell.id}" class="#{dashboard.autoscroll? ? 'allow-autoscroll' : nil}" data-cell-id=cell.id data-row=cell.row data-col=cell.column  data-sizex=cell.width data-sizey=cell.height
+      li.visualization-cell id="vc_#{cell.id}" class="#{dashboard.autoscroll? ? 'allow-autoscroll' : nil}" data-cell-id=cell.id data-row=cell.row data-col=cell.column data-sizex=cell.width data-sizey=cell.height data-autoscroll-delay=dashboard.autoscroll_delay
         .container title=cell.visualization.name
           .controls
             i.fa.fa-times.remove-cell.true title="remove this cell"
