@@ -44,6 +44,10 @@ html, body {
   transition: all 0.2s ease-out;
 }
 
+.autohide-menu.pure-menu-open {
+  position: relative;
+}
+
 .static-menu .hide-menu-link {
   display: none;
 }
