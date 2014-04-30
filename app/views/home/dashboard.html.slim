@@ -170,9 +170,10 @@ javascript:
       }
     }
 
-    gridster_el.gridster({
-      widget_margins: [5, 5],
-      widget_base_dimensions: [140, 140],
+    window.gridster = gridster_el.gridster({
+      widget_margins: [#{dashboard.cell_x_margin}, #{dashboard.cell_y_margin}],
+      widget_base_dimensions: [#{dashboard.cell_width}, #{dashboard.cell_height}],
+      autogrow_cols: true,
       resize: {
         enabled: true,
         stop: syncGridsterChangesToServer
@@ -181,10 +182,8 @@ javascript:
       serialize_params: function($w, wgd) {
         return { el: wgd.el, col: wgd.col, row: wgd.row, size_x: wgd.size_x, size_y: wgd.size_y }
         }
-    });
+    }).data('gridster');
 
-    window.gridster = gridster_el.gridster().data('gridster');
- 
   });
 
 scss:
@@ -296,15 +295,14 @@ scss:
     - counter = 0
     - max_cell_position = dashboard.dashboard_cells.maximum(:position)
     - while dashboard.dashboard_cells.size >= (counter+1)
-      - dashboard.columns.times do |column_number|
-        - cell = dashboard.dashboard_cells[counter]
-        - break if cell.nil?
-        - counter += 1
-        li.visualization-cell id="vc_#{cell.id}" data-cell-id=cell.id data-row=cell.row data-col=cell.column  data-sizex=cell.width data-sizey=cell.height
-          .container title=cell.visualization.name
-            .controls
-              i.fa.fa-times.remove-cell.true title="remove this cell"
-            = render inline: cell.visualization.markup, type: cell.visualization.markup_type
+      - cell = dashboard.dashboard_cells[counter]
+      - break if cell.nil?
+      - counter += 1
+      li.visualization-cell id="vc_#{cell.id}" data-cell-id=cell.id data-row=cell.row data-col=cell.column  data-sizex=cell.width data-sizey=cell.height
+        .container title=cell.visualization.name
+          .controls
+            i.fa.fa-times.remove-cell.true title="remove this cell"
+          = render inline: cell.visualization.markup, type: cell.visualization.markup_type
 
 .dashboard-controls
   .add.popup.true data-selector='.add-visualization'
@@ -348,5 +346,20 @@ scss:
         .pure-control-group
           = f.label :refresh
           = f.number_field :refresh
+        .pure-control-group
+          = f.label :refresh_to
+          = f.text_field :refresh_to
+        .pure-control-group
+          = f.label :cell_width
+          = f.number_field :cell_width
+        .pure-control-group
+          = f.label :cell_height
+          = f.number_field :cell_height
+        .pure-control-group
+          = f.label :cell_x_margin
+          = f.number_field :cell_x_margin
+        .pure-control-group
+          = f.label :cell_y_margin
+          = f.number_field :cell_y_margin
         .pure-controls
           button type="submit" class="pure-button pure-button-primary" Update

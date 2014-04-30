@@ -28,28 +28,36 @@
     <%= f.number_field :refresh %>
   </div>
   <div class="field">
+    <%= f.label :refresh_to %><br>
+    <%= f.text_field :refresh_to %>
+  </div>
+  <div class="field">
     <%= f.label :css %><br>
     <%= f.text_area :css %>
   </div>
   <div class="field">
-    <%= f.label :columns %><br>
-    <%= f.number_field :columns %>
+    <%= f.label :cell_width %><br>
+    <%= f.number_field :cell_width %>
+  </div>
+  <div class="field">
+    <%= f.label :cell_height %><br>
+    <%= f.number_field :cell_height %>
+  </div>
+  <div class="field">
+    <%= f.label :cell_x_margin %><br>
+    <%= f.number_field :cell_x_margin %>
+  </div>
+  <div class="field">
+    <%= f.label :cell_y_margin %><br>
+    <%= f.number_field :cell_y_margin %>
   </div>
   <%= f.fields_for :dashboard_cells do |ff| %>
     <fieldset>
-      <%= ff.hidden_field :dashboard_id %>
-      <!-- <div class="field">
-        <%= ff.label :visualization_id %><br>
-        <%= ff.number_field :visualization_id %>
-      </div> -->
       <div class="field">
         <%= ff.label :visualization_id %><br>
         <%= ff.select :visualization_id, Visualization.all.map{|v|[v.name, v.id]}, include_blank: '- select -' %>
       </div>
-      <div class="field">
-        <%= ff.label :position %><br>
-        <%= ff.number_field :position %>
-      </div>
+      <%= ff.hidden_field :dashboard_id %>
       <div class="field">
         <%= ff.label :_destroy, 'Destroy?' %>
         <%= ff.check_box :_destroy, value: true %>

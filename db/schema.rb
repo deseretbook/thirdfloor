@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140428233215) do
+ActiveRecord::Schema.define(version: 20140429233650) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -35,12 +35,16 @@ ActiveRecord::Schema.define(version: 20140428233215) do
   create_table "dashboards", force: true do |t|
     t.string   "name"
     t.string   "slug"
-    t.boolean  "enabled",    default: true
+    t.boolean  "enabled",       default: true
     t.integer  "refresh"
     t.text     "css"
-    t.integer  "columns",    default: 1,    null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "cell_width",    default: 100,  null: false
+    t.integer  "cell_height",   default: 100,  null: false
+    t.integer  "cell_x_margin", default: 5,    null: false
+    t.integer  "cell_y_margin", default: 5,    null: false
+    t.integer  "refresh_to"
   end
 
   add_index "dashboards", ["slug"], name: "index_dashboards_on_slug", unique: true, using: :btree
