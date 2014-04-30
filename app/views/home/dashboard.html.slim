@@ -103,7 +103,20 @@ javascript:
     });
 
     var scrollersPresent = function() {
-      return ($('body .maximum-height').length > 0);
+      var present = false;
+      $('ul.dashboard li.visualization-cell').each(function(index, el) {
+        var container = $(el).find('div.container');
+        if (container.css('height') > $(el).css('height')) {
+          $(el).addClass('scroller');
+          present = true;
+        }
+      });
+      if (present) {
+        console.log('scrollers present');
+      } else {
+        console.log('no scrollers present');
+      }
+      return present;
     };
 
     var autoScroll = function(el, scroll_delay) {
@@ -124,26 +137,29 @@ javascript:
         }
       }
       setTimeout(function(){ autoScroll(el, scroll_delay); }, scroll_delay);
-    }
+    };
 
-    if (scrollersPresent()) {
-      $('body .maximum-height').each(function(index, el) {
-      $(el).data('scroll-delay', 200);
-      setTimeout( function() {
-        autoScroll(el, 500);
-      }, 2000 );
-      });
+    startAutoScroll = function() {
+      if (scrollersPresent()) {
+        $('li.visualization-cell.scroller').each(function(index, el) {
+          var scroll_delay = $(el).data('scroll-delay');
+          setTimeout( function() {
+            autoScroll(el, (scroll_delay || 100));
+          }, 2000 );
+        });
 
-      $('body .maximum-height').on('mouseenter', function(event) {
-        $(this).data('stopped', true);
-        $(this).scrollTop('0');
-      });
+        $('li.visualization-cell.scroller').on('mouseenter', function(event) {
+          $(this).data('stopped', true);
+          $(this).scrollTop('0');
+        });
 
-      $('body .maximum-height').on('mouseleave', function(event) {
-        $(this).data('stopped', false);
-      });
-
-    }
+        $('li.visualization-cell.scroller').on('mouseleave', function(event) {
+          $(this).data('stopped', false);
+        });
+      } else {
+        console.log('no scrollers to scroll');
+      }
+    };
 
     window.gridster_el = $(".gridster .dashboard");
 

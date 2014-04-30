@@ -1,18 +1,21 @@
-td.repo = repo.repository
-td.branch = repo.branch_name
-td.state class="#{repo.passing?} #{repo.running? ? 'running' : nil}"
-  - if repo.finished?
-    - if repo.passing?
-      i.fa.fa-thumbs-up
+- if repo.present?
+  td.repo = repo.repository
+  td.branch = repo.branch_name
+  td.state class="#{repo.passing?} #{repo.running? ? 'running' : nil}"
+    - if repo.finished?
+      - if repo.passing?
+        i.fa.fa-thumbs-up
+      - else
+        i.fa.fa-thumbs-down
     - else
-      i.fa.fa-thumbs-down
-  - else
-    i.fa.fa-refresh
-td.last-build
-  - if repo.finished?
-    - if (finished = repo.finished).present?
-      | #{time_ago_in_words(finished)} ago 
-  - else
-    | currently running 
-  - if (by = repo.by).present?
-    | by #{by.split(' ').first}
+      i.fa.fa-refresh
+  td.last-build
+    - if repo.finished?
+      - if (finished = repo.finished).present?
+        | #{time_ago_in_words(finished)} ago 
+    - else
+      | currently running 
+    - if (by = repo.by).present?
+      | by #{by.split(' ').first}
+- else
+  td colspan=4 error loading repo info

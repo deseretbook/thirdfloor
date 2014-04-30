@@ -15,8 +15,11 @@ class Travis
     url = "#{BASE_URL}#{owner}/#{repo}/branches/#{branch}?access_token=#{Rails.application.secrets.travis_token}"
     puts url
     response = HTTParty.get(url, headers: default_headers)
-    report_http_error(response)
-    Travis::Repo.new(response.body, owner: owner, repository: repo)
+    if http_success?(response)
+      Travis::Repo.new(response.body, owner: owner, repository: repo)
+    else
+      nil
+    end
   end
 
 private
@@ -28,12 +31,13 @@ private
   }
   end
 
-  def self.report_http_error(response)
+  def self.http_success?(response)
     if response.code.to_s =~ /^(1|2)\d{2}$/
-      puts "HTTP success: #{response.code}"
-      return false
+      Rails.logger.info "HTTP success: #{response.code}"
+      return true
     else
-      raise "FATAL: HTTP Error: #{response.code}\n#{response.body}"
+      Rails.logger.fatal "FATAL: HTTP Error: #{response.code}\n#{response.body}"
+      return false
     end
   end
 
