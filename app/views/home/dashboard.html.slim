@@ -164,6 +164,11 @@ javascript:
     setTimeout(function() { startAutoScroll() }, 10000);
 
     var syncGridsterChangesToServer = function() {
+      if (#{!logged_in?}) {
+        alert('Please log in to do this!');
+        reload();
+        return;
+      }
       var objects = gridster.serialize();
       var done_count = 0;
       for (var index in objects) {

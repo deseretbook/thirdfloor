@@ -23,6 +23,7 @@ class ApplicationController < ActionController::Base
     # this is super-duper-secure. Believe it!
     session[:logged_in].present?
   end
+  helper_method :logged_in?
 
 protected
 
