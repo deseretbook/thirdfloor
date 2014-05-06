@@ -20,13 +20,21 @@ javascript:
 
     $('.remove-cell.true').on('click', function(event) {
       var cell_id = $(this).closest('.visualization-cell').data('cell-id');
-      var action = $(this).data('action');
 
       if (confirm('Remove this cell?')) {
         $.post('#{remove_visualization_dashboard_path(dashboard)}', { dashboard_cell_id: cell_id })
         .done(function() { reload(); })
         .fail(function(d,e,j) { alert(d.responseText); });
       }
+    });
+
+    $('.reload-cell.true').on('click', function(event) {
+      var cell = $(this).closest('.visualization-cell');
+      var visualization_dev = $(cell).find('.visualization');
+      visualization_dev.text('Reloading...');
+      $.get(cell.data('server-path'))
+        .done(function(responseText) { visualization_dev.html(responseText); })
+        .fail(function(d,e,j) { alert(d.responseText); });
     });
 
     $('.dashboard-controls .popup.true').on('click', function(event) {
@@ -333,11 +341,13 @@ scss:
       - cell = dashboard.dashboard_cells[counter]
       - break if cell.nil?
       - counter += 1
-      li.visualization-cell id="vc_#{cell.id}" class="#{dashboard.autoscroll? ? 'allow-autoscroll' : nil}" data-cell-id=cell.id data-row=cell.row data-col=cell.column data-sizex=cell.width data-sizey=cell.height data-autoscroll-delay=dashboard.autoscroll_delay
+      li.visualization-cell id="vc_#{cell.id}" class="#{dashboard.autoscroll? ? 'allow-autoscroll' : nil}" data-cell-id=cell.id data-row=cell.row data-col=cell.column data-sizex=cell.width data-sizey=cell.height data-autoscroll-delay=dashboard.autoscroll_delay data-server-path=render_visualization_path(cell.visualization.slug)
         .container title=cell.visualization.name
           .controls
+            i.fa.fa-refresh.reload-cell.true title="reload this cell"
             i.fa.fa-times.remove-cell.true title="remove this cell"
-          = render inline: cell.visualization.markup, type: cell.visualization.markup_type
+          .visualization
+            = render inline: cell.visualization.markup, type: cell.visualization.markup_type
 
 .dashboard-controls
   .add.popup.true data-selector='.add-visualization'
