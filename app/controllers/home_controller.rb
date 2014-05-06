@@ -2,6 +2,10 @@ class HomeController < ApplicationController
   respond_to :html, :json, :js, :text
   skip_before_action :verify_authenticity_token, only: :visualize # allow xss
 
+  def index
+    redirect_to action: :default_dashboard
+  end
+
   def visualize
     vis = Visualization.where(slug: params[:slug], enabled: true).first!
     render(
