@@ -180,18 +180,39 @@ javascript:
       }
     }
 
+    gridsterStartChanging = function() {
+      console.log('gridsterStartChanging');
+      $('.gridster').addClass('changing');
+    };
+
+    gridsterStopChanging = function() {
+      console.log('gridsterStopChanging');
+      $('.gridster').removeClass('changing');
+    };
+
     gridster = $(".gridster .dashboard").gridster({
       widget_margins: [#{dashboard.cell_x_margin}, #{dashboard.cell_y_margin}],
       widget_base_dimensions: [#{dashboard.cell_width}, #{dashboard.cell_height}],
       autogrow_cols: #{dashboard.maximum_width.blank?},
-      autogrow_rows: #{dashboard.maximum_height.blank?},
       #{dashboard.maximum_width? ? "max_cols: #{dashboard.maximum_x_cells}," : nil }
       // gridster doesn't seem to have a coresponding max_rows option, sadly.
+      //autogrow_rows: #{dashboard.maximum_height.blank?},
+      draggable: {
+        start: gridsterStartChanging, 
+        stop: function(event, ui){
+          gridsterStopChanging();
+          syncGridsterChangesToServer();
+        }
+      },
       resize: {
         enabled: true,
-        stop: syncGridsterChangesToServer
+        start: gridsterStartChanging,
+        stop: function(e, ui, wdgt) {
+          gridsterStopChanging();
+          syncGridsterChangesToServer();
+        }
       },
-      draggable: { stop: syncGridsterChangesToServer },
+
       serialize_params: function($w, wgd) {
         return { el: wgd.el, col: wgd.col, row: wgd.row, size_x: wgd.size_x, size_y: wgd.size_y }
         }
@@ -200,6 +221,10 @@ javascript:
   });
 
 scss:
+  .gridster.changing {
+    border: 1px solid red;
+  }
+
   ul.dashboard {
     list-style-type: none;
     li {
@@ -295,7 +320,7 @@ scss:
 
 - if dashboard.refresh.to_i > 0
   .reload-countdown
-.gridster
+.gridster style="#{dashboard.maximum_width? ? "width: #{dashboard.maximum_width}px;" : nil} #{dashboard.maximum_height? ? "height: #{dashboard.maximum_height}px;" : nil}"
   ul.dashboard data-dashboard-id=dashboard.id
     - counter = 0
     - max_cell_position = dashboard.dashboard_cells.maximum(:position)

@@ -35,9 +35,10 @@ class Dashboard < ActiveRecord::Base
 
   def maximum_x_cells
     return unless maximum_width?
-    ((maximum_width / ( cell_width + cell_x_margin))).to_i
+    (((maximum_width - cell_x_margin) / ( cell_width + cell_x_margin))).to_i
   end
 
+  # not yet used for anything. If you use this, check that is works first.
   def maximum_y_cells
     return unless maximum_height?
     ((maximum_height / ( cell_height + cell_y_margin))).to_i
