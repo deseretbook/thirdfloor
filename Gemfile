@@ -26,5 +26,4 @@ gem 'httparty'
 gem 'will_paginate'
 group :production do
   gem 'rollbar' # error reporting app
-  gem 'skylight'
 end
