@@ -6,4 +6,8 @@ module ApplicationHelper
       render text: "Visualization '#{slug}' not found."
     end
   end
+
+  def autohide_menu?
+    request.path == '/'  || request.path =~ /^\/dashboard\//
+  end
 end
