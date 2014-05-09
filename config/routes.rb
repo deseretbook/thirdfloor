@@ -38,7 +38,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :stations, only: [ :index, :show ]
+  resources :stations
 
   resources :travis, only: [ :index ]
   get '/travis/*repo_string' => 'travis#show'

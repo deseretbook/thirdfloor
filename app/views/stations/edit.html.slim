@@ -1,0 +1,12 @@
+h1
+  Editing dashboard
+
+= render 'form'
+
+= link_to 'Show', station
+= link_to 'Back', stations_path
+
+- if station.local?
+  | Can't delete the local station
+- else
+  = link_to 'Destroy', station, method: :delete, data: { confirm: 'Are you sure?' }

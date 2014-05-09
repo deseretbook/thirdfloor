@@ -1,0 +1,29 @@
+= form_for(station, html: { class: 'pure-form pure-form-aligned' }) do |f|
+  - if station.errors.any?
+    #error_explanation
+      h2
+        = pluralize(station.errors.count, "error")
+        | prohibited this station from being saved:
+      ul
+        - station.errors.full_messages.each do |msg|
+          li = msg
+  
+  fieldset
+    .pure-control-group
+      = f.label :hostname
+      = f.text_field :hostname
+
+    .pure-control-group
+      = f.label :password
+      = f.text_field :password
+
+    .pure-control-group
+      = f.label :location
+      = f.text_field :location
+
+    .pure-control-group
+      = f.label :enabled
+      = f.check_box :enabled
+  
+  .actions
+    = f.submit
