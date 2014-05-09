@@ -331,7 +331,7 @@ scss:
   .popups {
     display: none;
   }
-
+x
 - if dashboard.refresh.to_i > 0
   .reload-countdown
 .gridster style="#{dashboard.maximum_width? ? "width: #{dashboard.maximum_width}px;" : nil} #{dashboard.maximum_height? ? "height: #{dashboard.maximum_height}px;" : nil}"
@@ -342,7 +342,7 @@ scss:
       - cell = dashboard.dashboard_cells[counter]
       - break if cell.nil?
       - counter += 1
-      li.visualization-cell id="vc_#{cell.id}" class="#{dashboard.autoscroll? ? 'allow-autoscroll' : nil}" data-cell-id=cell.id data-row=cell.row data-col=cell.column data-sizex=cell.width data-sizey=cell.height data-autoscroll-delay=dashboard.autoscroll_delay data-server-path=render_visualization_path(cell.visualization.slug)
+      li.visualization-cell id="vc_#{cell.id}" class="#{autoscroll_cell?(cell) ? 'allow-autoscroll' : nil}" data-cell-id=cell.id data-row=cell.row data-col=cell.column data-sizex=cell.width data-sizey=cell.height data-autoscroll-delay=(cell.autoscroll_delay || dashboard.autoscroll_delay) data-server-path=render_visualization_path(cell.visualization.slug)
         .container title=cell.visualization.name
           .controls
             i.fa.fa-refresh.reload-cell.true title="reload this cell"
