@@ -18,6 +18,8 @@
 
 window.ready = function() {
   console.log('window.ready()');
+
+  setTimeout(function() { $('.flash.notice').fadeOut(); }, 3000)
   
   if ($('.pure-menu').hasClass('autohide-menu')) {
     var hideMenu = function() {

@@ -40,4 +40,11 @@ class UsersController < ApplicationController
     end
   end
 
+  def log_out
+    session[:logged_in] = nil
+    session[:email_address] = nil
+    flash[:notice] = "Logged Out"
+    redirect_to root_path
+  end
+
 end

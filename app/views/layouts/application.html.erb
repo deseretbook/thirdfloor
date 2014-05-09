@@ -35,12 +35,22 @@
           <a href="<%= path %>"><%= text %></a>
         </li>
       <% end -%>
+      <li class="log-out">
+        <% if logged_in? %>
+          <a href="<%= log_out_users_path %>">
+            <span class="default">Logged in</span>
+            <span class="hover">Log Out</span>
+          </a>
+        <% else %>
+          <a href="<%= log_in_users_path %>">Log in</a>
+        <% end %>
+      </li>
     </ul>
   </div>
 
   <div class="content <%= params[:controller] %>">
     <%- if (nn = flash[:notice]).present? %>
-      <div class="notice"><%= nn %></div>
+      <div class="flash notice"><%= nn %></div>
     <% end -%>
     <%= yield %>
   </div>

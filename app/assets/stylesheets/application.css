@@ -79,6 +79,16 @@ html, body {
   border-radius: 30px;
 }
 
+#menu .log-out span.hover{
+  display:none;
+}
+#menu .log-out:hover span.default{
+  display:none;
+}
+#menu .log-out:hover span.hover{
+  display:block;
+}
+
 .pure-g .container {
   border: 1px solid rgb(30,30,30);
   margin: 3px;

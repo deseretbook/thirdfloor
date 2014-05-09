@@ -35,6 +35,7 @@ Rails.application.routes.draw do
     collection do
       get 'log_in'
       post 'authenticate'
+      get 'log_out'
     end
   end
 
