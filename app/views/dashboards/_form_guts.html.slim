@@ -17,7 +17,7 @@ fieldset
 
   .pure-control-group
     = f.label :refresh_to
-    = f.text_field :refresh_to
+    = f.select :refresh_to, Dashboard.enabled.map{|v|[v.name, v.id]}, include_blank: '- select -'
 
   .pure-control-group
     = f.label :cell_width

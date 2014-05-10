@@ -2,6 +2,7 @@ javascript:
   $(function() {
 
     var reload = function() { window.location.reload(); }
+    var refresh_to = parseInt('#{dashboard.refresh_to}');
 
     var reload_timer = #{dashboard.refresh.to_i * 1000};
     
@@ -15,7 +16,13 @@ javascript:
         $('.reload-countdown').css('width', reload_countdown_width + "%")
       }, counter_timeout);
 
-      setInterval(function() { reload() }, reload_timer);
+      setInterval(function() {
+        if (refresh_to > 0) {
+          window.location.href="/dashboard/" + refresh_to;
+        } else {
+          reload();
+        }
+      }, reload_timer);
     }
 
     $('.remove-cell.true').on('click', function(event) {
