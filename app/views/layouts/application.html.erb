@@ -46,6 +46,11 @@
         <% end %>
       </li>
     </ul>
+    <% if content_for?(:additional_menu) %>
+      <ul class='additional-menu'>
+        <%= yield :additional_menu %>
+      </ul>
+    <% end %>
   </div>
 
   <div class="content <%= params[:controller] %>">

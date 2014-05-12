@@ -44,7 +44,8 @@ javascript:
         .fail(function(d,e,j) { alert(d.responseText); });
     });
 
-    $('.dashboard-controls .popup.true').on('click', function(event) {
+    $('.popup.true').on('click', function(event) {
+      event.preventDefault();
       var selector = $(this).data('selector');
       var el = $('.popups').find(selector);
       var title = el.find('title').text();
@@ -65,6 +66,7 @@ javascript:
     });
 
     $('.popups .add-visualization form').on('submit', function(event) {
+      event.preventDefault();
       var visualization_id = $(this).find('select').val();
       if (visualization_id.toString().length < 1) {
         alert('Select a visualization first');
@@ -79,42 +81,6 @@ javascript:
 
     $('.popups .dashboard-settings form').bind('ajax:complete', function(e) {
       reload();
-    });
-
-    var dashboardControlsVisible = function() {
-      return ($('.dashboard-controls.visible').length > 0);
-    };
-
-    var hideDashboardControls = function() {
-      $('.dashboard-controls').removeClass('visible');
-    };
-
-    var showDashboardControls = function() {
-      if (!$('.dashboard-controls').hasClass('visible')) {
-        $('.dashboard-controls').addClass('visible');
-      }
-    };
-
-    var setDashboardControlsHideTimeout = function(){
-      return setTimeout(function(){
-        if (dashboardControlsVisible()) {
-          hideDashboardControls();
-        }
-      }, 5000);
-    };
-
-    var dashboardControlsHiderId = setDashboardControlsHideTimeout();
-
-    var menuHiderId = setDashboardControlsHideTimeout();
-
-    $('body').on('mousemove', function() {
-      if (!dashboardControlsVisible()) {
-        showDashboardControls();
-      }
-      if (typeof(dashboardControlsHiderId) != "undefined") {
-        clearTimeout(dashboardControlsHiderId);
-        dashboardControlsHiderId = setDashboardControlsHideTimeout();
-      }  
     });
 
     var markAutoScrollingElements = function() {
@@ -285,59 +251,20 @@ scss:
     }
   }
 
-  .dashboard-controls {
-    &.visible {
-      .add { left: 0px; }
-      .dashboard-settings { right: 0px; }
-    }
-    div {
-      position: fixed;
-      
-      padding: 10px;
-      background-color: lightgrey;
-      opacity: 0.75;
-      span {
-        display: none;
-      }
-      &:hover {
-        opacity: 1.0;
-        z-index: 1;
-        
-        &.true {
-          color: blue;
-          cursor: pointer;
-        }
-        &.false { color: red; }
-        
-        span {
-          display: inline-block;
-        }
-      }
-      transition: all 0.2s ease-out;
-      &.add {
-        top: 75px;
-        left: -35px;
-        border-top-right-radius: 1em;
-        border-bottom-right-radius: 1em;
-        span {
-          margin-right: 10px;
-        }
-      }
-      &.dashboard-settings {
-        top: 75px;
-        right: -35px;
-        border-top-left-radius: 1em;
-        border-bottom-left-radius: 1em;
-        span {
-          margin-left: 10px;
-        }
-      }
-    }
-  }
-
   .popups {
     display: none;
   }
+
+- content_for :additional_menu do
+  li
+    a.add.popup.true href="#" data-selector='.add-visualization'
+      i.fa.fa-plus
+      span Add Visualization
+  li
+    a.dashboard-settings.popup.true href="#" data-selector='.dashboard-settings'
+      i.fa.fa-cog
+      span Settings
+
 
 - if dashboard.refresh.to_i > 0
   .reload-countdown
@@ -356,15 +283,6 @@ scss:
             i.fa.fa-times.remove-cell.true title="remove this cell"
           .visualization
             = render inline: cell.visualization.markup, type: cell.visualization.markup_type
-
-.dashboard-controls
-  .add.popup.true data-selector='.add-visualization'
-    span Add Visualization
-    i.fa.fa-plus
-    
-  .dashboard-settings.popup.true data-selector='.dashboard-settings'
-    i.fa.fa-cog
-    span Settings
 
 .popups    
   .add-visualization

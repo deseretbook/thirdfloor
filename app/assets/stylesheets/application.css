@@ -89,6 +89,14 @@ html, body {
   display:block;
 }
 
+#menu .additional-menu {
+  display: block;
+}
+
+#menu .additional-menu li i{
+  margin-right: 5px;
+}
+
 .pure-g .container {
   border: 1px solid rgb(30,30,30);
   margin: 3px;
