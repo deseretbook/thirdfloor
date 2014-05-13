@@ -47,9 +47,12 @@ javascript:
         log('Reloading cell ' + cell_id);
         var visualization_el = $(vc).find('.visualization');
         visualization_el.text('Reloading...');
-        $.get(vc.data('server-path'))
-          .done(function(responseText) { visualization_el.html(responseText); })
-          .fail(function(d,e,j) { alert(d.responseText); });
+        setTimeout(function() {
+          $.get(vc.data('server-path'))
+            .done(function(responseText) { visualization_el.html(responseText); })
+            .fail(function(d,e,j) { alert(d.responseText); });
+          }
+        }, Math.floor(Math.random() * (5000 - 1000 + 1)) + 1000); // random timeout 1s-5s to avoid dogpile
       } else {
        log('No cell with id ' + cell_id + ' was found on page');
      }
@@ -209,7 +212,7 @@ javascript:
         } else {
           log('Polling delay is already at maximum: ' + delaytoString());
         }
-        addFlashNotice('Error reading update from server. Trying again in ' + delay.toString() + ' seconds.');
+        addFlashNotice('Error reading update from server. Trying again in ' + delay.toString() + ' milliseconds.');
       });
 
       setTimeout( function() {
