@@ -1,6 +1,6 @@
 javascript:
   $(function() {
-    var window.environment = '#{Rails.env}';
+    window.environment = '#{Rails.env}';
     var log = function(msg) {
       if (window.environment != 'production') {
         console.log(msg);
