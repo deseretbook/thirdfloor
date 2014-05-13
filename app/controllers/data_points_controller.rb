@@ -53,6 +53,7 @@ protected
   end
 
   def cached_data_points
+    params.permit(:cache_time)
     cache_expiration = if params[:cache_time].present?
       params[:cache_time].to_i.seconds
     else
