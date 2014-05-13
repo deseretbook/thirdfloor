@@ -80,7 +80,7 @@ class DashboardsController < ApplicationController
   # Example: /dashboards/1/updates?since=1398721509
   def updates
     since = params.require(:since).to_i
-    cache_time = (params.permit(:cache_time).to_s || 60).to_i
+    cache_time = (params.permit(:cache_time).to_s || 15).to_i
 
     json_response = Rails.cache.fetch(
       "dashboard_#{@dashboard.id}_updates_since_#{since}",
