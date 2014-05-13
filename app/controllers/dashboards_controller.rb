@@ -91,9 +91,11 @@ class DashboardsController < ApplicationController
 
       next_since = 0
 
+      dps_cache = {} # don't load the same data twice, use this cache.
+
       @dashboard.dashboard_cells.each do |cell|
         if (data_point_name = cell.visualization.data_point_name).present?
-          dp_since = DataPoint.newest_for(data_point_name).created_at.to_i
+          dp_since = (dps_cache[data_point_name] || (dps_cache[data_point_name] = DataPoint.newest_for(data_point_name).created_at.to_i))
           next_since = dp_since if next_since < dp_since
           cell_updates << cell.id if since < dp_since
         end
