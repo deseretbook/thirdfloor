@@ -46,12 +46,17 @@ javascript:
       if (vc.length > 0) {
         log('Reloading cell ' + cell_id);
         var visualization_el = $(vc).find('.visualization');
-        visualization_el.text('Reloading...');
-        setTimeout(function() {
-          $.get(vc.data('server-path'))
-            .done(function(responseText) { visualization_el.html(responseText); })
-            .fail(function(d,e,j) { alert(d.responseText); });
-        }, Math.floor(Math.random() * (5000 - 1000 + 1)) + 1000); // random timeout 1s-5s to avoid dogpile
+        visualization_el.hide('blind', { direction: 'up' }, 1000, function() {
+          $.get(vc.data('server-path')).done(function(responseText) {
+            $.when(function() {
+              visualization_el.html(responseText)
+            }).then(function(){
+              visualization_el.show('blind', { direction: 'up' }, 1000);
+            });
+          })
+          .fail(function(d,e,j) { alert(d.responseText); });
+        });
+      
       } else {
        log('No cell with id ' + cell_id + ' was found on page');
      }

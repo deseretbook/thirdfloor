@@ -13,6 +13,7 @@
 //= require jquery
 //= require jquery_ujs
 //= require jquery.ui.dialog
+//= require jquery.ui.effect-blind
 //= require turbolinks
 //= require_tree .
 
