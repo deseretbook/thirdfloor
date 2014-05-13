@@ -28,6 +28,10 @@
     <%= f.text_field :slug %>
   </div>
   <div class="field">
+    <%= f.label :data_point_name %><br>
+    <%= f.select :data_point_name, DataPoint.select(:name).distinct.reorder(:name).map(&:name), include_blank: '- optional -' %>
+  </div>
+  <div class="field">
     <%= f.label :markup_type %><br>
     <%= f.select :markup_type, [ 'html', 'slim', 'erb' ] %>
   </div>

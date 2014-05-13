@@ -4,6 +4,10 @@ class DataPoint < ActiveRecord::Base
 
   after_save :delete_old_records
 
+  def self.newest_for(name)
+    where(name: name).first
+  end
+
   private
 
   # doing this here saves managing a cron job

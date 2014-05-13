@@ -2,6 +2,7 @@ class Visualization < ActiveRecord::Base
   validates_presence_of :name, :slug, case_sensitive: false
   validates_inclusion_of :markup_type, in: %i[ html erb slim ]
   validates_format_of :slug, with: /[a-z0-9_\-]+/
+  validates_length_of :data_point_name, allow_blank: true, maximum: 255.bytes
 
   has_many :dashboard_cells, dependent: :destroy
 

@@ -3,6 +3,10 @@ class DashboardCell < ActiveRecord::Base
   belongs_to :visualization
   default_scope -> { order('position, updated_at ASC') }
 
+  def auto_refresh?
+    visualization.data_point_name.present?
+  end
+
   # default lower by 2 so it gets resorted properly
   def lower_position!(amount = 2)
     if position > 0

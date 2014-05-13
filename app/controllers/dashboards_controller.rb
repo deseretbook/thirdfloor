@@ -1,7 +1,9 @@
 class DashboardsController < ApplicationController
   before_action :set_dashboard
 
-  before_filter :login_required
+  before_filter :login_required, except: :updates
+
+  respond_to :html, :json
 
   # GET /dashboards
   def index
@@ -67,6 +69,41 @@ class DashboardsController < ApplicationController
   def destroy
     @dashboard.destroy
     redirect_to dashboards_url, notice: 'Dashboard was successfully destroyed.'
+  end
+
+  # Tells you the cells that need updating if the cell visualizations are
+  # subscribed to a data point name (Visualization#data_point_name). Checks
+  # to see if the last record created_at.to_i for that data point name is
+  # greater than the 'since' query param. Array of the cell_ids that need to be
+  # updated it returned along with a new "since" value that should be passed
+  # next time.
+  # Example: /dashboards/1/updates?since=1398721509
+  def updates
+    since = params.require(:since).to_i
+
+    json_response = Rails.cache.fetch(
+      "dashboard_#{@dashboard.id}_updates_since_#{since}",
+      expires_in: 1.second
+    ) do
+      cell_updates = []
+
+      next_since = 0
+
+      @dashboard.dashboard_cells.each do |cell|
+        if (data_point_name = cell.visualization.data_point_name).present?
+          dp_since = DataPoint.newest_for(data_point_name).created_at.to_i
+          next_since = dp_since if next_since < dp_since
+          cell_updates << cell.id if since < dp_since
+        end
+      end
+
+      { update: { cells: cell_updates }, next_since: next_since }
+    end
+
+    respond_with(json_response) do |format|
+      format.html { render text: json_response.to_json }
+    end
+
   end
 
   private

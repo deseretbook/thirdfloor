@@ -1,5 +1,11 @@
 javascript:
   $(function() {
+    var environment = '#{Rails.env}';
+    var log = function(msg) {
+      if (environment != 'production') {
+        console.log(msg);
+      }
+    }
 
     var reload = function() { window.location.reload(); }
     var refresh_to = parseInt('#{dashboard.refresh_to}');
@@ -35,13 +41,23 @@ javascript:
       }
     });
 
+    var reloadCell = function(cell_id) {
+      var vc = $('#vc_' + cell_id);
+      if (vc.length > 0) {
+        log('Reloading cell ' + cell_id);
+        var visualization_el = $(vc).find('.visualization');
+        visualization_el.text('Reloading...');
+        $.get(vc.data('server-path'))
+          .done(function(responseText) { visualization_el.html(responseText); })
+          .fail(function(d,e,j) { alert(d.responseText); });
+      } else {
+       log('No cell with id ' + cell_id + ' was found on page');
+     }
+    };
+
     $('.reload-cell.true').on('click', function(event) {
       var cell = $(this).closest('.visualization-cell');
-      var visualization_dev = $(cell).find('.visualization');
-      visualization_dev.text('Reloading...');
-      $.get(cell.data('server-path'))
-        .done(function(responseText) { visualization_dev.html(responseText); })
-        .fail(function(d,e,j) { alert(d.responseText); });
+      reloadCell(cell.data('cell-id'));
     });
 
     $('.popup.true').on('click', function(event) {
@@ -118,12 +134,12 @@ javascript:
       setTimeout(function(){ autoScroll(el, scroll_delay); }, scroll_delay);
     };
 
-    startAutoScroll = function() {
+    var startAutoScroll = function() {
       if (scrollersArePresent()) {
-        console.log('Beginning autoscroll');
+        log('Beginning autoscroll');
         $('.visualization-cell.do-scrolling').each(function(index, el) {
           var scroll_delay = $(el).data('autoscroll-delay');
-          console.log(scroll_delay);
+          log("Autoscroll delay:" + scroll_delay);
           autoScroll(el, parseInt(scroll_delay || 1000));
         });
 
@@ -136,13 +152,84 @@ javascript:
           $(this).data('stopped', false);
         });
       } else {
-        console.log('No divs found that need autoscrolling');
+        log('No divs found that need autoscrolling');
       }
     };
 
     // start autoscrolling after the grid contents have had time to load.
-    // That may take a while on slow machings like the Raspi.
+    // That may take a while on slow machines like the Raspi.
     setTimeout(function() { startAutoScroll() }, 10000);
+
+    var autoRefreshCellsArePresent = function() {
+      return($('.dashboard .allow-auto-refresh').length > 0);
+    };
+
+    var startAutoRefresh = function() {
+      if (autoRefreshCellsArePresent()) {
+        var cell_ids = [];
+        $('.dashboard .allow-auto-refresh').each(function(index, el) {
+          cell_ids.push($(el).data('cell-id'));
+        });
+        log('Beginning auto-refresh poller for ' + cell_ids.join(', '));
+        autoRefresh(cell_ids, default_autorefresh_delay);
+      } else {
+        log('No divs found that need automatic refreshing');
+      }
+    };
+
+    var default_autorefresh_delay = 15000; // milliseconds
+    var last_refresh_since = #{Time.now.to_i};
+    // TODO: turn this into something that will extend the interval when the
+    // $.get() receives an error.
+    var autoRefresh = function(cell_ids, delay) {
+      var url = [
+        '/dashboards/#{dashboard.id}/updates?since=',
+        last_refresh_since,
+        '&nocache=',
+        (new Date()).getTime().toString()
+      ].join('');
+      $.get(url).done(function(returned_data) {
+        if (delay > default_autorefresh_delay) {
+          log('resetting delay to default');
+          delay = default_autorefresh_delay;
+        }
+        var response = JSON.parse(returned_data);
+        last_refresh_since = response.next_since
+        if (response.update.cells.length > 0) {
+          updateCells(response.update.cells);
+        } else {
+          log('No cells need to be updated');
+        }
+      }).fail(function(d,e,j) {
+        console.log('Error polling: ' + e)
+        console.log(d);
+        if (delay < (default_autorefresh_delay*3)) {
+          delay = delay + 1000;
+          log('Increasing polling delay to ' + delay.toString());
+        } else {
+          log('Polling delay is already at maximum: ' + delaytoString());
+        }
+      });
+
+      setTimeout( function() {
+        autoRefresh(cell_ids, delay);
+      }, delay);
+    };
+
+    var updateCells = function(cell_ids) {
+      for (var index in cell_ids) {
+        updateCell(cell_ids[index]);
+      }
+    };
+
+    var updateCell = function(cell_id) {
+      log("Auto-refreshing cell " + cell_id);
+      reloadCell(cell_id);
+    };
+
+    // start auto-refresh after the grid contents have had time to load.
+    // That may take a while on slow machines like the Raspi.
+    setTimeout(function() { startAutoRefresh() }, 5000);
 
     var syncGridsterChangesToServer = function() {
       if (#{!logged_in?}) {
@@ -164,15 +251,15 @@ javascript:
         $.post('/dashboard_cells/' + cell_id, data)
           .fail(function(d,e,j) { alert(d.responseText); });
       }
-    }
+    };
 
     gridsterStartChanging = function() {
-      console.log('gridsterStartChanging');
+      log('gridsterStartChanging');
       $('.gridster').addClass('changing');
     };
 
     gridsterStopChanging = function() {
-      console.log('gridsterStopChanging');
+      log('gridsterStopChanging');
       $('.gridster').removeClass('changing');
     };
 
@@ -276,7 +363,7 @@ scss:
       - cell = dashboard.dashboard_cells[counter]
       - break if cell.nil?
       - counter += 1
-      li.visualization-cell id="vc_#{cell.id}" class="#{autoscroll_cell?(cell) ? 'allow-autoscroll' : nil}" data-cell-id=cell.id data-row=cell.row data-col=cell.column data-sizex=cell.width data-sizey=cell.height data-autoscroll-delay=(cell.autoscroll_delay || dashboard.autoscroll_delay) data-server-path=render_visualization_path(cell.visualization.slug)
+      li.visualization-cell id="vc_#{cell.id}" class="#{autoscroll_cell?(cell) ? 'allow-autoscroll' : nil} #{cell.auto_refresh? ? 'allow-auto-refresh' : nil}" data-cell-id=cell.id data-row=cell.row data-col=cell.column data-sizex=cell.width data-sizey=cell.height data-autoscroll-delay=(cell.autoscroll_delay || dashboard.autoscroll_delay) data-server-path=render_visualization_path(cell.visualization.slug)
         .container title=cell.visualization.name
           .controls
             i.fa.fa-refresh.reload-cell.true title="reload this cell"

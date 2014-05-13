@@ -9,6 +9,7 @@ Rails.application.routes.draw do
     member do
       post :add_visualization
       post :remove_visualization
+      get :updates
     end
   end
 
