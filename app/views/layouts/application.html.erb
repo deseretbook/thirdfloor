@@ -54,9 +54,7 @@
   </div>
 
   <div class="content <%= params[:controller] %>">
-    <%- if (nn = flash[:notice]).present? %>
-      <div class="flash notice"><%= nn %></div>
-    <% end -%>
+    <div class="flash notice"><%= flash[:notice] %></div>
     <%= yield %>
   </div>
 

@@ -209,6 +209,7 @@ javascript:
         } else {
           log('Polling delay is already at maximum: ' + delaytoString());
         }
+        addFlashNotice('Error reading update from server. Trying again in ' + delay.toString() + ' seconds.');
       });
 
       setTimeout( function() {

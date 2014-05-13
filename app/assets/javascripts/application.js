@@ -19,7 +19,19 @@
 window.ready = function() {
   console.log('window.ready()');
 
-  setTimeout(function() { $('.flash.notice').fadeOut(); }, 3000)
+  var fadeOutFlashNotice = function() {
+    setTimeout(function() {
+      $('.flash.notice').fadeOut(1000, function() { $(this).html(''); });
+     }, 3000);
+  };
+
+  window.addFlashNotice = function(msg) {
+    $('.flash.notice').html(msg);
+    $('.flash.notice').show();
+    fadeOutFlashNotice();
+  };
+
+  (function() { fadeOutFlashNotice(); })();
   
   if ($('.pure-menu').hasClass('autohide-menu')) {
     var hideMenu = function() {
