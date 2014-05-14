@@ -3,7 +3,9 @@ javascript:
     $.each($('.travis table tbody tr'), function(index, el) {
       // stagger the load times so we don't crush the server.
       setTimeout(function() {
-        $.get('/travis/' + $(el).data('repo-string')).done(function(returned_data) {
+        $.get(
+          '/travis/' + $(el).data('repo-string') + '?nocache=' + (new Date()).getTime().toString()
+        ).done(function(returned_data) {
           $(el).html(returned_data);
         });
       }, (index+1) * 500);
