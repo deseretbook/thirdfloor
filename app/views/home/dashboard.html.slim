@@ -377,7 +377,7 @@ scss:
       span Settings
 
 .heartbeat title="heartbeat, blink indicates server is being polled"
-  img src='/assets/heart.png' alt="heartbeat indicator icon"
+  = image_tag('heart.png', alt: "heartbeat indicator icon")
 - if dashboard.refresh.to_i > 0
   .reload-countdown
 .gridster style="#{dashboard.maximum_width? ? "width: #{dashboard.maximum_width}px;" : nil} #{dashboard.maximum_height? ? "height: #{dashboard.maximum_height}px;" : nil}"
