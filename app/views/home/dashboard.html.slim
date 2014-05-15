@@ -359,10 +359,33 @@ scss:
     position: fixed;
     right:0;
     bottom:0;
-    opacity: 0.30;
-    transition: opacity 1.5s ease;
+    //opacity: 0.30;
+    //transition: opacity 1.5s ease;
+    i {
+      position: fixed;
+      right:0;
+      bottom:0;
+      &.communicating {
+        //display: none;
+        opacity: 0.0;
+        transition: opacity 1.0s ease;
+      }
+      &.waiting {
+        //display: none;
+        opacity: 1.0;
+        transition: opacity 1.0s ease;
+      }
+    }
     &.beating {
-      opacity: 1.0;
+      i.waiting {
+        //display: none;
+        opacity: 0.0;
+      }
+      i.communicating {
+        //display: inherit;
+        opacity: 1.0;
+      }
+      // opacity: 1.0;
     }
   }
 
@@ -376,8 +399,9 @@ scss:
       i.fa.fa-cog
       span Settings
 
-.heartbeat title="heartbeat, blink indicates server is being polled"
-  = image_tag('heart.png', alt: "heartbeat indicator icon")
+.heartbeat title="heartbeat, indicates when server is being polled"
+  i.fa.fa-heart-o.waiting
+  i.fa.fa-heart.communicating
 - if dashboard.refresh.to_i > 0
   .reload-countdown
 .gridster style="#{dashboard.maximum_width? ? "width: #{dashboard.maximum_width}px;" : nil} #{dashboard.maximum_height? ? "height: #{dashboard.maximum_height}px;" : nil}"
