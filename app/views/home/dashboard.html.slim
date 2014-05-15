@@ -195,6 +195,7 @@ javascript:
         '&nocache=',
         (new Date()).getTime().toString()
       ].join('');
+      $('.heartbeat').addClass('beating');
       $.get(url).done(function(returned_data) {
         if (delay > default_autorefresh_delay) {
           log('resetting delay to default');
@@ -217,6 +218,10 @@ javascript:
           log('Polling delay is already at maximum: ' + delaytoString());
         }
         addFlashNotice('Error reading update from server. Trying again in ' + delay.toString() + ' milliseconds.');
+      }).always(function() {
+        setTimeout(function() {
+          $('.heartbeat').removeClass('beating');
+        }, 2000); // let people see the change before removing it
       });
 
       setTimeout( function() {
@@ -350,6 +355,17 @@ scss:
     display: none;
   }
 
+  .heartbeat {
+    position: fixed;
+    right:0;
+    bottom:0;
+    opacity: 0.30;
+    transition: opacity 1.5s ease;
+    &.beating {
+      opacity: 1.0;
+    }
+  }
+
 - content_for :additional_menu do
   li
     a.add.popup.true href="#" data-selector='.add-visualization'
@@ -360,7 +376,8 @@ scss:
       i.fa.fa-cog
       span Settings
 
-
+.heartbeat title="heartbeat, blink indicates server is being polled"
+  img src='/assets/heart.png' alt="heartbeat indicator icon"
 - if dashboard.refresh.to_i > 0
   .reload-countdown
 .gridster style="#{dashboard.maximum_width? ? "width: #{dashboard.maximum_width}px;" : nil} #{dashboard.maximum_height? ? "height: #{dashboard.maximum_height}px;" : nil}"
