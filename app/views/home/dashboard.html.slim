@@ -44,17 +44,14 @@ javascript:
     var reloadCell = function(cell_id) {
       var vc = $('#vc_' + cell_id);
       if (vc.length > 0) {
-        log('Reloading cell ' + cell_id);
+        var slug = vc.data('slug');
+        log('Reloading cell ' + slug + '(' + cell_id + ')');
         var visualization_el = $(vc).find('.visualization');
         visualization_el.hide('blind', { direction: 'up' }, 1000, function() {
-          $.get(vc.data('server-path')).done(function(responseText) {
-            $.when(function() {
-              visualization_el.html(responseText)
-            }).then(function(){
-              visualization_el.show('blind', { direction: 'up' }, 1000);
-            });
-          })
-          .fail(function(d,e,j) { alert(d.responseText); });
+          var trigger_name = 'tf_refresh_' + slug;
+          log("triggering event " + trigger_name);
+          $(document).trigger(trigger_name);
+          visualization_el.show('blind', { direction: 'up' }, 1000);
         });
       
       } else {
@@ -304,6 +301,12 @@ javascript:
         }
     }).data('gridster');
 
+    // tell vis cells to load
+    (function() {
+      log("triggering tf_ready");
+      $(document).trigger('tf_ready');
+    })();
+
   });
 
 scss:
@@ -412,7 +415,7 @@ scss:
       - cell = dashboard.dashboard_cells[counter]
       - break if cell.nil?
       - counter += 1
-      li.visualization-cell id="vc_#{cell.id}" class="#{autoscroll_cell?(cell) ? 'allow-autoscroll' : nil} #{cell.auto_refresh? ? 'allow-auto-refresh' : nil}" data-cell-id=cell.id data-row=cell.row data-col=cell.column data-sizex=cell.width data-sizey=cell.height data-autoscroll-delay=(cell.autoscroll_delay || dashboard.autoscroll_delay) data-server-path=render_visualization_path(cell.visualization.slug)
+      li.visualization-cell id="vc_#{cell.id}" class="#{autoscroll_cell?(cell) ? 'allow-autoscroll' : nil} #{cell.auto_refresh? ? 'allow-auto-refresh' : nil}" data-cell-id=cell.id data-row=cell.row data-col=cell.column data-sizex=cell.width data-sizey=cell.height data-autoscroll-delay=(cell.autoscroll_delay || dashboard.autoscroll_delay) data-slug=cell.visualization.slug
         .container title=cell.visualization.name
           .controls
             i.fa.fa-refresh.reload-cell.true title="reload this cell"
