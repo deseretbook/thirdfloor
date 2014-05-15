@@ -54,6 +54,9 @@
       &.running {
         i { color: yellow; }
       }
+      &.test {
+        i { color: grey; }
+      }
     }
   }
 }

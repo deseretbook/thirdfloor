@@ -12,13 +12,18 @@ class Travis
   # variable in .env.example for examples.
   def self.status(repo_string)
     owner, repo, branch = repo_string.split('/')
+
+    if Rails.application.secrets.travis_test_mode
+      return Travis::Repo::Test.new("test", owner: owner, repository: repo, branch_name: branch)
+    end
+    
     url = "#{BASE_URL}#{owner}/#{repo}/branches/#{branch}?access_token=#{Rails.application.secrets.travis_token}"
     puts url
     response = HTTParty.get(url, headers: default_headers)
     if http_success?(response)
       Travis::Repo.new(response.body, owner: owner, repository: repo)
     else
-      nil
+      Travis::Repo::Error.new("#{response.code}\n#{response.body}", owner: owner, repository: repo, branch_name: branch)
     end
   end
 
@@ -57,6 +62,14 @@ class Travis::Repo
     @owner = owner
     @repository = repository
     @branch_name = branch_name
+  end
+
+  def test?
+    !!@test
+  end
+
+  def error?
+    false
   end
 
   def state
@@ -110,5 +123,73 @@ class Travis::Repo
 
   def by
     @commit["committer_name"]
+  end
+end
+
+class Travis::Repo::Test < Travis::Repo
+  def initialize(state="test", owner: nil, repository: nil, branch_name: nil)
+    @state = state
+    @owner = owner
+    @repository = repository
+    @branch_name = branch_name
+
+    @test = true
+  end
+
+  def error?
+    false
+  end
+
+  def state
+    @state
+  end
+
+  def running?
+    false
+  end
+
+  def duration(fmt=:raw)
+    fmt == :english ? "1 second" : 1
+  end
+
+  def finished
+    Time.now
+  end
+
+  def by
+    "test"
+  end
+end
+
+class Travis::Repo::Error < Travis::Repo
+  def initialize(state="error", owner: nil, repository: nil, branch_name: nil)
+    @state = state
+    @owner = owner
+    @repository = repository
+    @branch_name = branch_name
+  end
+
+  def error?
+    true
+  end
+  
+  def state
+    @state
+  end
+
+  def running?
+    false
+  end
+
+  def duration(fmt=:raw)
+    fmt == :english ? "1 second" : 1
+  end
+
+  def finished
+    Time.now
+  end
+
+  def by
+    "test"
   end
 end

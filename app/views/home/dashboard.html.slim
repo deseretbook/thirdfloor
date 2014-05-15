@@ -211,7 +211,7 @@ javascript:
       }).fail(function(d,e,j) {
         console.log('Error polling: ' + e)
         console.log(d);
-        if (delay < (default_autorefresh_delay*3)) {
+        if (delay < (default_autorefresh_delay*10)) {
           delay = delay + 1000;
           log('Increasing polling delay to ' + delay.toString());
         } else {

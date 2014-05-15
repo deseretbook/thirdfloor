@@ -1,14 +1,19 @@
 - if repo.present?
   td.repo = repo.repository
   td.branch = repo.branch_name
-  td.state class="#{repo.passing?} #{repo.running? ? 'running' : nil}"
-    - if repo.finished?
-      - if repo.passing?
-        i.fa.fa-thumbs-up
-      - else
-        i.fa.fa-thumbs-down
+  td.state class="#{repo.passing?} #{repo.running? ? 'running' : nil} #{repo.error? ? 'error' : nil} #{repo.test? ? 'test' : nil}"
+    - if repo.error?
+      i.fa.fa-exclamation-triangle title=repo.state
+    - elsif repo.test?
+      i.fa.fa-times title="test mode"
     - else
-      i.fa.fa-refresh
+      - if repo.finished?
+        - if repo.passing?
+          i.fa.fa-thumbs-up
+        - else
+          i.fa.fa-thumbs-down
+      - else
+        i.fa.fa-refresh
   td.last-build
     - if repo.finished?
       - if (finished = repo.finished).present?

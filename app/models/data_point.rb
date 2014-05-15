@@ -4,8 +4,17 @@ class DataPoint < ActiveRecord::Base
 
   after_save :delete_old_records
 
-  def self.newest_for(name)
-    where(name: name).first
+  after_commit :flush_newest_for_cache
+
+  def self.newest_for(name, opts={})
+    opts = { expires_in: 5.minutes }.merge(opts)
+    Rails.cache.fetch(newest_cache_key(name), opts) do
+      where(name: name).first
+    end
+  end
+
+  def self.newest_cache_key(name)
+    "newest_data_point_for_#{name}"
   end
 
   private
@@ -16,6 +25,10 @@ class DataPoint < ActiveRecord::Base
     if rand(10) >= 8
       DataPoint.where(['created_at < ?', 14.days.ago]).delete_all
     end
+  end
+
+  def flush_newest_for_cache
+    Rails.cache.delete(self.class.newest_cache_key(name))
   end
 
 end

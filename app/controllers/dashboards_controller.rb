@@ -81,7 +81,8 @@ class DashboardsController < ApplicationController
   def updates
     params.permit(:cache_time)
     since = params.require(:since).to_i
-    cache_time = (params[:cache_time] || 15).to_i
+    # default cache time is low because DataPoint.newest_for is cached longer.
+    cache_time = (params[:cache_time] || 15.seconds).to_i
 
     json_response = Rails.cache.fetch(
       "dashboard_#{@dashboard.id}_updates_since_#{since}",
