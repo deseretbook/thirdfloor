@@ -9,6 +9,9 @@ css:
   .data-point pre {
     background: transparent;
   }
+  .data-point .delete {
+    float: right;
+  }
 
 .data-point
   h3 #{point.name} data point
@@ -17,3 +20,6 @@ css:
     =h pretty_print_json(point.to_json)
 
   = link_to 'Back', data_points_path
+
+  .delete = link_to 'Destroy', point, method: :delete, data: { confirm: 'Are you sure?' }
+

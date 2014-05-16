@@ -45,7 +45,7 @@ Rails.application.routes.draw do
   resources :travis, only: [ :index ]
   get '/travis/*repo_string' => 'travis#show'
 
-  resources :data_points, only: [ :index, :show, :create ]
+  resources :data_points, only: [ :index, :show, :create, :destroy ]
   post 'data_points/:name' => 'data_points#named_route_create'
 
   get '/visualize/:slug' => 'home#visualize', as: 'render_visualization'

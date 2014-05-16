@@ -5,6 +5,7 @@ class DataPointsController < ApplicationController
   skip_before_filter :verify_authenticity_token, only: [ :create, :named_route_create ]
 
   # before_filter :login_required, only: [ :index, :show ]
+  before_filter :login_required, only: [ :destroy ]
 
   def index # GET/HEAD collection
     if request.head?
@@ -39,6 +40,12 @@ class DataPointsController < ApplicationController
       format.html { render locals: { point:point } }
     end
   end
+
+  def destroy
+    DataPoint.find(params[:id]).destroy
+    redirect_to data_points_url, notice: 'Data Point was successfully destroyed.'
+  end
+
 
 protected
 
