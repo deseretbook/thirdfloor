@@ -35,7 +35,7 @@ class DataPointsController < ApplicationController
   end
 
   def show
-    point = DataPoint.find(params[:id])
+    point = DataPoint.where(id: params[:id]).first!
     respond_with(point, serializer: DataPointSerializer, root: false) do |format|
       format.html { render locals: { point:point } }
     end
