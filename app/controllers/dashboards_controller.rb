@@ -79,8 +79,8 @@ class DashboardsController < ApplicationController
   # next time.
   # Example: /dashboards/1/updates?since=1398721509
   def updates
-    params.permit(:cache_time)
     since = params.require(:since).to_i
+
     # default cache time is low because DataPoint.newest_for is cached longer.
     cache_time = (params[:cache_time] || 15.seconds).to_i
 
