@@ -1,0 +1,19 @@
+javascript:
+  $(function(){
+    $('.data-points').on('change', 'select', function(eventData) {
+      $(this).closest('form').submit();
+    });
+  });
+
+css:
+  .data-point pre {
+    background: transparent;
+  }
+
+.data-point
+  h3 #{point.name} data point
+
+  pre
+    =h pretty_print_json(point.to_json)
+
+  = link_to 'Back', data_points_path

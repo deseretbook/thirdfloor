@@ -19,6 +19,7 @@ gem 'debugger', group: [:development, :test]
 gem 'active_model_serializers'
 gem 'slim'
 gem 'font-awesome-sass'
+gem 'tolerate_json'
 
 gem 'rails_12factor', group: :production
 

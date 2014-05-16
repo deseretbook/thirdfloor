@@ -122,6 +122,7 @@ GEM
     thread_safe (0.2.0)
       atomic (>= 1.1.7, < 2)
     tilt (1.4.1)
+    tolerate_json (0.0.3)
     treetop (1.4.15)
       polyglot
       polyglot (>= 0.3.1)
@@ -153,6 +154,7 @@ DEPENDENCIES
   sass-rails (~> 4.0.1)
   slim
   spring
+  tolerate_json
   turbolinks
   uglifier (>= 1.3.0)
   will_paginate

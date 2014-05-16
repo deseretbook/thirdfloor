@@ -1,4 +1,5 @@
 class DataPointsController < ApplicationController
+
   respond_to :html, :json
 
   skip_before_filter :verify_authenticity_token, only: [ :create, :named_route_create ]
@@ -35,7 +36,7 @@ class DataPointsController < ApplicationController
   def show
     point = DataPoint.find(params[:id])
     respond_with(point, serializer: DataPointSerializer, root: false) do |format|
-      format.html { render text: point.to_json }
+      format.html { render locals: { point:point } }
     end
   end
 
