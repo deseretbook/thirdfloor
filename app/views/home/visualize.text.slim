@@ -1,0 +1,8 @@
+= render inline: visualization.markup, type: visualization.markup_type
+- if !request.xhr?
+  // we're viewing this standalone, need to trigger the read event.
+  javascript:
+    $(document).ready(function() {
+      console.log('triggering tf_ready');
+      $(document).trigger('tf_ready');
+    });
