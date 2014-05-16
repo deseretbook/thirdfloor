@@ -14,10 +14,6 @@ class DataPointsController < ApplicationController
   end
 
   def create # POST collection
-    
-    params.require(:name)
-    params.permit(:data)
-
     data = (params[:data] || {}) # allow a station to send no data
     
     respond_with(DataPoint.create!(
@@ -53,7 +49,6 @@ protected
   end
 
   def cached_data_points
-    params.permit(:cache_time)
     cache_expiration = if params[:cache_time].present?
       params[:cache_time].to_i.seconds
     else
@@ -136,5 +131,9 @@ private
         "defined(data, '#{k}')"
       end.join(' AND ')
     end
+  end
+
+  def data_point_params
+    params.require(:name).permit(:data)
   end
 end
