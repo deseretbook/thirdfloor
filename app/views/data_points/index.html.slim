@@ -20,6 +20,8 @@ javascript:
       span
         = data_points.count
         | &nbsp;records
+      span
+        | Storing records for #{DataPoint.maximum_record_age(:words)}
   .navigation = will_paginate data_points
   table
     thead

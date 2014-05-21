@@ -1,4 +1,5 @@
 class DataPoint < ActiveRecord::Base
+  MAXIMUM_RECORD_AGE = { number: 10, unit: :days }
   belongs_to :station
   default_scope -> { order('id DESC') }
 
@@ -17,13 +18,24 @@ class DataPoint < ActiveRecord::Base
     "newest_data_point_for_#{name}"
   end
 
+  def self.maximum_record_age(format=:date)
+    case format
+    when :words
+      "#{MAXIMUM_RECORD_AGE[:number]} #{MAXIMUM_RECORD_AGE[:unit]}"
+    else # :date
+      MAXIMUM_RECORD_AGE[:number].send(MAXIMUM_RECORD_AGE[:unit]).ago
+    end
+  end
+
   private
 
   # doing this here saves managing a cron job
   def delete_old_records
     # only do this ~20% of the time
     if rand(10) >= 8
-      DataPoint.where(['created_at < ?', 14.days.ago]).delete_all
+      DataPoint.where(
+        ['created_at < ?', self.class.maximum_record_age]
+      ).delete_all
     end
   end
 
