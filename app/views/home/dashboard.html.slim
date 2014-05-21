@@ -7,6 +7,8 @@ javascript:
       }
     }
 
+    window.development = function() { window.environment = 'development'; }
+
     var reload = function() { window.location.reload(); }
     var refresh_to = parseInt('#{dashboard.refresh_to}');
 
@@ -223,7 +225,7 @@ javascript:
         if (response.update.dashboard) {
           reloadDashboard();
         } else {
-          console.log('Do not need to refresh dashboard');
+          log('Do not need to refresh dashboard');
         }
 
       }).fail(function(d,e,j) {
@@ -263,6 +265,22 @@ javascript:
     // start auto-refresh after the grid contents have had time to load.
     // That may take a while on slow machines like the Raspi.
     setTimeout(function() { startAutoRefresh() }, 5000);
+
+    // resize any iframes present to take up the while cell.
+    var resizeIframes = function() {
+      $('.visualization-cell iframe').each(function(index, el) {
+        var vc = $(el).closest('.visualization-cell');
+        var container_height = vc.height();
+        var container_width = vc.width();
+        log('Resizing iframe ' + $(el).attr('src') + ' to ' + container_height + 'h/' + container_width + 'w:');
+  
+        $(el).height(container_height);
+        $(el).width(container_width);
+      });
+    }
+
+    // call resizeIframes in a timer to allow gridster to load first.
+    setTimeout(resizeIframes, 3000);
 
     var syncGridsterChangesToServer = function() {
       if (#{!logged_in?}) {
