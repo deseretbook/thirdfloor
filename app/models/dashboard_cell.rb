@@ -1,5 +1,5 @@
 class DashboardCell < ActiveRecord::Base
-  belongs_to :dashboard
+  belongs_to :dashboard, touch: true
   belongs_to :visualization
   default_scope -> { order('position, updated_at ASC') }
 

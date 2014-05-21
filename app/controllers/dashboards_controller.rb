@@ -102,7 +102,19 @@ class DashboardsController < ApplicationController
         end
       end
 
-      { update: { cells: cell_updates }, next_since: next_since }
+      # tell browser to update the whole dashboard if it's been changed.
+      update_dashboard = false
+      dash_updated = @dashboard.updated_at.to_i
+      update_dashboard = true if dash_updated > since
+      next_since = dash_updated if next_since < dash_updated
+
+      {
+        update: {
+          cells: cell_updates,
+          dashboard: update_dashboard
+        },
+        next_since: next_since
+      }
     end
 
     respond_with(json_response) do |format|

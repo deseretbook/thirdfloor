@@ -41,6 +41,17 @@ javascript:
       }
     });
 
+    var reloadDashboard = function() {
+      // we could have called reload() directly, but this give us room to grow.
+      if (window.ignoreNextDashboardReload) {
+        log('Ignoring this dashboard reload request.');
+        window.ignoreNextDashboardReload = false;
+      } else {
+        log('Reloading current dashboard');
+        reload();
+      }
+    };
+
     var reloadCell = function(cell_id) {
       var vc = $('#vc_' + cell_id);
       if (vc.length > 0) {
@@ -193,18 +204,28 @@ javascript:
         (new Date()).getTime().toString()
       ].join('');
       $('.heartbeat').addClass('beating');
+      log('--- POLLING CYCLE BEGIN ---');
+      log('Polling server with url: ' + url);
       $.get(url).done(function(returned_data) {
         if (delay > default_autorefresh_delay) {
           log('resetting delay to default');
           delay = default_autorefresh_delay;
         }
         var response = JSON.parse(returned_data);
+        log(response);
         last_refresh_since = response.next_since
         if (response.update.cells.length > 0) {
           updateCells(response.update.cells);
         } else {
           log('No cells need to be updated');
         }
+
+        if (response.update.dashboard) {
+          reloadDashboard();
+        } else {
+          console.log('Do not need to refresh dashboard');
+        }
+
       }).fail(function(d,e,j) {
         console.log('Error polling: ' + e)
         console.log(d);
@@ -219,11 +240,13 @@ javascript:
         setTimeout(function() {
           $('.heartbeat').removeClass('beating');
         }, 2000); // let people see the change before removing it
-      });
 
-      setTimeout( function() {
-        autoRefresh(cell_ids, delay);
-      }, delay);
+        setTimeout( function() {
+          autoRefresh(cell_ids, delay);
+        }, delay);
+
+        log("--- POLLING CYCLE END -----\n");
+      });
     };
 
     var updateCells = function(cell_ids) {
@@ -247,6 +270,10 @@ javascript:
         reload();
         return;
       }
+
+      // so we don't get a refresh while *we're* making the changes.
+      window.ignoreNextDashboardReload = true;
+
       var objects = gridster.serialize();
       var done_count = 0;
       for (var index in objects) {
