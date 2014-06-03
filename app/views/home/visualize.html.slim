@@ -1,8 +1,32 @@
-= render inline: visualization.markup, type: visualization.markup_type
+javascript:
+  $(document).ready(function() {
+    $('.send-refresh').on('click', function(event) {
+      event.preventDefault();
+
+      var visualization_el = $('##{visualization.div_id}').find('.visualization');
+      visualization_el.hide('blind', { direction: 'up' }, 1000, function() {
+        $(document).trigger('#{visualization.refresh_event_name}');
+        addFlashNotice('Sent "#{visualization.refresh_event_name}" event.');
+        visualization_el.show('blind', { direction: 'up' }, 1000);
+      });
+
+      
+    });
+  });
+
+scss:
+  .visualization-cell .container { height: 200px }
+
+.visualization-cell id=visualization.div_id
+  .container title=visualization.name
+    .visualization
+      = render inline: visualization.interpolated_markup, type: visualization.markup_type
 - if !request.xhr?
   // we're viewing this standalone, need to trigger the read event.
+  button.send-refresh Send refresh event
   javascript:
     $(document).ready(function() {
-      console.log('triggering tf_ready');
-      $(document).trigger('tf_ready');
+      console.log('triggering #{visualization.ready_event_name}');
+      $(document).trigger('#{visualization.ready_event_name}');
+      addFlashNotice('Triggered #{visualization.ready_event_name} event.');
     });

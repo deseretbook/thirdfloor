@@ -21,6 +21,58 @@ class Visualization < ActiveRecord::Base
     !enabled?
   end
 
+  # Return visualization#markup, but replace strings with data structures.
+  # __READY_EVENT__   : name of the JS event signaling the page is ready.
+  # __REFRESH_EVENT__ : name of the JS event signaling the vis should refresh.
+  # __DIV_ID__        : DOM ID of the div containing the visualizartion.
+  def interpolated_markup
+    visualization.markup.tap do |markup|
+      [
+        [ :ready_event, 'tf_ready' ],
+        [ :refresh_event, "tf_refresh_#{visualization.slug}" ],
+        [ :div_id, div_id ]
+      ].each do |k, v|
+        markup.gsub!("__#{k.upcase}__", v.to_s)
+      end
+    end
+  end
+
+  def div_id
+    "visualization_#{id}"
+  end
+
+  def ready_event_name
+    'tf_ready'
+  end
+
+  def refresh_event_name
+    "tf_refresh_#{slug}"
+  end
+
+  def interpolation_values
+    {}.tap do |h|
+      [
+        [ :ready_event, ready_event_name ],
+        [ :refresh_event, refresh_event_name ],
+        [ :div_id, div_id ]
+      ].each do |k, v|
+        h[k] = v
+      end
+    end
+  end
+
+  # Return visualization#markup, but replace strings with data structures.
+  # __READY_EVENT__   : name of the JS event signaling the page is ready.
+  # __REFRESH_EVENT__ : name of the JS event signaling the vis should refresh.
+  # __DIV_ID__        : DOM ID of the div containing the visualizartion.
+  def interpolated_markup
+    markup.tap do |markup|
+      interpolation_values.each do |k,v|
+        markup.gsub!("__#{k.upcase}__", v.to_s)
+      end
+    end
+  end
+
 private
 
   def populate_slug
