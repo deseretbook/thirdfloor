@@ -1,5 +1,8 @@
 class DataPoint < ActiveRecord::Base
   MAXIMUM_RECORD_AGE = { number: 10, unit: :days }
+
+  serialize :data, ActiveRecord::Coders::NestedHstore
+
   belongs_to :station
   default_scope -> { order('id DESC') }
 
