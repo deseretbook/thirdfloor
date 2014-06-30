@@ -79,8 +79,9 @@ ActiveRecord::Schema.define(version: 20140630202324) do
   add_index "flow_dashboards", ["flow_id"], name: "index_flow_dashboards_on_flow_id", using: :btree
 
   create_table "flows", force: true do |t|
-    t.string   "name",       null: false
-    t.string   "slug",       null: false
+    t.string   "name",                      null: false
+    t.string   "slug",                      null: false
+    t.boolean  "enabled",    default: true, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end

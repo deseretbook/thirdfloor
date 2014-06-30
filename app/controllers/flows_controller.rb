@@ -56,6 +56,6 @@ class FlowsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def flow_params
-      params.require(:flow).permit(:name, :slug, flow_dashboards_attributes: %i[ id dashboard_id flow_id _destroy refresh position ])
+      params.require(:flow).permit(:name, :slug, :enabled, flow_dashboards_attributes: %i[ id dashboard_id flow_id _destroy refresh position ])
     end
 end

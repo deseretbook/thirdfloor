@@ -27,11 +27,24 @@ class HomeController < ApplicationController
     render locals: { dashboard: dashboard }
   end
 
+  def flow
+    slug = params[:slug]
+    # get dashboard by slug or id
+    flow = if slug =~ /^\d+/
+      Flow.enabled.where(id: slug.to_i).first!
+    else
+      Flow.enabled.where(slug: params[:slug]).first!
+    end
+    dashboard = flow.dashboards.find_by_id(params[:dashboard_id]) || flow.dashboards.first
+    
+    render locals: { flow: flow, dashboard: dashboard }
+  end
+
   def default_dashboard
-    redirect_to(
-      render_dashboard_path(
-        Dashboard.enabled.first!.slug
-      )
-    )
+    redirect_to(render_dashboard_path(Dashboard.enabled.first!.slug))
+  end
+
+  def default_flow
+    redirect_to(render_flow_path(Flow.enabled.first!.slug))
   end
 end

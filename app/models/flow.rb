@@ -10,6 +10,8 @@ class Flow < ActiveRecord::Base
 
   before_validation :populate_slug
 
+  scope :enabled, -> { where(enabled: true) }
+
   after_save :reposition_dasboards
 
 private

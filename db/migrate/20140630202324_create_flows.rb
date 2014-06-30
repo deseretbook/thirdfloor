@@ -3,6 +3,7 @@ class CreateFlows < ActiveRecord::Migration
     create_table :flows do |t|
       t.string :name, null: false
       t.string :slug, null: false
+      t.boolean :enabled, null: false, default: true
       t.timestamps
     end
 

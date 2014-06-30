@@ -54,6 +54,8 @@ Rails.application.routes.draw do
   get '/dashboard/:slug' => 'home#dashboard', as: 'render_dashboard'
   get '/dashboard/' => 'home#default_dashboard', as: 'render_default_dashboard'
   get '/flow/:slug' => 'home#flow', as: 'render_flow'
+  get '/flow/:slug/:dashboard_id' => 'home#flow', as: 'render_flow_dashboard'
+  get '/flow/' => 'home#default_flow', as: 'render_default_flow'
 
   resources :visualizations
 

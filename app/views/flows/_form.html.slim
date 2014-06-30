@@ -20,6 +20,10 @@
     = f.label :slug
     = f.text_field :slug
 
+  .pure-control-group
+    = f.label :enabled
+    = f.check_box :enabled
+
   h2 Dashboards included
   = render partial: 'dashboards_form', locals: { f: f }    
 
