@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :flows
+
   resources :dashboard_cells do
     member do
       post '/' => :update
@@ -51,6 +53,7 @@ Rails.application.routes.draw do
   get '/visualize/:slug' => 'home#visualize', as: 'render_visualization'
   get '/dashboard/:slug' => 'home#dashboard', as: 'render_dashboard'
   get '/dashboard/' => 'home#default_dashboard', as: 'render_default_dashboard'
+  get '/flow/:slug' => 'home#flow', as: 'render_flow'
 
   resources :visualizations
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140513153608) do
+ActiveRecord::Schema.define(version: 20140630202324) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -64,6 +64,28 @@ ActiveRecord::Schema.define(version: 20140513153608) do
   end
 
   add_index "data_points", ["name"], name: "index_data_points_on_name", using: :btree
+
+  create_table "flow_dashboards", force: true do |t|
+    t.integer  "flow_id",                  null: false
+    t.integer  "dashboard_id",             null: false
+    t.integer  "refresh",      default: 0, null: false
+    t.integer  "position",     default: 0, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "flow_dashboards", ["dashboard_id"], name: "index_flow_dashboards_on_dashboard_id", using: :btree
+  add_index "flow_dashboards", ["flow_id", "dashboard_id"], name: "index_flow_dashboards_on_flow_id_and_dashboard_id", unique: true, using: :btree
+  add_index "flow_dashboards", ["flow_id"], name: "index_flow_dashboards_on_flow_id", using: :btree
+
+  create_table "flows", force: true do |t|
+    t.string   "name",       null: false
+    t.string   "slug",       null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "flows", ["slug"], name: "index_flows_on_slug", unique: true, using: :btree
 
   create_table "stations", force: true do |t|
     t.string   "hostname",                        null: false

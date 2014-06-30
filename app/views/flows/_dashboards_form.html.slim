@@ -1,0 +1,19 @@
+= f.fields_for :flow_dashboards do |ff|
+  fieldset
+    .pure-control-group
+      = ff.label :dashboard_id
+      = ff.select :dashboard_id, Dashboard.all.map{|v|[v.name, v.id]}, include_blank: '- select -'
+
+    = ff.hidden_field :flow_id
+
+    .pure-control-group
+      = ff.label :refresh, 'Refresh timeout (seconds)'
+      = ff.number_field :refresh
+
+    .pure-control-group
+      = ff.label :position
+      = ff.number_field :position
+
+    .pure-control-group
+      = ff.label :_destroy, 'Destroy?'
+      = ff.check_box :_destroy, value: true

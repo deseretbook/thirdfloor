@@ -1,0 +1,27 @@
+= form_for(@flow, html: { class: 'pure-form pure-form-aligned' }) do |f|
+  -if @flow.errors.any?
+    #error_explanation
+      h2
+        = pluralize(@flow.errors.count, "error")
+        | prohibited this flow from being saved:
+
+      ul
+        - @flow.errors.full_messages.each do |message|
+          li= message
+      
+      
+  
+
+  .pure-control-group
+    = f.label :name
+    = f.text_field :name
+  
+  .pure-control-group
+    = f.label :slug
+    = f.text_field :slug
+
+  h2 Dashboards included
+  = render partial: 'dashboards_form', locals: { f: f }    
+
+  .actions
+    = f.submit
