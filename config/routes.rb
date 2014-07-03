@@ -45,9 +45,13 @@ Rails.application.routes.draw do
   resources :travis, only: [ :index ]
   get '/travis/*repo_string' => 'travis#show'
 
-  # get data points by name through a url
-  get 'data_points/:name' => 'data_points#index', id: /[^\d+]/
-  resources :data_points, only: [ :index, :show, :create, :destroy ]
+  
+  
+  
+  # match only numeric ids
+  resources :data_points, only: [ :index, :show, :create, :destroy ], constraints: { id: /\d+/ }
+  # get data points by name through a url, match only alphanumeric ids
+  get 'data_points/:name' => 'data_points#index', constraints: { id: /^\d+]/ }
   post 'data_points/:name' => 'data_points#named_route_create'
 
   get '/visualize/:slug' => 'home#visualize', as: 'render_visualization'
