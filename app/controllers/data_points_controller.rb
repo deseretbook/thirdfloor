@@ -84,10 +84,11 @@ protected
   def respond_with_collection_head
     params[:limit] = 1 # so caching works
     point = cached_data_points.first
+    # using #try below because point could be nil
     h = {
-      "x-last-data-point-id" => point.id,
-      "x-last-data-point-created-at" => point.created_at.to_i,
-      "x-last-data-point-name" => point.name
+      "x-last-data-point-id" => point.try(:id),
+      "x-last-data-point-created-at" => point.try(:created_at).to_i,
+      "x-last-data-point-name" => point.try(:name)
     }
 
     h.each { |k,v| headers[k] = v.to_s }
