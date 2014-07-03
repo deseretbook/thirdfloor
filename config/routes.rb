@@ -45,6 +45,8 @@ Rails.application.routes.draw do
   resources :travis, only: [ :index ]
   get '/travis/*repo_string' => 'travis#show'
 
+  # get data points by name through a url
+  get 'data_points/:name' => 'data_points#index', id: /[^\d+]/
   resources :data_points, only: [ :index, :show, :create, :destroy ]
   post 'data_points/:name' => 'data_points#named_route_create'
 
