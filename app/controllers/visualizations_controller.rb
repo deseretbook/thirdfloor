@@ -35,7 +35,15 @@ class VisualizationsController < ApplicationController
   # PATCH/PUT /visualizations/1
   def update
     if @visualization.update(visualization_params)
-      redirect_to @visualization, notice: 'Visualization was successfully updated.'
+      # hack to decide if the user wanted to keep in this page or return
+      # to the list. Eventually do the update with ajax and never have to submit
+      # the page at all.
+      if params[:commit] =~ /stay/i # 'Save and Stay' button on form
+        flash[:notice] = 'Updated'
+        render action: 'edit'
+      else
+        redirect_to @visualization, notice: 'Visualization was successfully updated.'
+      end
     else
       render action: 'edit'
     end
