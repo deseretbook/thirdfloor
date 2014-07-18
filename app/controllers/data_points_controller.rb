@@ -29,7 +29,7 @@ class DataPointsController < ApplicationController
   def named_route_create
     
     data_hash = request.request_parameters.merge(remote_ip: request.remote_ip)
-    data_hash.delete('data_point') if data_hash['data_point'].empty?
+    data_hash.delete('data_point') if (data_hash.keys.include?('data_point') && data_hash['data_point'].empty?)
 
     respond_with(DataPoint.create!(
       name: params[:name],
