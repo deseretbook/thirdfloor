@@ -96,7 +96,7 @@ class DashboardsController < ApplicationController
 
       @dashboard.dashboard_cells.each do |cell|
         if (data_point_name = cell.visualization.data_point_name).present?
-          dp_since = (dps_cache[data_point_name] || (dps_cache[data_point_name] = DataPoint.newest_for(data_point_name).created_at.to_i))
+          dp_since = (dps_cache[data_point_name] || (dps_cache[data_point_name] = DataPoint.newest_for(data_point_name).try(:created_at).to_i))
           next_since = dp_since if next_since < dp_since
           cell_updates << cell.id if since < dp_since
         end
