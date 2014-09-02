@@ -1,5 +1,5 @@
 class DataPoint < ActiveRecord::Base
-  MAXIMUM_RECORD_AGE = { number: 10, unit: :days }
+  MAXIMUM_RECORD_AGE = { number: 7, unit: :days }
 
   serialize :data, ActiveRecord::Coders::NestedHstore
 
