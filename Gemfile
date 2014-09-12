@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-ruby "2.0.0"
+ruby "2.1.2"
 
 gem 'dotenv-rails', :groups => [:development, :test]
 gem 'rails', '4.1.2'
@@ -15,7 +15,7 @@ gem 'turbolinks'
 # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
 gem 'spring',        group: :development
 
-gem 'debugger', group: [:development, :test]
+gem 'pry-byebug', group: [:development, :test]
 
 gem 'active_model_serializers'
 gem 'slim'
