@@ -5,6 +5,11 @@
       = ff.select :visualization_id, Visualization.all.map{|v|[v.name, v.id]}, include_blank: '- select -'
 
     = ff.hidden_field :dashboard_id
+
+    .pure-control-group
+      = ff.label :_destroy, 'Auto-scroll?'
+      = ff.check_box :autoscroll, value: true
+
     .pure-control-group
       = ff.label :_destroy, 'Destroy?'
       = ff.check_box :_destroy, value: true

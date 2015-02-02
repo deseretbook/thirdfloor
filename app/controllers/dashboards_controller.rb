@@ -136,7 +136,8 @@ class DashboardsController < ApplicationController
       params.require(:dashboard).permit(
         :name, :slug, :enabled, :refresh, :refresh_to, :css,
         :cell_width, :cell_height, :cell_x_margin, :cell_y_margin,
-        :maximum_width, :maximum_height, :autoscroll, :autoscroll_delay
+        :maximum_width, :maximum_height, :autoscroll, :autoscroll_delay,
+        dashboard_cells_attributes: [ :id, :visualization_id, :dashboard_id, :autoscroll, :_destroy]
       )
     end
 end
