@@ -51,7 +51,7 @@ Rails.application.routes.draw do
   # match only numeric ids
   resources :data_points, only: [ :index, :show, :create, :destroy ], constraints: { id: /\d+/ }
   # get data points by name through a url, match only alphanumeric ids
-  get 'data_points/:name' => 'data_points#index', constraints: { id: /^\d+]/ }
+  get 'data_points/:name' => 'data_points#index', constraints: { id: /^\d+/ }
   post 'data_points/:name' => 'data_points#named_route_create'
 
   get '/visualize/:slug' => 'home#visualize', as: 'render_visualization'
