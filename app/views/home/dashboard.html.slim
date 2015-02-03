@@ -395,6 +395,8 @@ scss:
     &:hover {
       .controls {
         display: block;
+        background: grey;
+        border-radius: 5px;
       }
     }
   }
@@ -464,6 +466,7 @@ scss:
         .container title=cell.visualization.name
           .controls
             i.fa.fa-refresh.reload-cell.true title="reload this cell"
+            i.fa.fa-arrows.move-cell.true title="drag to move cell"
             i.fa.fa-times.remove-cell.true title="remove this cell"
           .visualization
             = render inline: cell.interpolated_markup, type: cell.markup_type
