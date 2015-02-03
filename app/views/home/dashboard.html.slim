@@ -392,12 +392,15 @@ scss:
       }
     }
     
+    .visualization-placeholder { display: none; }
     &:hover {
       .controls {
         display: block;
         background: grey;
         border-radius: 5px;
       }
+      .visualization-placeholder { display: block; }
+      .visualization { display: none; }
     }
   }
 
@@ -468,6 +471,8 @@ scss:
             i.fa.fa-refresh.reload-cell.true title="reload this cell"
             i.fa.fa-arrows.move-cell.true title="drag to move cell"
             i.fa.fa-times.remove-cell.true title="remove this cell"
+          .visualization-placeholder
+            p PLACEHOLDER FOR MOVING AND RESIZING
           .visualization
             = render inline: cell.interpolated_markup, type: cell.markup_type
 
