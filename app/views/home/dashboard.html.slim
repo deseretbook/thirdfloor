@@ -272,7 +272,8 @@ javascript:
         var vc = $(el).closest('.visualization-cell');
         var container_height = vc.height();
         var container_width = vc.width();
-        if (/(midori|luakit)/i.exec(navigator.userAgent)) {
+        var iframeAdjustRegex = new RegExp("(midori|luakit)", 'i');
+        if (iframeAdjustRegex.exec(navigator.userAgent)) {
           // change iframe height in these browsers
           container_height = container_height - 50;
         }
