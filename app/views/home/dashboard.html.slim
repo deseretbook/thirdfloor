@@ -272,7 +272,11 @@ javascript:
         var vc = $(el).closest('.visualization-cell');
         var container_height = vc.height();
         var container_width = vc.width();
-        log('Resizing iframe ' + $(el).attr('src') + ' to ' + container_height + 'h/' + container_width + 'w:');
+        if (/(midori|luakit)/i.exec(navigator.userAgent)) {
+          // change iframe height in these browsers
+          container_height = container_height - 50;
+        }
+        log('Resizing iframe ' + $(el).attr('src') + ' to ' + container_height-5 + 'h/' + container_width-5 + 'w:');
   
         $(el).height(container_height);
         $(el).width(container_width);
