@@ -277,15 +277,19 @@ javascript:
           // change iframe height in these browsers
           container_height = container_height - 50;
         } */
-        log('Resizing iframe ' + $(el).attr('src') + ' to ' + container_height-5 + 'h/' + container_width-5 + 'w:');
+        log('Resizing iframe ' + $(el).attr('src') + ' to ' + (container_height-5).toString() + 'h/' + (container_width-5).toString() + 'w');
   
         $(el).height(container_height);
+        $(el).css('height', container_height.toString() + 'px');
         $(el).width(container_width);
+        $(el).css('width', container_width.toString() + 'px');
       });
     }
 
     // call resizeIframes in a timer to allow gridster to load first.
-    //setTimeout(resizeIframes, 30000);
+    setTimeout(resizeIframes, 30000);
+    setTimeout(resizeIframes, 90000);
+    setTimeout(resizeIframes, 120000);
 
     var syncGridsterChangesToServer = function() {
       if (#{!logged_in?}) {
